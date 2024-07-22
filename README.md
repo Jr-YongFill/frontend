@@ -40,7 +40,6 @@
 GPT AI 기반 면접을 도와주는 서비스입니다.
 <p align="right">(<a href="#용기가-필요한-아이들[가명]-yellow_heart">back to top</a>)</p>
 
-
 ### Languages, libraries and tools used
 #### Languages
 * Javascript
