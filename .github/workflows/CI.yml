@@ -1,0 +1,66 @@
+name:
+  CI
+on: 
+  pull_request:
+    branches: [main]
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: npm install
+      run: npm install
+
+    - name: create .env
+      run: |
+        touch .env
+        echo "${{ secrets.REACT_ENV }}" > .env
+      
+    - name: build Project
+      run: npm run build
+    
+    - name: build 실패 PR 닫기
+      if: ${{ failure() }}
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ github.TOKEN }}
+        script: |
+          const pull_number = ${{ github.event.pull_request.number }}
+          const updated_title = `[BUILD FAIL] ${{ github.event.pull_request.title }}`
+           await github.rest.pulls.createReview({
+             owner: context.repo.owner,
+             repo: context.repo.repo,
+             pull_number: pull_number,
+             body: '드에 실패했습니다.',
+             event: 'REQUEST_CHANGES'
+           })
+           await github.rest.pulls.update({
+             owner: context.repo.owner,
+             repo: context.repo.repo,
+             pull_number: pull_number,
+             title: updated_title,
+             state: 'closed'
+           })
+    - name: build 통과 PR merge
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ github.TOKEN }}
+        script: |
+          const pull_number = ${{ github.event.pull_request.number }}
+          await github.rest.pulls.createReview({
+           owner: context.repo.owner,
+            repo: context.repo.repo,
+              pull_number: pull_number,
+              body: '빌드 통과해 main 브랜치로 자동 머지합니다.',
+              event: 'REQUEST_CHANGES'
+            })
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pull_number,
+            })
