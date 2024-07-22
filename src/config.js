@@ -42,7 +42,7 @@ baseAPI.interceptors.response.use(response => {
 }, async error => {
     const originalRequest = error.config;
 
-    if (getRefreshToken() && error.response.status === 403 && !originalRequest._retry) {
+    if (getRefreshToken() && error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         await refreshAccessToken();
         return baseAPI(originalRequest);
