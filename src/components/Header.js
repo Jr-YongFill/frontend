@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import palette from '../styles/pallete';
 
 const HeaderContainer = styled.header`
   top: 0;
@@ -10,7 +11,7 @@ const HeaderContainer = styled.header`
   align-items: center;
   padding: 0 30px;
   z-index: 9;
-  background: #B6CCED;
+  background: ${palette.skyblue};
 `;
 
 const StyledLink = styled(Link)`
