@@ -8,8 +8,9 @@ const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 30px;
+  padding: 0 30px;
   z-index: 9;
+  background: #B6CCED;
 `;
 
 const StyledLink = styled(Link)`
