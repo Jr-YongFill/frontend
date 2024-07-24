@@ -77,8 +77,8 @@ const Header = ({ color }) => {
       <HeaderSign style={style}>
         
         <div>
-        <StyledLink to="/auth/signin">로그인</StyledLink>
-        <StyledLink to="/auth/signup">회원가입</StyledLink>
+        <StyledLink to="/auth/sign-in">로그인</StyledLink>
+        <StyledLink to="/auth/sign-up">회원가입</StyledLink>
         </div>
         <div>
           <span>닉네임</span>

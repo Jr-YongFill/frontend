@@ -30,8 +30,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/member" element={<Member />} />
-          <Route path="/auth/signin" element={<Signin />} />
-          <Route path="/auth/signup" element={<Signup />} />
+          <Route path="/auth/sign-in" element={<Signin />} />
+          <Route path="/auth/sign-up" element={<Signup />} />
           <Route path="/interview/choice-mode" element={<ChoiceInterviewMode />} />
           <Route path="/interview" element={<Interview />} />
           <Route path="/interview/choice-stack" element={<InterviewChoiceStack />} />
