@@ -73,7 +73,7 @@ const InterviewMain = () => {
             API키 생성 방법
           </div>
         </TitleTextGroup>
-        <img src={img} width={'20%'}></img>
+        <img src={img} width={'20%'} alt={'기본 이미지'}></img>
       </Title>
       <BtnGroup>
         <BtnBox>
