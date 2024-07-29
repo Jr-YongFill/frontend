@@ -12,8 +12,7 @@ const Container = styled.li`
 
 const CustomLi = ({ data }) => {
   const handleClick = () => {
-    const baseUrl = process.env.REACT_APP_BASE_URL || ''; // 환경 변수에서 baseUrl 가져오기
-    window.location.href = `${baseUrl}/api/posts/${data.postId}`;
+    window.location.href = `/api/posts/${data.postId}`;
   };
 
   return (

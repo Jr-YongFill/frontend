@@ -4,8 +4,8 @@ import Header from '../components/Header';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
 import axios from 'axios';
-import CustomLi from '../components/posts/CustomLi';
-import CustomButton from '../CustomButton';
+import CustomLi from '../components/CustomLi';
+import CustomButton from '../components/CustomButton';
 
 const Wrapper = styled.div`
   display: flex;
