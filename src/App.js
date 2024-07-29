@@ -17,11 +17,10 @@ import InfoPost from './components/posts/InfoPost';
 import Post from './components/posts/Post';
 import QnAPost from './components/posts/QnAPost';
 import UpdatePost from './components/posts/UpdatePost';
-import Community from './components/Community';
 import Home from './components/Home';
 import Store from './components/Store';
 import Vote from './components/Vote';
-import Header from './components/Header'
+import Community from './pages/Community';
 
 function App() {
   return (
