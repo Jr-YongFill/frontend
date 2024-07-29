@@ -1,65 +1,68 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
-
+import axios from 'axios';
+import CustomLi from '../components/posts/CustomLi';
+import CustomButton from '../CustomButton';
 
 const Wrapper = styled.div`
   display: flex;
   margin: 10px;
-  background: gold;
-  justify-content:center;
-  align-content:center;  
+  justify-content: center;
+  align-content: center;  
 `;
-
 
 const ContainerWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  background: blue;
-  justify-content:center;
-  align-content:center;  
+  justify-content: center;
+  align-content: center;  
 `;
 
 const ContainerRow = styled.div`
-  display:flex;
-  background:orange;
-  justify-content:space-between;
-`
+  display: flex;
+  justify-content: space-between;
+`;
 
 const Container = styled.div`
-  background:white;
-  width:35vw;
-  margin: 5px 0px 0px 5px;
+  background: white;
+  width: 35vw;
+  margin: 5px 5px 0px 5px;
   height: 38vh;
-`
+`;
+
 const HighLight = styled.div`
-  background:${palette.skyblue};
-  width:150px;
+  background: ${palette.skyblue};
+  width: 150px;
   height: 8px;
-  margin-top:-20px;
+  margin-top: 3px;
+`;
 
-`
-
-const PostList = ({ posts }) => (
-  <ul>
-    {posts.map((post, index) => (
-      <li key={index}>
-        <h4>{post.title}</h4>
-        <p>작성자: {post.writerName}</p>
-        <p>작성 시간: {new Date(post.createTime).toLocaleString()}</p>
-        <p>마지막 수정 시간: {new Date(post.lastUpdateTime).toLocaleString()}</p>
-      </li>
-    ))}
-  </ul>
-);
-
+const SubContainer = styled.div`
+  margin-right: 30px;
+  background: white;
+  width: 100%;
+  height: 30vh;
+  margin-top: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-left: -4vw;
+`;
 
 const Community = () => {
-  const navigate = useNavigate(); // useNavigate를 호출
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
-  
+  const [count, setCount] = useState(0);
+  const [question, setQuestion] = useState("");
+
+  const navigateHandler = (url) => () => {
+    navigate(url);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -69,13 +72,37 @@ const Community = () => {
         console.error('Error fetching data', error);
       }
     };
-
-
     fetchData();
+
+    const fetchCount = async () => {
+      try {
+        // TODO: localStorage에서 멤버 id 가져오기
+        const response = await axios.get('/api/members/1/answers');
+        setCount(response.data.count);
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    };
+    fetchCount();
+
+    const fetchQuestion = async () => {
+      try {
+        const response = await axios.get('/api/votes');
+        const resultList = response.data.pageResponseDTO.resultList;
+
+        if (resultList && resultList.length > 0) {
+          setQuestion(resultList[0]);
+        } else {
+          setQuestion("");
+        }
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    };
+
+    fetchQuestion();
   }, []);
 
-
-  
   return (
     <div>
       <Header />
@@ -83,40 +110,63 @@ const Community = () => {
         <ContainerWrapper>
           <ContainerRow>
             <Container>
-
-              <h2>오늘의 면접</h2>
-              <HighLight/>
-
+              <div style={{ fontSize: 25, fontWeight: 'bold' }}>오늘의 면접</div>
+              <HighLight />
+              <SubContainer>
+                {count === 0 ? (
+                  <div>
+                    <div style={{ marginBottom: '-3vh' }}>오늘 면접 본 기록이 없어요!</div>
+                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/interview/choice-mode")}>
+                      면접 보러 가기
+                    </CustomButton>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{ marginBottom: '-3vh' }}>오늘 {count} 개 질문에 답했네요!</div>
+                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/interview/choice-mode")}>
+                      오답노트 보기
+                    </CustomButton>
+                  </div>
+                )}
+              </SubContainer>
             </Container>
             <Container>
-
-              <h2>CS 투표</h2>
-              <HighLight/>
-
+              <div style={{ fontSize: 25, fontWeight: 'bold' }}>CS 투표</div>
+              <HighLight />
+              <SubContainer>
+                {question === "" ? (
+                  <div>
+                    <div style={{ marginBottom: '-3vh' }}>새로 질문을 등록하고 크레딧을 받아봐요!</div>
+                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/vote")}>
+                      질문 등록 하기
+                    </CustomButton>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{ marginBottom: '-3vh' }}>{question}</div>
+                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/vote")}>
+                      투표하러 가기
+                    </CustomButton>
+                  </div>
+                )}
+              </SubContainer>
             </Container>
           </ContainerRow>
           <ContainerRow>
-            <Container>
-
-              <h2>정보게시판</h2>
-              
-              <HighLight/>
-
-            </Container>
-            <Container>
-
-              <h2>질문게시판</h2>
-              <HighLight/>
-
-            </Container>
+            {data.map((category, categoryIndex) => (
+              <Container key={categoryIndex}>
+                <div style={{ fontSize: 25, fontWeight: 'bold' }}>{category.category}</div>
+                <HighLight />
+                <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>
+                  {category.postList.map((post, postIndex) => (
+                    <CustomLi key={postIndex} data={post}></CustomLi>
+                  ))}
+                </ul>
+              </Container>
+            ))}
           </ContainerRow>
-
         </ContainerWrapper>
-        
-
       </Wrapper>
-
-
     </div>
   );
 };
