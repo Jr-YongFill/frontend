@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Member from './components/Member';
+import Member from './pages/Member';
 import Signin from './components/auth/Signin';
 import Signup from './components/auth/Signup';
 import ChoiceInterviewMode from './components/interview/ChoiceInterviewMode';
@@ -17,9 +17,9 @@ import InfoPost from './components/posts/InfoPost';
 import Post from './components/posts/Post';
 import QnAPost from './components/posts/QnAPost';
 import UpdatePost from './components/posts/UpdatePost';
-import Home from './components/Home';
-import Store from './components/Store';
-import Vote from './components/Vote';
+import Home from './pages/Home';
+import Store from './pages/Store';
+import Vote from './pages/Vote';
 import Community from './pages/Community';
 
 function App() {
