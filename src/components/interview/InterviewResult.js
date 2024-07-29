@@ -1,6 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Header';
+import styled from 'styled-components';
+
+
+
 
 const InterviewResult = () => {
   const navigate = useNavigate(); // useNavigate를 호출
@@ -13,5 +17,6 @@ const InterviewResult = () => {
     </div>
   );
 };
+
 
 export default InterviewResult;
