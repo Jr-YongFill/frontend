@@ -33,21 +33,26 @@ function App() {
           <Route path="/member" element={<Member />} />
           <Route path="/auth/sign-in" element={<Signin />} />
           <Route path="/auth/sign-up" element={<Signup />} />
+
           <Route path="/interview/choice-mode" element={<ChoiceInterviewMode />} />
           <Route path="/interview" element={<Interview />} />
           <Route path="/interview/choice-stack" element={<InterviewChoiceStack />} />
           <Route path="/interview/main" element={<InterviewMain />} />
           <Route path="/interview/note" element={<InterviewNote />} />
           <Route path="/interview/result" element={<InterviewResult />} />
+
           <Route path="/interview/practice-choice-stack" element={<PracticeChoiceStack />} />
           <Route path="/interview/practice" element={<PracticeInterview />} />
           <Route path="/interview/practice-main" element={<PracticeInterviewMain />} />
-          <Route path="/post/info" element={<InfoPost />} />
+
+          <Route path="/community/main" element={<Community />} />
+          <Route path="/community/info" element={<InfoPost />} />
+          <Route path="/community/qna" element={<QnAPost/>} />
+
           <Route path="/post" element={<Post></Post>} />
-          <Route path="/post/qna" element={<QnAPost/>} />
           <Route path="/post/update" element={<UpdatePost/>}></Route>
-          <Route path="/community" element={<Community />} />
-          <Route path="/community/write" element={<CommunityWrite/>}></Route>
+          <Route path="/post/write" element={<CommunityWrite/>}></Route>
+          
           <Route path="/store" element={<Store />} />
           <Route path="/vote" element={<Vote />} />
         </Routes>
