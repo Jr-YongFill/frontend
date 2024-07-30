@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from './Header';
+import Header from '../components/Header';
 import styled from 'styled-components';
 import { baseAPI } from '../config';
 import palette from '../styles/pallete';
