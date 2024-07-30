@@ -172,6 +172,13 @@ const Vote = () => {
   };
 
   useEffect(() => {
+    const fetchVoteInfos = async () => {
+      const response = await baseAPI.get(`/api/votes?page=${currentPage}&size=10`);
+      setVoteInfos(response.data.pageResponseDTO);
+      setStackInfos(response.data.stackInfoDtos);
+    };
+
+
     fetchVoteInfos();
   }, [currentPage]);
 
