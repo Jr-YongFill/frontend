@@ -63,7 +63,8 @@ const Store = () => {
   const navigate = useNavigate(); // useNavigate를 호출
 
   const fetchMemberCredit = async () => {
-    const response = await baseAPI.get(`/api/members/${memberId}/credits`);
+    const response = await baseAPI.get(`/api/members/${memberId}/credit`);
+    setCredit(response.data);
   }
 
   const fetchPurchasStack = async (stackId) => {
@@ -85,6 +86,7 @@ const Store = () => {
 
   useEffect(() => {
     fetchMemberStack();
+    fetchMemberCredit();
   }, []);
 
   return (
