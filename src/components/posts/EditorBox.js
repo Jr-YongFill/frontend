@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
@@ -7,23 +7,22 @@ import { baseAPI } from '../../config';
 
 function EditorBox() {
   const editorRef = useRef();
-
+  const [images, setImages] = useState([]);
   const onChange = () => {
     const data = editorRef.current.getInstance().getHTML();
     console.log(data);
   };
 
   const onUploadImage = async (blob, callback) => {
-    let formData = new FormData();
-    formData.append("file", blob);
-
+    // let formData = new FormData();
+    // formData.append("file", blob);
     try {
-      const response = await baseAPI.post('/api/upload?mode=post', formData)
+      // const response = await baseAPI.post('/api/upload?mode=post', formData)
+      // const url = response.data;
       
-      const url = response.data;
-      console.log(url);
+      console.log(blob);
 
-      callback(url, 'alt text');
+      // callback(url, 'alt text');
     } catch (error) {
       console.error("Image upload failed", error);
     }
