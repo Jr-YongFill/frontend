@@ -17,8 +17,25 @@ const Wrapper = styled.div`
   align-content: center;  
 `;
 
+const EditorArea = styled.div`
+  padding: 20px 10px 40px;
+  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+    min-height: 600px;
+    margin-bottom: 30px;
+  }
 
-const CommunityWrite = (props) => {
+  /* 툴박스 */
+  .ck.ck-toolbar.ck-toolbar_grouping {
+    width: 100%;
+  }
+
+  /* 입력내용이 짧고 행이 길어지면 자동으로 텍스트입력태그 가로넓이가 줄어들기 때문에 고정 */
+  .ck-editor__editable_inline {
+    width: 100%;
+  }
+`;
+
+const WritePost = (props) => {
 
   //env 환경 변수 선언
   const API_URL = process.env.REACT_APP_API_URI;
@@ -146,19 +163,7 @@ const CommunityWrite = (props) => {
                 <div className="col-sm-10">
                   <div className="summernote">
                     <EditorBox/>
-                    {/*<CKEditor*/}
-                    {/*  editor={ClassicEditor}*/}
-                    {/*  data="<p>텍스트 입력</p>"*/}
-                    {/*  onReady={(editor) => {*/}
-                    {/*    // You can store the "editor" and use when it is needed.*/}
-                    {/*    // console.log("Editor is ready to use!", editor);*/}
-                    {/*  }}*/}
-                    {/*  onChange={(event, editor) => {*/}
-                    {/*    const data = editor.getData();*/}
-                    {/*    console.log({ event, editor, data });*/}
-                    {/*    setContents(data);*/}
-                    {/*  }}*/}
-                    {/*/>*/}
+                    
                   </div>
                 </div>
               </div>
@@ -185,22 +190,4 @@ const CommunityWrite = (props) => {
   );
 };
 
-export default CommunityWrite;
-
-const EditorArea = styled.div`
-  padding: 20px 10px 40px;
-  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
-    min-height: 600px;
-    margin-bottom: 30px;
-  }
-
-  /* 툴박스 */
-  .ck.ck-toolbar.ck-toolbar_grouping {
-    width: 100%;
-  }
-
-  /* 입력내용이 짧고 행이 길어지면 자동으로 텍스트입력태그 가로넓이가 줄어들기 때문에 고정 */
-  .ck-editor__editable_inline {
-    width: 100%;
-  }
-`;
+export default WritePost;
