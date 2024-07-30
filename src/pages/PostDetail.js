@@ -53,7 +53,7 @@ const SubContainer = styled.div`
   margin-left: -4vw;
 `;
 
-const Community = () => {
+const PostDetail = ({id}) => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
@@ -66,7 +66,7 @@ const Community = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/categories/posts');
+        const response = await axios.get(`/api/posts/${id}`);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data', error);
@@ -171,4 +171,4 @@ const Community = () => {
   );
 };
 
-export default Community;
+export default PostDetail;

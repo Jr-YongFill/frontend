@@ -13,16 +13,18 @@ import InterviewResult from './components/interview/InterviewResult';
 import PracticeChoiceStack from './components/interview/PracticeChoiceStack';
 import PracticeInterview from './components/interview/PracticeInterview';
 import PracticeInterviewMain from './components/interview/PracticeInterviewMain';
-import InfoPost from './components/posts/InfoPost';
-import Post from './components/posts/Post';
-import QnAPost from './components/posts/QnAPost';
-import UpdatePost from './components/posts/UpdatePost';
 import Home from './pages/Home';
 import Store from './pages/Store';
 import Vote from './pages/Vote';
-import Community from './pages/Community';
+import Community from './pages/posts/Community';
+import CommunityWrite from './pages/posts/CommunityWrite';
+import QnAPost from './pages/posts/QnAPost';
+import Post from './pages/posts/Post';
+import UpdatePost from './pages/posts/UpdatePost';
+import InfoPost from './pages/posts/InfoPost';
 
 function App() {
+
   return (
     <div className="App">
       <Router>
@@ -41,10 +43,11 @@ function App() {
           <Route path="/interview/practice" element={<PracticeInterview />} />
           <Route path="/interview/practice-main" element={<PracticeInterviewMain />} />
           <Route path="/post/info" element={<InfoPost />} />
-          <Route path="/post" element={<Post />} />
-          <Route path="/post/qna" element={<QnAPost />} />
-          <Route path="/post/update" element={<UpdatePost />} />
+          <Route path="/post" element={<Post></Post>} />
+          <Route path="/post/qna" element={<QnAPost/>} />
+          <Route path="/post/update" element={<UpdatePost/>}></Route>
           <Route path="/community" element={<Community />} />
+          <Route path="/community/write" element={<CommunityWrite/>}></Route>
           <Route path="/store" element={<Store />} />
           <Route path="/vote" element={<Vote />} />
         </Routes>
