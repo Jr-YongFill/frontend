@@ -16,12 +16,12 @@ import PracticeInterviewMain from './components/interview/PracticeInterviewMain'
 import Home from './pages/Home';
 import Store from './pages/Store';
 import Vote from './pages/Vote';
-import Community from './pages/posts/Community';
-import CommunityWrite from './pages/posts/CommunityWrite';
-import QnAPost from './pages/posts/QnAPost';
-import Post from './pages/posts/Post';
 import UpdatePost from './pages/posts/UpdatePost';
-import InfoPost from './pages/posts/InfoPost';
+import WritePost from './pages/posts/WritePost';
+import CommunityMain from './pages/community/CommunityMain';
+import CommunityQNA from './pages/community/CommunityQNA';
+import CommunityInfo from './pages/community/CommunityInfo';
+import PostDetail from './pages/posts/PostDetail';
 
 function App() {
 
@@ -45,13 +45,13 @@ function App() {
           <Route path="/interview/practice" element={<PracticeInterview />} />
           <Route path="/interview/practice-main" element={<PracticeInterviewMain />} />
 
-          <Route path="/community/main" element={<Community />} />
-          <Route path="/community/info" element={<InfoPost />} />
-          <Route path="/community/qna" element={<QnAPost/>} />
+          <Route path="/community/main" element={<CommunityMain/>} />
+          <Route path="/community/info" element={<CommunityInfo />} />
+          <Route path="/community/qna" element={<CommunityQNA/>} />
 
-          <Route path="/post" element={<Post></Post>} />
-          <Route path="/post/update" element={<UpdatePost/>}></Route>
-          <Route path="/post/write" element={<CommunityWrite/>}></Route>
+          <Route path="/post/:id" element={<PostDetail/>} />
+          <Route path="/post/update" element={<UpdatePost/>}/>
+          <Route path="/post/write" element={<WritePost/>}/>
           
           <Route path="/store" element={<Store />} />
           <Route path="/vote" element={<Vote />} />
