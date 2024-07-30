@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
+import Header from '../../components/Header';
 import styled from 'styled-components';
-import palette from '../styles/pallete';
-import axios from 'axios';
-import CustomLi from '../components/CustomLi';
-import CustomButton from '../components/CustomButton';
+import palette from '../../styles/pallete';
+import CustomLi from '../../components/CustomLi';
+import CustomButton from '../../components/CustomButton';
+import { baseAPI } from '../../config';
 
 const Wrapper = styled.div`
   display: flex;
@@ -53,7 +53,10 @@ const SubContainer = styled.div`
   margin-left: -4vw;
 `;
 
-const Community = () => {
+const CommunityMain = () => {
+
+  const API_URL = process.env.REACT_APP_API_URI;
+
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
@@ -66,10 +69,11 @@ const Community = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/categories/posts');
+        const response = await baseAPI.get('/api/categories/posts');
         setData(response.data);
+        console.log(response.data);
       } catch (error) {
-        console.error('Error fetching data', error);
+        // console.error('카테고리 정보 로딩 실패', error);
       }
     };
     fetchData();
@@ -77,17 +81,17 @@ const Community = () => {
     const fetchCount = async () => {
       try {
         // TODO: localStorage에서 멤버 id 가져오기
-        const response = await axios.get('/api/members/1/answers');
+        const response = await baseAPI.get('/api/members/1/answers');
         setCount(response.data.count);
       } catch (error) {
-        console.error('Error fetching data', error);
+        // console.error('Error fetching data', error);
       }
     };
     fetchCount();
 
     const fetchQuestion = async () => {
       try {
-        const response = await axios.get('/api/votes');
+        const response = await baseAPI.get('/api/votes');
         const resultList = response.data.pageResponseDTO.resultList;
 
         if (resultList && resultList.length > 0) {
@@ -96,7 +100,7 @@ const Community = () => {
           setQuestion("");
         }
       } catch (error) {
-        console.error('Error fetching data', error);
+        // console.error('Error fetching data', error);
       }
     };
 
@@ -153,17 +157,24 @@ const Community = () => {
             </Container>
           </ContainerRow>
           <ContainerRow>
-            {data.map((category, categoryIndex) => (
-              <Container key={categoryIndex}>
-                <div style={{ fontSize: 25, fontWeight: 'bold' }}>{category.category}</div>
-                <HighLight />
-                <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>
-                  {category.postList.map((post, postIndex) => (
-                    <CustomLi key={postIndex} data={post}></CustomLi>
-                  ))}
-                </ul>
-              </Container>
-            ))}
+          {data.map((category, categoryIndex) => (
+            <Container key={categoryIndex}>
+              <div style={{ fontSize: 25, fontWeight: 'bold' }}>{category.category}</div>
+              <HighLight />
+              <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>
+                {
+                  category.postList && category.postList.length > 0 ? (
+                    category.postList.map((post, postIndex) => (
+                      <CustomLi key={postIndex} data={post}></CustomLi>
+                    ))
+                  ) : (
+                    <div>게시글이 없네요!</div>
+                  )
+                }
+              </ul>
+            </Container>
+          ))}
+
           </ContainerRow>
         </ContainerWrapper>
       </Wrapper>
@@ -171,4 +182,4 @@ const Community = () => {
   );
 };
 
-export default Community;
+export default CommunityMain;

@@ -1,3 +1,4 @@
+//작성자 bbmini96
 import React, { useState } from 'react';
 import Header from '../Header';
 import styled from 'styled-components';

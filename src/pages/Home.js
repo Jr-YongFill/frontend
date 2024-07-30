@@ -1,3 +1,4 @@
+//작성자 bbmini96
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +7,6 @@ import Header from '../components/Header';
 import palette from '../styles/pallete';
 
 const WrapperContainer = styled.div`
-    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -104,7 +104,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <>
+    <div>
       <Header />
       <WrapperContainer>
         <ContainerWrapper>
@@ -153,7 +153,7 @@ const Home = () => {
           </Container>
         </ContainerWrapper>
       </WrapperContainer>
-    </>
+    </div>
   );
 };
 

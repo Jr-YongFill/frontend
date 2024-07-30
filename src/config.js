@@ -14,7 +14,7 @@ const refreshAccessToken = async () => {
     try {
         const response = await baseAPI.get(`/api/auth/refresh`);
 
-        localStorage.setItem('accessToken', response.data);
+        localStorage.setItem('accessToken', response.data.accessToken);
     } catch (error) {
         localStorage.clear();
         window.location.href = '/';
