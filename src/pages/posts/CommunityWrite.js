@@ -4,12 +4,11 @@ import {useNavigate} from "react-router-dom";
 
 
 // 토스트 에디터
-import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import {baseAPI} from "../../config";
 import Header from "../../components/Header";
+import EditorBox from "../../components/posts/EditorBox";
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,17 +41,15 @@ const CommunityWrite = (props) => {
   const editorRef = useRef();
 
   useEffect(()=>{
-
-    console.log(API_URL)
     
   },[])
   const onUploadImage = async (blob, callback) => {
     let formData = new FormData();
     formData.append("file", blob);
 
-    const url = await baseAPI.post(API_URL+'/api/upload', formData)
+    const url = await baseAPI.post('/api/upload', formData)
         .then((res)=>{
-          console.log(res, " ...login.....?")
+          console.log(res, "해치웠나???")
         })
         .catch(()=>{
 
@@ -148,24 +145,7 @@ const CommunityWrite = (props) => {
                 <label className="col-sm-2 col-form-label">Description:</label>
                 <div className="col-sm-10">
                   <div className="summernote">
-                    <Editor
-                        initialValue="hello react editor world!"
-                        previewStyle="vertical"
-                        height="600px"
-                        initialEditType="wysiwyg"
-                        useCommandShortcut={false}
-                        ref={editorRef}
-                        plugins={[colorSyntax]}
-                        language="ko-KR"
-                        hooks={{
-                          addImageBlobHook: onUploadImage
-                        }}
-                        onChange={(event, editor) => {
-                          const data = editorRef.current.getInstance().getHTML();
-                          console.log({ event, editor, data });
-                          setContents(data);
-                        }}
-                    />
+                    <EditorBox/>
                     {/*<CKEditor*/}
                     {/*  editor={ClassicEditor}*/}
                     {/*  data="<p>텍스트 입력</p>"*/}

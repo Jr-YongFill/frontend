@@ -70,7 +70,7 @@ const Community = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await baseAPI.get(API_URL+'/api/categories/posts');
+        const response = await baseAPI.get('/api/categories/posts');
         setData(response.data);
         console.log(response.data);
       } catch (error) {
