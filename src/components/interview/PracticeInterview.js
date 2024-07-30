@@ -23,15 +23,14 @@ const PracticeInterview = () => {
 
       const response = await baseAPI.get(`/api/questions?${params.toString()}`);
       setQuestions(response.data);
-      console.log(response.data); // Updated to log response.data directly
     } catch (error) {
       console.error("Failed to fetch questions:", error);
     }
-  }, [stackids]); // stackids가 변경될 때만 재생성
+  }, [stackids]);
 
   useEffect(() => {
     fetchQuestions();
-  }, [fetchQuestions]); // fetchQuestions을 의존성 배열에 추가
+  }, [fetchQuestions]);
 
 
 

@@ -19,17 +19,14 @@ const PracticeInterview = () => {
 
       const response = await baseAPI.get(`/api/questions?${params.toString()}`);
       setQuestions(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Failed to fetch questions:", error);
     }
   }, [stackids]);
 
   useEffect(() => {
-    if (stackids && stackids.length > 0) {
       fetchQuestions();
-    }
-  }, [fetchQuestions, stackids]);
+  }, [fetchQuestions]);
 
   return (
     <div>
