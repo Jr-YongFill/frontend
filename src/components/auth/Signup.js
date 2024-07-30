@@ -6,15 +6,18 @@ import { useNavigate } from 'react-router-dom';
 import { baseAPI } from '../../config';
 
 const WrapperContainer = styled.div`
-    height: 70vh; 
+    height: 100vh; 
     display: flex;
-    justify-content: center;
-    align-items: top; 
-    margin-top: 50px;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    background-color: #f0f4ff;
 `;
 
 const FormContainer = styled.div`
-    width: 400px;
+    width: 50%;
+    height: 50%;
+    margin-top: 50px;
     padding: 40px;
     border: 1px solid ${palette.skyblue};
     border-radius: 10px;
@@ -26,7 +29,7 @@ const Title = styled.h1`
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
-    color: ${palette.skyblue};
+    color: black;
 `;
 
 const Input = styled.input`
@@ -47,7 +50,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 100%;
     padding: 15px;
-    margin: 30px 0 10px 0;
+    margin: 50px 0 10px 0;
     background-color: ${palette.skyblue};
     color: white;
     border: none;
@@ -65,7 +68,7 @@ const LinkStyled = styled.a`
     display: block;
     text-align: right;
     margin-top: 10px;
-    color: ${palette.skyblue};
+    color: black;
     cursor: pointer;
 
     &:hover {
