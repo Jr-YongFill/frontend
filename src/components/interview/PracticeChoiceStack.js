@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Header';
 import styled from "styled-components";
@@ -71,27 +71,26 @@ const ModalTextInput = styled.input`
 
 
 const PracticeChoiceStack = () => {
-
   const memberId = 1;
   const [stacks, setStacks] = useState([]);
   const [modalSwitch, setModalSwitch] = useState(false);
-
   const [apiKey, setApiKey] = useState("");
   const myModalTextBoxRef = useRef(null);
   const myModalBtnRef = useRef(null);
-  const navigate = useNavigate(); // useNavigate를 호출
+  const navigate = useNavigate();
 
-
-  const fetchMemberStack = async () => {
+  const fetchMemberStack = useCallback(async () => {
+    try {
       const response = await baseAPI.get(`/api/members/${memberId}/stacks`);
-      setStacks(response.data.map(stack => ({...stack, selected: false})));
-      console.log(stacks)
-  }
+      setStacks(response.data.map(stack => ({ ...stack, selected: false })));
+    } catch (error) {
+      console.error("Failed to fetch stacks:", error);
+    }
+  }, [memberId]);
 
   useEffect(() => {
-
     fetchMemberStack();
-  }, []);
+  }, [fetchMemberStack]);
 
 
   return (
@@ -113,7 +112,6 @@ const PracticeChoiceStack = () => {
                   setStacks(stacks.map((s) =>
                     s.id === stack.id ? {...s, selected: !s.selected} : s
                   ));
-                  console.log("set");
                 }
               }}
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import Header from '../Header';
 import {baseAPI} from "../../config";
@@ -10,23 +10,31 @@ const PracticeInterview = () => {
   const { stackids, apiKey } = location.state || {};
   const [questions, setQuestions] = useState([]);
 
-  const fetchQuestions = async () => {
+  const fetchQuestions = useCallback(async () => {
+    if (!stackids || stackids.length === 0) {
+      console.warn('No stack IDs provided.');
+      return;
+    }
 
+    try {
+      const params = new URLSearchParams();
+      stackids.forEach(id => params.append('stack_id', id));
+      params.append('size', '1');
 
-    const params = new URLSearchParams();
-    stackids.forEach(id => params.append('stack_id', id));
-    params.append('size', '1');
-
-    const response = await baseAPI.get(`/api/questions?${params.toString()}`);
-    setQuestions(response.data);
-  }
+      const response = await baseAPI.get(`/api/questions?${params.toString()}`);
+      setQuestions(response.data);
+      console.log(response.data); // Updated to log response.data directly
+    } catch (error) {
+      console.error("Failed to fetch questions:", error);
+    }
+  }, [stackids]); // stackids가 변경될 때만 재생성
 
   useEffect(() => {
-
     fetchQuestions();
-  }, []);
+  }, [fetchQuestions]); // fetchQuestions을 의존성 배열에 추가
 
-  console.log(questions);
+
+
 
 
 
