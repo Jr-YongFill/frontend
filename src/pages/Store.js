@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from './Header';
 import styled from 'styled-components';
 import { baseAPI } from '../config';
 import palette from '../styles/pallete';
 import Modal from 'react-modal';
+import Header from '../components/Header';
 
 const Title = styled.div`
   display: flex;
