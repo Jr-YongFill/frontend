@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.li`
@@ -11,8 +12,11 @@ const Container = styled.li`
 `
 
 const CustomLi = ({ data }) => {
+
+  const navigate = useNavigate();
+
   const handleClick = () => {
-    window.location.href = `/api/posts/${data.postId}`;
+    navigate(`/post/${data.postId}`);
   };
 
   return (

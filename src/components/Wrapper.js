@@ -7,11 +7,11 @@ const CustomWrapper = styled.div`
   align-content: center;  
 `;
 
-const Wrapper = ({ childeren }) => {
+const Wrapper = ({ children }) => {
 
     return(
         <CustomWrapper>
-            {childeren}
+            {children}
         </CustomWrapper>
     )
 
