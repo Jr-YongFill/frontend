@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import Header from './Header';
-import defaultImage from '../assets/default.png';
 import { useNavigate } from 'react-router-dom';
+import defaultImage from '../assets/default.png';
+import Header from '../components/Header';
+
 
 const WrapperContainer = styled.div`
     height: 100vh; 
@@ -86,13 +87,12 @@ const DeveloperCard = styled.div`
     margin: 10px;
     width: 150px;
 `;
-
 const Home = () => {
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
 
   return (
     <>
-      <Header />
+    <Header />
       <WrapperContainer>
         <CsContainer>
           <Title>개발자들을 위한 CS 랜덤 디펜스</Title>

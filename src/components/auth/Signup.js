@@ -3,7 +3,7 @@ import Header from '../Header';
 import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { useNavigate } from 'react-router-dom';
-import { fetchUserSingup } from './FetchMember';
+import { baseAPI } from '../../config';
 
 const WrapperContainer = styled.div`
     height: 70vh; 
@@ -81,16 +81,15 @@ const Signup = () => {
     setUserLogin((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
-    fetchUserSingup(userLogin.email, userLogin.password, userLogin.nickname)
-      .then(() => {
+    try{
+        const response = await baseAPI.post('/api/auth/sign-up', userLogin);
         alert('회원가입 성공');
         navigate('/auth/sign-in');
-      })
-      .catch(error => {
-        alert(error.response.data.message);
-      });
+    } catch (error){
+      alert(error.response.data.error) 
+    }
   };
 
   return (

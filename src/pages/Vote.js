@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from './Header';
+import Header from '../components/Header';
 
 const Vote = () => {
   const navigate = useNavigate(); // useNavigate를 호출

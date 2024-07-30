@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Header';
-import axios from 'axios';
 import styled from 'styled-components';
 import palette from '../../styles/pallete';
+import { baseAPI } from '../../config';
 
 const WrapperContainer = styled.div`
     height: 50vh;
@@ -86,11 +86,18 @@ const Signin = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('/sign-in', userLogin);
+      const response = await baseAPI.post('/api/auth/sign-in', userLogin);
+
+      const { id, accessToken, refreshToken, tokenType } = response.data;
+      localStorage.setItem('id', id);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('tokenType', tokenType);
+
       alert('로그인 성공');
       navigate('/');
     } catch (error) {
-      alert(error.response.data.message);
+      alert(error.response.message || '로그인 실패');
     }
   };
 

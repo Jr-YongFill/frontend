@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Header from './Header';
+import Header from '../components/Header';
 import defaultImage from '../assets/default.png';
 import palette from '../styles/pallete';
+import { baseAPI } from '../config';
 
 const WrapperContainer = styled.div`
     height: 100%;
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,13 +16,12 @@ const WrapperContainer = styled.div`
 `;
 
 const Box = styled.div`
-    width: 100%;
-    max-width: 850px;
+    width: 80%;
     background-color: white;
     padding: 50px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin: 20px;
 `;
 
 const Title = styled.h2`
@@ -197,24 +195,52 @@ const ListLi = styled.li`
     margin: 10px 0;
 `;
 
+const ContainerLi = styled.li`
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  list-style: none;
+  padding:3px 0px;
+  cursor:pointer;
+`
+
 const Member = () => {
   const [profileImage, setProfileImage] = useState(defaultImage);
-  const [nickname, setNickname] = useState("");
+  const [nickName, setNickname] = useState("");
+  const [password, setPassword] = useState("");
+  const [checkPassword, setCheckPassword] = useState("");
+  const [memberId, setMemberId] = useState(null);
   const [filePath, setFilePath] = useState('');
   const [fileName, setFileName] = useState('');
   const [fileSize, setFileSize] = useState(0);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const memberId = localStorage.getItem('id');
+    setMemberId(memberId);
+  }, []);
+
   const deleteHandle = async (event) => {
     event.preventDefault();
-    const memberId = '{member_id}';
     try {
-      await axios.delete(`/members/${memberId}`);
-      alert("회원 탈퇴");
+      await baseAPI.delete(`/api/members/${memberId}`);
+      localStorage.removeItem('id');
+      localStorage.removeItem('tokenType');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      alert("회원 탈퇴 성공");
       navigate('/');
     } catch (error) {
-      alert(error.response.data.message);
+      alert("회원 탈퇴 실패: " + error.response.data.message);
     }
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleCheckPasswordChange = (event) => {
+    setCheckPassword(event.target.value);
   };
 
   const handleImageChange = (event) => {
@@ -231,20 +257,51 @@ const Member = () => {
     }
   };
 
+  const handleNameChange = (event) => {
+    setNickname(event.target.value);
+  };
+
+
+  const UpdatePasswordHandle = async (event) => {
+    event.preventDefault();
+    if (password !== checkPassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('password', password);
+
+      await baseAPI.patch(`/api/members/${memberId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      alert("비밀번호 변경이 완료되었습니다.");
+      navigate('/member');
+    } catch (error) {
+      alert("비밀번호 변경 실패: " + error.response.data.message);
+    }
+  };
+
   const UpdateImageHandle = async (event) => {
     event.preventDefault();
-    const memberId = '{member_id}';
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
+      formData.append('nickname', nickName);
+      formData.append('file_path', filePath);
+      formData.append('attachment_file_name', fileName);
+      formData.append('attachment_file_size', fileSize);
 
-    formData.append('file_path', filePath);
-    formData.append('attachment_file_name', fileName);
-    formData.append('attachment_file_size', fileSize);
+      await baseAPI.patch(`/api/members/${memberId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-    await axios.patch(`/api/members/${memberId}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+      alert("프로필 수정 성공");
+      window.document.location= '/member';
+    } catch (error) {
+      alert("프로필 이미지 수정 실패: " + error.response.data.message);
+    }
   };
 
   return (
@@ -273,19 +330,29 @@ const Member = () => {
                 <NicknameInput>
                   <Input
                     type="text"
-                    style={{ width: '75%' }}
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
+                    style={{ width: '80%' }}
+                    value={nickName}
+                    onChange={handleNameChange}
                   />
-                  <Button style={{ width: '25%' }}>수정하기</Button>
+                  <Button onClick={UpdateImageHandle} style={{ width: '20%' }}>수정하기</Button>
                 </NicknameInput>
               </NicknameContainer>
               <PasswordContainer>
                 <PasswordLabel>비밀번호 변경</PasswordLabel>
-                <Input type="password" placeholder="새 비밀번호" />
-                <Input type="password" placeholder="비밀번호 확인" />
+                <Input
+                  type="password"
+                  placeholder="새 비밀번호"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+                <Input
+                  type="password"
+                  placeholder="비밀번호 확인"
+                  value={checkPassword}
+                  onChange={handleCheckPasswordChange}
+                />
                 <ButtonContainer>
-                  <Button>변경하기</Button>
+                  <Button onClick={UpdatePasswordHandle}>변경하기</Button>
                 </ButtonContainer>
               </PasswordContainer>
             </MemberUpdateContainer>
@@ -303,32 +370,30 @@ const Member = () => {
             </List>
           </AnswerNoteBox>
 
-        <PostAndCommentBox>
-          <PostBox>
-            <Title>내가 쓴 글</Title>
-            <List>
-              <ListLi>게시글</ListLi>
-              <ListLi>게시글</ListLi>
-              <ListLi>게시글</ListLi>
-              <ListLi>게시글</ListLi>
-            </List>
-          </PostBox>
+          <PostAndCommentBox>
+            <PostBox>
+              <Title>내가 쓴 글</Title>
+              <List>
+                <ListLi>게시글</ListLi>
+                <ListLi>게시글</ListLi>
+                <ListLi>게시글</ListLi>
+                <ListLi>게시글</ListLi>
+              </List>
+            </PostBox>
 
-          <CommentBox>
-            <Title>내가 쓴 댓글</Title>
-            <List>
-              <ListLi>댓글</ListLi>
-              <ListLi>댓글</ListLi>
-              <ListLi>댓글</ListLi>
-              <ListLi>댓글</ListLi>
-            </List>
-          </CommentBox>
+            <CommentBox>
+              <Title>내가 쓴 댓글</Title>
+              <List>
+                <ListLi>댓글</ListLi>
+                <ListLi>댓글</ListLi>
+                <ListLi>댓글</ListLi>
+                <ListLi>댓글</ListLi>
+              </List>
+            </CommentBox>
           </PostAndCommentBox>
         </CommunityContainer>
       </WrapperContainer>
     </>
   );
 };
-
-
 export default Member;
