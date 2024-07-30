@@ -57,7 +57,7 @@ const VoteBox = styled.div`
   border: solid;
   border-radius: 20px;
   background-color: white;
-  border-color: ${palette.skyblue};
+  border-color: ${(props) => props.color};
   width: 200px;
   height: 80px;
   font-size: 20px;
@@ -232,6 +232,7 @@ const Vote = () => {
                           </div>
                         ) : null}
                         <VoteBox
+                          color={(vote.myVoteStackId === 0 || vote.myVoteStackId === stack.stackId ? palette.skyblue : palette.gray)}
                           hover={vote.myVoteStackId === 0}
                           onClick={
                             vote.myVoteStackId === 0
