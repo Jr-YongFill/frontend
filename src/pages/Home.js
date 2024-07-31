@@ -1,4 +1,3 @@
-//작성자 bbmini96
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -103,27 +102,37 @@ const DeveloperCard = styled.div`
 const Home = () => {
   const navigate = useNavigate();
 
+  const ButtonClick = (path) => {
+    const role = localStorage.getItem('role');
+    if (!role) {
+      alert('로그인이 필요한 페이지입니다.')
+      navigate('/auth/sign-in');
+    } else {
+      navigate(path);
+    }
+  };
+
   return (
     <div>
       <Header />
       <WrapperContainer>
         <ContainerWrapper>
-          <Container >
+          <Container>
             <Label>개발자들을 위한</Label>
             <Title>CS 랜덤 디펜스</Title>
             <Description>멘트주세요</Description>
-            <Button onClick={() => navigate('/interview/choice-mode')}>면접 페이지 이동</Button>
+            <Button onClick={() => ButtonClick('/interview/choice-mode')}>면접 페이지 이동</Button>
           </Container>
 
-          <Container >
+          <Container>
             <Label>개발자들을 위한</Label>
             <Title>취준생을 위한 커뮤니티</Title>
             <Description>멘트주세요</Description>
-            <Button onClick={() => navigate('/community')}>커뮤니티 이동</Button>
+            <Button onClick={() => ButtonClick('/community/main')}>커뮤니티 이동</Button>
           </Container>
 
           <Container flex="2">
-            <Title>개발자 정보</Title>
+            <Title style={{textAlign: 'center'}}>개발자 정보</Title>
             <DeveloperInfoContainer>
               <DeveloperCard>
                 <img src={defaultImage} alt="Developer" />

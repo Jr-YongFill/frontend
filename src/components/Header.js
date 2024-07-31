@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
-import { baseAPI } from '../config';
+import { decoding } from '../utils/decoding';
 
 const HeaderContainer = styled.header`
   top: 0;
@@ -20,7 +20,6 @@ const StyledLink = styled(Link)`
   color: var(--color);
   font-size: 18px;
   cursor: pointer;
-  margin-left: 15px;
   margin-left: 15px;
 `;
 
@@ -51,30 +50,29 @@ const LogoutButton = styled.span`
   font-size: 18px;
   cursor: pointer;
   margin-left: 10px;
-  margin-left: 10px;
 `;
+
 const Header = ({ color }) => {
-  const [nickName, setNickname] = useState('');
+  const [memberId, setMemberId] = useState('')
+  const [nickName, setNickName] = useState('');
+  const [role, setRole] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkLoginStatus = () => {
-      const nickName = localStorage.getItem('nickName');
-      setNickname(!!nickName);
-    };
-
-    checkLoginStatus();
+    const encryptedNickName = localStorage.getItem('nickName');
+    if (encryptedNickName) {
+      decoding(setNickName, setMemberId, setRole);
+    }
   }, []);
 
-  const logoutHandle = async () => {
-    if (localStorage != null) {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('tokenType');
-      localStorage.removeItem('id');
-      localStorage.removeItem('role');
-      localStorage.removeItem('nickName');
-      window.document.location = '/';
-    }
+  const logoutHandle = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('tokenType');
+    localStorage.removeItem('id');
+    localStorage.removeItem('role');
+    localStorage.removeItem('nickName');
+    window.location.href = '/';
   };
 
   const style = {
@@ -82,7 +80,15 @@ const Header = ({ color }) => {
     color: 'black'
   };
 
-
+  const LinkClick = (event, path) => {
+    if (!role) {
+      event.preventDefault();
+      alert('로그인이 필요한 페이지 입니다.')
+      navigate('/auth/sign-in');
+    } else {
+      navigate(path);
+    }
+  };
 
   return (
     <HeaderContainer style={style}>
@@ -91,22 +97,22 @@ const Header = ({ color }) => {
           <span>용가리</span>
         </MainLink>
         <GnbMenu>
-          <StyledLink to="/interview/main">
+          <StyledLink to="/interview/main" onClick={(event) => LinkClick(event, '/interview/main')}>
             <span>면접보러가기</span>
           </StyledLink>
-          <StyledLink to="/store">
+          <StyledLink to="/store" onClick={(event) => LinkClick(event, '/store')}>
             <span>상점</span>
           </StyledLink>
-          <StyledLink to="/community/main">
+          <StyledLink to="/community/main" onClick={(event) => LinkClick(event, '/community/main')}>
             <span>커뮤니티</span>
           </StyledLink>
         </GnbMenu>
       </HeaderGnb>
       <HeaderSign style={style}>
-        {nickName ? (
+        {localStorage.getItem('nickName') ? (
           <div>
-            <span>{localStorage.getItem('nickName')}</span>
-            <StyledLink to="/member">마이페이지</StyledLink>
+            <span>{nickName}</span>
+            <StyledLink to="/member" onClick={(event) => LinkClick(event, '/member')}>마이페이지</StyledLink>
             <LogoutButton onClick={logoutHandle}>로그아웃</LogoutButton>
           </div>
         ) : (
