@@ -55,10 +55,10 @@ const SubContainer = styled.div`
 
 const CommunityMain = () => {
 
-  const API_URL = process.env.REACT_APP_API_URI;
 
   const navigate = useNavigate();
-  const [data, setData] = useState([]);
+  const [qnaData, setQNAData] = useState([]);
+  const [infoData, setInfoData] = useState([]);
   const [count, setCount] = useState(0);
   const [question, setQuestion] = useState("");
 
@@ -67,16 +67,25 @@ const CommunityMain = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+
+    const fetcQNAData = async () => {
       try {
-        const response = await baseAPI.get('/api/categories/posts');
-        setData(response.data);
-        console.log(response.data);
+        const qnaResponse = await baseAPI.get(`/api/categories/QNA/posts?page=0&size=5`);
+        setQNAData(qnaResponse.data.resultList);
       } catch (error) {
         // console.error('카테고리 정보 로딩 실패', error);
       }
     };
-    fetchData();
+
+
+    const fetcInfoData = async () => {
+      try {
+        const infoResponse = await baseAPI.get(`/api/categories/INFO/posts?page=0&size=5`);
+        setInfoData(infoResponse.data.resultList);
+      } catch (error) {
+        // console.error('카테고리 정보 로딩 실패', error);
+      }
+    };
 
     const fetchCount = async () => {
       try {
@@ -87,7 +96,6 @@ const CommunityMain = () => {
         // console.error('Error fetching data', error);
       }
     };
-    fetchCount();
 
     const fetchQuestion = async () => {
       try {
@@ -104,6 +112,9 @@ const CommunityMain = () => {
       }
     };
 
+    fetcQNAData();
+    fetcInfoData();
+    fetchCount();
     fetchQuestion();
   }, []);
 
@@ -120,7 +131,7 @@ const CommunityMain = () => {
                 {count === 0 ? (
                   <div>
                     <div style={{ marginBottom: '-3vh' }}>오늘 면접 본 기록이 없어요!</div>
-                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/interview/choice-mode")}>
+                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/interview/main")}>
                       면접 보러 가기
                     </CustomButton>
                   </div>
@@ -147,7 +158,7 @@ const CommunityMain = () => {
                   </div>
                 ) : (
                   <div>
-                    <div style={{ marginBottom: '-3vh' }}>{question}</div>
+                    <div style={{ marginBottom: '-3vh' }}>{question.question}</div>
                     <CustomButton color={palette.skyblue} onClick={navigateHandler("/vote")}>
                       투표하러 가기
                     </CustomButton>
@@ -157,28 +168,44 @@ const CommunityMain = () => {
             </Container>
           </ContainerRow>
           <ContainerRow>
-          {data.map((category, categoryIndex) => (
-            <Container key={categoryIndex}>
-              <div style={{ fontSize: 25, fontWeight: 'bold' }}>{category.category}</div>
+            <Container>
+              <div
+                style={{ fontSize: 25, fontWeight: 'bold' }}
+                onClick={navigateHandler("/community/qna")}>Q & A</div>
               <HighLight />
               <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>
-                {
-                  category.postList && category.postList.length > 0 ? (
-                    category.postList.map((post, postIndex) => (
-                      <CustomLi key={postIndex} data={post}></CustomLi>
-                    ))
-                  ) : (
-                    <div>게시글이 없네요!</div>
-                  )
+                {qnaData ?
+                  (qnaData.map((data, idx) => {
+                    return (
+                      <CustomLi key={idx} data={data}></CustomLi>
+                    )
+                  }))
+                  :
+                  (<div>게시글이 없네요!</div>)
                 }
               </ul>
             </Container>
-          ))}
-
+            <Container>
+              <div
+                style={{ fontSize: 25, fontWeight: 'bold' }}
+                onClick={navigateHandler("/community/info")}>정보 공유</div>
+              <HighLight />
+              <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>
+                {infoData ?
+                  (infoData.map((data, idx) => {
+                    return (
+                      <CustomLi key={idx} data={data}></CustomLi>
+                    )
+                  }))
+                  :
+                  (<div>게시글이 없네요!</div>)
+                }
+              </ul>
+            </Container>
           </ContainerRow>
         </ContainerWrapper>
       </Wrapper>
-    </div>
+    </div >
   );
 };
 
