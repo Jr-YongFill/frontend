@@ -213,6 +213,7 @@ const Member = () => {
       localStorage.removeItem('tokenType');
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('nickName');
       alert("회원 탈퇴 성공");
       navigate('/');
     } catch (error) {
