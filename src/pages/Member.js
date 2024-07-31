@@ -1,3 +1,4 @@
+//작성자 bbmini96
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';

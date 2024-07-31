@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
 import styled from 'styled-components';
 import { baseAPI } from '../config';
 import palette from '../styles/pallete';
 import Modal from 'react-modal';
+import Header from '../components/Header';
 
 const Title = styled.div`
   display: flex;
@@ -63,7 +63,8 @@ const Store = () => {
   const navigate = useNavigate(); // useNavigate를 호출
 
   const fetchMemberCredit = async () => {
-    const response = await baseAPI.get(`/api/members/${memberId}/credits`);
+    const response = await baseAPI.get(`/api/members/${memberId}/credit`);
+    setCredit(response.data);
   }
 
   const fetchPurchasStack = async (stackId) => {
@@ -85,6 +86,7 @@ const Store = () => {
 
   useEffect(() => {
     fetchMemberStack();
+    fetchMemberCredit();
   }, []);
 
   return (

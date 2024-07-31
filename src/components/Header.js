@@ -90,6 +90,7 @@ const Header = ({ color }) => {
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('tokenType');
       localStorage.removeItem('id');
+      localStorage.removeItem('role');
       window.document.location= '/';
     }
   };
@@ -113,7 +114,7 @@ const Header = ({ color }) => {
           <StyledLink to="/store">
             <span>상점</span>
           </StyledLink>
-          <StyledLink to="/community">
+          <StyledLink to="/community/main">
             <span>커뮤니티</span>
           </StyledLink>
         </GnbMenu>
