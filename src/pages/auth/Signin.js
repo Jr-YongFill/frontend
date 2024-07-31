@@ -1,24 +1,21 @@
 //작성자 bbmini96
 import React, { useState } from 'react';
-import Header from '../Header';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../../styles/pallete';
-import { useNavigate } from 'react-router-dom';
 import { baseAPI } from '../../config';
+import Header from '../../components/Header';
 
 const WrapperContainer = styled.div`
-    height: 100vh; 
+    height: 50vh;
     display: flex;
-    flex-direction: column;
-    justify-content: top;
-    align-items: center;
-    background-color: #f0f4ff;
+    justify-content: center;
+    align-items: top;
+    margin-top: 50px;
 `;
 
 const FormContainer = styled.div`
-    width: 50%;
-    height: 50%;
-    margin-top: 50px;
+    width: 400px;
     padding: 40px;
     border: 1px solid ${palette.skyblue};
     border-radius: 10px;
@@ -30,7 +27,7 @@ const Title = styled.h1`
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
-    color: black;
+    color: ${palette.skyblue};
 `;
 
 const Input = styled.input`
@@ -51,7 +48,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 100%;
     padding: 15px;
-    margin: 50px 0 10px 0;
+    margin: 10px 0;
     background-color: ${palette.skyblue};
     color: white;
     border: none;
@@ -59,6 +56,7 @@ const Button = styled.button`
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s;
+    box-sizing: border-box;
 
     &:hover {
         background-color: ${palette.gray};
@@ -68,31 +66,40 @@ const Button = styled.button`
 const LinkStyled = styled.a`
     display: block;
     text-align: right;
-    margin-top: 10px;
-    color: black;
+    margin: 10px 0;
+    color: ${palette.skyblue};
     cursor: pointer;
+    text-decoration: none;
 
     &:hover {
         text-decoration: underline;
     }
 `;
 
-const Signup = () => {
-  const [userLogin, setUserLogin] = useState({ email: "", password: "", nickname: "" });
+const Signin = () => {
+  const [userLogin, setUserLogin] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setUserLogin((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    try{
-        const response = await baseAPI.post('/api/auth/sign-up', userLogin);
-        alert('회원가입 성공');
-        navigate('/auth/sign-in');
-    } catch (error){
-      alert(error.response.data.error) 
+    try {
+      const response = await baseAPI.post('/api/auth/sign-in', userLogin);
+
+      const { id, accessToken, refreshToken, tokenType, role } = response.data;
+      localStorage.setItem('id', id);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('tokenType', tokenType);
+      localStorage.setItem('role', role);
+
+      alert('로그인 성공');
+      navigate('/');
+    } catch (error) {
+      alert(error.response.message || '로그인 실패');
     }
   };
 
@@ -101,31 +108,26 @@ const Signup = () => {
       <Header />
       <WrapperContainer>
         <FormContainer>
-          <Title>회원가입</Title>
+          <Title>로그인</Title>
           <form onSubmit={handleSubmit}>
             <Input
               type="email"
               name="email"
-              placeholder="Email Address"
+              value={userLogin.email}
               onChange={handleInputChange}
+              placeholder="Email Address"
               required
             />
             <Input
               type="password"
               name="password"
+              value={userLogin.password}
+              onChange={handleInputChange}
               placeholder="Password"
-              onChange={handleInputChange}
               required
             />
-            <Input
-              type="text"
-              name="nickname"
-              placeholder="Nickname"
-              onChange={handleInputChange}
-              required
-            />
-            <Button type="submit">회원가입</Button>
-            <LinkStyled onClick={() => navigate('/auth/sign-in')}>로그인</LinkStyled>
+            <LinkStyled onClick={() => navigate('/auth/sign-up')}>회원가입</LinkStyled>
+            <Button type="submit">로그인</Button>
           </form>
         </FormContainer>
       </WrapperContainer>
@@ -133,4 +135,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signin;

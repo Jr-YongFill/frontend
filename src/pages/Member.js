@@ -1,7 +1,7 @@
 //작성자 bbmini96
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import defaultImage from '../assets/default.png';
 import palette from '../styles/pallete';
@@ -134,35 +134,34 @@ const PasswordButtonContainer = styled.div`
     margin-top: 20px;
 `;
 
+const BottomContainer = styled(MiddelContainer)``;
+
 const PostContainer = styled.div`
-    display: flex;
-    width: 100%;
-    gap: 20px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 `;
 
-const AnswerNoteBox = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+const CommentContainer = styled(PostContainer)``;
+
+const LinkStyled = styled(Link)`
+  text-decoration: none;
+  color: blue;
+  font-size: 16px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
-
-const PostAndCommentBox = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-`;
-
-const PostBox = styled(AnswerNoteBox)``;
-
-const CommentBox = styled(PostBox)``;
 
 const Member = () => {
   const [profileImage, setProfileImage] = useState(null);
+  const [postData, setPostData] = useState([]);
+  const [commentData, setCommentData] = useState([]);
   const [nickName, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
@@ -171,18 +170,39 @@ const Member = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const memberId = localStorage.getItem('id');
+    setMemberId(memberId);
+
+    // member 조회
     const fetchMemberData = async () => {
       try {
-        const memberId = localStorage.getItem('id');
-        setMemberId(memberId);
         const response = await baseAPI.get(`/api/members/${memberId}`);
         setProfileImage(response.data.filePath);
       } catch (error) {
         console.error(error);
       }
     };
-
     fetchMemberData();
+
+    // post조회
+    const fetchPostData = async () => {
+      try {
+        const response = await baseAPI.get(`/api/members/${memberId}/posts?page=0&size=5`);
+        setPostData(response.data.resultList);
+      } catch (error) {
+      }
+    };
+    fetchPostData();
+
+    // comment 조회
+    const fetchCommentData = async () => {
+      try {
+        const response = await baseAPI.get(`/api/members/${memberId}/comments?page=0&size=5`);
+        setCommentData(response.data.resultList);
+      } catch (error) {
+      }
+    };
+    fetchCommentData();
   }, []);
 
   const deleteHandle = async (event) => {
@@ -279,7 +299,7 @@ const Member = () => {
 
           <MiddelContainer>
             <ImageContainer>
-              <ProfileImage src= {profileImage} alt="Profile 선택" />
+              <ProfileImage src={profileImage} alt="Profile 선택" />
               <ButtonContainer>
                 <FileInput type="file" accept="image/*" onChange={handleImageChange} />
                 <ImageUpdateButton onClick={UpdateImageHandle}>수정하기</ImageUpdateButton>
@@ -313,48 +333,35 @@ const Member = () => {
                   value={checkPassword}
                   onChange={handleCheckPasswordChange}
                 />
-              <PasswordButtonContainer>
+                <PasswordButtonContainer>
                   <Button onClick={UpdatePasswordHandle}>변경하기</Button>
                 </PasswordButtonContainer>
               </PasswordContainer>
             </MemberUpdateContainer>
           </MiddelContainer>
 
-          <PostContainer>
-            <AnswerNoteBox>
-              <Title>내 오답노트</Title>
+          <BottomContainer>
+            <PostContainer>
+              <Title>내가 쓴 글</Title>
               <ul>
-                <li>게시글</li>
-                <li>게시글</li>
-                <li>게시글</li>
-                <li>게시글</li>
-                <li>게시글</li>
+                {postData.map((post, index) => (
+                  <li key={index}>{post.title}</li>
+                ))}
               </ul>
-            </AnswerNoteBox>
-
-            <PostAndCommentBox>
-              <PostBox>
-                <Title>내가 쓴 글</Title>
-                <ul>
-                  <li>게시글</li>
-                  <li>게시글</li>
-                  <li>게시글</li>
-                </ul>
-              </PostBox>
-
-              <CommentBox>
-                <Title>내가 쓴 댓글</Title>
-                <ul>
-                  <li>게시글</li>
-                  <li>게시글</li>
-                  <li>게시글</li>
-                </ul>
-              </CommentBox>
-            </PostAndCommentBox>
-          </PostContainer>
+              <LinkStyled to='/post/:id' style={{textAlign: 'right'}}>게시글 조회</LinkStyled>
+            </PostContainer>
+            <CommentContainer>
+            <Title>내가 쓴 댓글</Title> 
+              <ul>
+                {commentData.map((comment, index) => (
+                  <li key={index}>{comment.content}</li>
+                ))}
+              </ul>
+            </CommentContainer>
+          </BottomContainer>
         </Box>
       </WrapperContainer>
     </>
   );
 };
-export default Member;
+export default Member;  

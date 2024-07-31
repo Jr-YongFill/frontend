@@ -1,26 +1,25 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-import Member from './pages/Member';
-import Signin from './components/auth/Signin';
-import Signup from './components/auth/Signup';
-import ChoiceInterviewMode from './components/interview/ChoiceInterviewMode';
-import Interview from './components/interview/Interview';
-import InterviewChoiceStack from './components/interview/InterviewChoiceStack';
-import InterviewMain from './components/interview/InterviewMain';
-import InterviewNote from './components/interview/InterviewNote';
-import InterviewResult from './components/interview/InterviewResult';
-import PracticeChoiceStack from './components/interview/PracticeChoiceStack';
-import PracticeInterview from './components/interview/PracticeInterview';
-import PracticeInterviewMain from './components/interview/PracticeInterviewMain';
 import Home from './pages/Home';
-import Store from './pages/Store';
-import Vote from './pages/Vote';
+import Member from './pages/Member';
+import Signin from './pages/auth/Signin';
+import Signup from './pages/auth/Signup';
+import ChoiceInterviewMode from './pages/interview/ChoiceInterviewMode';
+import InterviewChoiceStack from './pages/interview/InterviewChoiceStack';
+import InterviewMain from './pages/interview/InterviewMain';
+import InterviewResult from './pages/interview/InterviewResult';
+import PracticeChoiceStack from './pages/interview/PracticeChoiceStack';
+import PracticeInterview from './pages/interview/PracticeInterview';
+import PracticeInterviewMain from './pages/interview/PracticeInterviewMain';
+import CommunityMain from './pages/community/CommunityMain';
+import CommunityInfo from './pages/community/CommunityInfo';
+import CommunityQNA from './pages/community/CommunityQNA';
 import UpdatePost from './pages/posts/UpdatePost';
 import WritePost from './pages/posts/WritePost';
-import CommunityMain from './pages/community/CommunityMain';
-import CommunityQNA from './pages/community/CommunityQNA';
-import CommunityInfo from './pages/community/CommunityInfo';
+import Store from './pages/Store';
+import Vote from './pages/Vote';
+import Interview from './pages/interview/Interview';
+import InterviewNote from './pages/interview/InterviewNote';
 import PostDetail from './pages/posts/PostDetail';
 
 function App() {
@@ -53,8 +52,8 @@ function App() {
           <Route path="/post/update" element={<UpdatePost/>}/>
           <Route path="/post/write" element={<WritePost/>}/>
           
-          <Route path="/store" element={<Store />} />
-          <Route path="/vote" element={<Vote />} />
+          <Route path="/store" element={<Store/>} />
+          <Route path="/vote" element={<Vote/>} />
         </Routes>
       </Router>
     </div>
