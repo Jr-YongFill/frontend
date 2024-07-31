@@ -115,17 +115,18 @@ const CommunityQNA = () => {
     return date.toISOString().split('T')[0]; // '2024-07-24' 형식으로 변환
   };
 
-  const fetchData = async () => {
-    const url = searchText ?
-      `/api/categories/QNA/posts?title=${searchText}&page=${currentPage}&size=10`
-      :
-      `/api/categories/QNA/posts?page=${currentPage}&size=10`;
-
-    const response = await baseAPI.get(url);
-    setData(response.data);
-  };
-
   useEffect(() => {
+
+    const fetchData = async () => {
+      const url = searchText ?
+        `/api/categories/QNA/posts?title=${searchText}&page=${currentPage}&size=10`
+        :
+        `/api/categories/QNA/posts?page=${currentPage}&size=10`;
+
+      const response = await baseAPI.get(url);
+      setData(response.data);
+    };
+
     fetchData();
   }, [currentPage, searchText]);
 
