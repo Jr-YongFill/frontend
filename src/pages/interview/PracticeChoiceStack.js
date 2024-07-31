@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../Header';
+import Header from '../../components/Header';
 import styled from "styled-components";
 import palette from "../../styles/pallete";
 import {baseAPI} from "../../config";
@@ -71,44 +71,42 @@ const ModalTextInput = styled.input`
 
 
 const PracticeChoiceStack = () => {
-
   const memberId = 1;
   const [stacks, setStacks] = useState([]);
   const [modalSwitch, setModalSwitch] = useState(false);
-
   const [apiKey, setApiKey] = useState("");
   const myModalTextBoxRef = useRef(null);
   const myModalBtnRef = useRef(null);
   const navigate = useNavigate();
 
-
   const fetchMemberStack = useCallback(async () => {
     try {
       const response = await baseAPI.get(`/api/members/${memberId}/stacks`);
-      setStacks(response.data.filter(stack => stack.isPurchase).map(stack => ({ ...stack, selected: false })));
+      setStacks(response.data.map(stack => ({ ...stack, selected: false })));
     } catch (error) {
       console.error("Failed to fetch stacks:", error);
     }
   }, [memberId]);
 
-
   useEffect(() => {
     fetchMemberStack();
   }, [fetchMemberStack]);
+
 
   return (
     <>
       <Header />
       <Title>
-        <h1>이력서에 어떤 스택으로 지원하셨나요?</h1>
-        <h3>잠긴 스택은 상점에서 구매가 필요합니다.</h3>
+          <h1>이력서에 어떤 스택으로 지원하셨나요?</h1>
+          <h3>잠긴 스택은 상점에서 구매가 필요합니다.</h3>
       </Title>
       <Main>
         <Content>
           {stacks && stacks.map((stack, idx) => {
             return <MyBtn
               key={idx}
-              color={stack.selected ? palette.blue : palette.skyblue}
+              color={stack.isPurchase ?
+                (stack.selected ? palette.blue : palette.skyblue) : palette.gray}
               onClick={() => {
                 if(stack.isPurchase) {
                   setStacks(stacks.map((s) =>
@@ -136,10 +134,10 @@ const PracticeChoiceStack = () => {
               background: `${palette.pink}`,
             }
           }}>
-          <ModalContent>
-            {
-              stacks.filter(stack => stack.selected).length ?
-                <>
+            <ModalContent>
+              {
+                stacks.filter(stack => stack.selected).length ?
+                  <>
                   <ModalTextBox>
                     <h2>모의 면접을 위해서는<br/>GPT API 키가 필요합니다.</h2>
                   </ModalTextBox>
@@ -157,7 +155,7 @@ const PracticeChoiceStack = () => {
                     onChange={(e) => setApiKey(e.target.value)}/>
                   <MyBtn
                     color={palette.skyblue}
-                    onClick={() => navigate('/interview', {
+                    onClick={() => navigate('/interview/practice', {
                       state: {
                         stackids: stacks.filter(stack => stack.selected).map(s => s.id),
                         apiKey: apiKey
@@ -165,21 +163,21 @@ const PracticeChoiceStack = () => {
                     })}>
                     면접 시작
                   </MyBtn>
-                </>
-                :
-                <>
-                  <ModalTextBox style={{ marginBottom: 400 }}>
-                    <h2>스택을 선택해주세요.</h2>
-                  </ModalTextBox>
-                  <MyBtn
-                    color={palette.skyblue}
-                    onClick={() => setModalSwitch(false)}>
-                    닫기
-                  </MyBtn>
-                </>
-            }
+                  </>
+                  :
+                  <>
+                    <ModalTextBox style={{ marginBottom: 400 }}>
+                      <h2>스택을 선택해주세요.</h2>
+                    </ModalTextBox>
+                    <MyBtn
+                      color={palette.skyblue}
+                      onClick={() => setModalSwitch(false)}>
+                      닫기
+                    </MyBtn>
+                  </>
+              }
 
-          </ModalContent>
+            </ModalContent>
         </Modal>
       </Main>
     </>

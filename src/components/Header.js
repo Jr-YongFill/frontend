@@ -1,7 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
+import { baseAPI } from '../config';
 
 const HeaderContainer = styled.header`
   top: 0;
@@ -19,6 +20,7 @@ const StyledLink = styled(Link)`
   color: var(--color);
   font-size: 18px;
   cursor: pointer;
+  margin-left: 15px;
 `;
 
 const HeaderGnb = styled.div`
@@ -47,14 +49,56 @@ const LogoutButton = styled.span`
   color: var(--color);
   font-size: 18px;
   cursor: pointer;
+  margin-left: 10px;
 `;
-
 const Header = ({ color }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [nickname, setNickname] = useState('');
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = localStorage.getItem('accessToken');
+      const memberId = localStorage.getItem('id');
+      setIsLoggedIn(!!token);
+      if (token) {
+        await getMemberInfo(token, memberId);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
+
+  const getMemberInfo = async (token, memberId) => {
+    try {
+      const response = await baseAPI.get(`/api/members/${memberId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setNickname(response.data.nickname);
+    } catch (error) {
+      alert(error.response.data.message);
+    }
+  };
+
+  const logoutHandle = async () => {
+    if (localStorage != null) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('tokenType');
+      localStorage.removeItem('id');
+      window.document.location= '/';
+    }
+  };
 
   const style = {
-    'background': color,
-    'color': 'black'
+    background: color,
+    color: 'black'
   };
+
 
   return (
     <HeaderContainer style={style}>
@@ -75,16 +119,18 @@ const Header = ({ color }) => {
         </GnbMenu>
       </HeaderGnb>
       <HeaderSign style={style}>
-        
-        <div>
-        <StyledLink to="/auth/sign-in">로그인</StyledLink>
-        <StyledLink to="/auth/sign-up">회원가입</StyledLink>
-        </div>
-        <div>
-          <span>닉네임</span>
-          <StyledLink to="/member">마이페이지</StyledLink>
-        </div>
-        
+        {isLoggedIn ? (
+          <div>
+            <span>{nickname}</span>
+            <StyledLink to="/member">마이페이지</StyledLink>
+            <LogoutButton onClick={logoutHandle}>로그아웃</LogoutButton>
+          </div>
+        ) : (
+          <div>
+            <StyledLink to="/auth/sign-in">로그인</StyledLink>
+            <StyledLink to="/auth/sign-up">회원가입</StyledLink>
+          </div>
+        )}
       </HeaderSign>
     </HeaderContainer>
   );

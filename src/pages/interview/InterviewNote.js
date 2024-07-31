@@ -18,8 +18,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import img from "../../assets/default.png";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
-import Header from '../Header';
-import CustomButton from "../CustomButton";
+import Header from '../../components/Header';
+import CustomButton from "../../components/CustomButton";
 import { palette } from "@mui/system";
 
 const TitleContainer = styled(Box)`
@@ -38,7 +38,7 @@ const CenteredBox = styled(Box)`
     align-items: center;
 `;
 
-const App = () => {
+const InterviewNote = () => {
   const [stacks, setStacks] = useState([]);
   const [selectedStack, setSelectedStack] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -233,4 +233,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default InterviewNote;
