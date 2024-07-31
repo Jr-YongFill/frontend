@@ -89,11 +89,12 @@ const Signin = () => {
     try {
       const response = await baseAPI.post('/api/auth/sign-in', userLogin);
 
-      const { id, accessToken, refreshToken, tokenType } = response.data;
+      const { id, accessToken, refreshToken, tokenType, role } = response.data;
       localStorage.setItem('id', id);
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('tokenType', tokenType);
+      localStorage.setItem('role', role);
 
       alert('로그인 성공');
       navigate('/');

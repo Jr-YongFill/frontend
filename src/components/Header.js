@@ -21,6 +21,7 @@ const StyledLink = styled(Link)`
   font-size: 18px;
   cursor: pointer;
   margin-left: 15px;
+  margin-left: 15px;
 `;
 
 const HeaderGnb = styled.div`
@@ -49,6 +50,7 @@ const LogoutButton = styled.span`
   color: var(--color);
   font-size: 18px;
   cursor: pointer;
+  margin-left: 10px;
   margin-left: 10px;
 `;
 const Header = ({ color }) => {
@@ -90,7 +92,8 @@ const Header = ({ color }) => {
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('tokenType');
       localStorage.removeItem('id');
-      window.document.location= '/';
+      localStorage.removeItem('role');
+      window.document.location = '/';
     }
   };
 
@@ -98,6 +101,7 @@ const Header = ({ color }) => {
     background: color,
     color: 'black'
   };
+
 
 
   return (
