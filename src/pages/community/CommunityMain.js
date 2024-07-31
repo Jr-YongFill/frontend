@@ -170,7 +170,7 @@ const CommunityMain = () => {
           <ContainerRow>
             <Container>
               <div
-                style={{ fontSize: 25, fontWeight: 'bold' }}
+                style={{ fontSize: 25, fontWeight: 'bold', cursor:'pointer'}}
                 onClick={navigateHandler("/community/qna")}>Q & A</div>
               <HighLight />
               <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>
@@ -187,7 +187,7 @@ const CommunityMain = () => {
             </Container>
             <Container>
               <div
-                style={{ fontSize: 25, fontWeight: 'bold' }}
+                style={{ fontSize: 25, fontWeight: 'bold' ,cursor:'pointer' }}
                 onClick={navigateHandler("/community/info")}>정보 공유</div>
               <HighLight />
               <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>

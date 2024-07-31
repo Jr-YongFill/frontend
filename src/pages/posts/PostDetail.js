@@ -6,6 +6,8 @@ import Wrapper from '../../components/Wrapper';
 import { baseAPI } from '../../config';
 import palette from '../../styles/pallete';
 import styled from 'styled-components';
+import EditorViewer from '../../components/posts/EditorViewer';
+import CustomButton from '../../components/CustomButton';
 
 /* data객체 정보 예시
 {
@@ -380,7 +382,7 @@ function PostDetail() {
             </div>
           </PageHeader>
           <Wrapper>
-            <Content>{data.content}</Content>
+            <EditorViewer contents={data.content}></EditorViewer>
           </Wrapper>
 
           {memberId && <LikeButton liked={data.liked} onClick={fetchLike}>
