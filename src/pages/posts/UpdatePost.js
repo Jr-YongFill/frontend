@@ -76,7 +76,7 @@ const UpdatePost = () => {
   const { data } = location.state;
   console.log(data);
 
-  const memberId = localStorage.getItem('id');
+  const postId = data.postId;
   const [dataValue, setDataValue] = useState({
     title: data.title,
     category: data.category,
@@ -126,7 +126,7 @@ const UpdatePost = () => {
         saveEvent: 'Y',
       }));
 
-      const response = await baseAPI.patch(`/api/posts/${memberId}`, dataValue);
+      const response = await baseAPI.patch(`/api/posts/${postId}`, dataValue);
       navigate(`/post/${response.data.postId}`);
     }
   };
@@ -184,7 +184,6 @@ const UpdatePost = () => {
           </EditorArea>
         </div>
       </Wrapper>
-      <EditorViewer contents={dataValue.content} />
     </div>
   );
 };

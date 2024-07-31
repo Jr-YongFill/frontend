@@ -234,6 +234,10 @@ function PostDetail() {
     setEditComment(content);
   };
 
+  const handleUpdate = () => {
+    navigate("/post/update", { state: { data } });
+  }
+
   const fetchDeletePost = async () => {
     try {
       await baseAPI.delete(`/api/posts/${id}`);
@@ -362,7 +366,7 @@ function PostDetail() {
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
                 <MyBtn
                   color={palette.skyblue}
-                  onClick={() => navigate(`/post/update/${id}`)}>
+                  onClick={handleUpdate}>
                   수정
                 </MyBtn>
                 <div>
