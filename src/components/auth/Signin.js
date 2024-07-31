@@ -7,16 +7,19 @@ import palette from '../../styles/pallete';
 import { baseAPI } from '../../config';
 
 const WrapperContainer = styled.div`
-    height: 50vh;
+    height: 100vh; 
     display: flex;
-    justify-content: center;
-    align-items: top;
-    margin-top: 50px;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    background-color: #f0f4ff;
 `;
 
 const FormContainer = styled.div`
-    width: 400px;
+    width: 50%;
+    height: 50%;
     padding: 40px;
+    margin-top: 50px;
     border: 1px solid ${palette.skyblue};
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -27,7 +30,7 @@ const Title = styled.h1`
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
-    color: ${palette.skyblue};
+    color: black;
 `;
 
 const Input = styled.input`
@@ -48,7 +51,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 100%;
     padding: 15px;
-    margin: 10px 0;
+    margin: 30px 0;
     background-color: ${palette.skyblue};
     color: white;
     border: none;
@@ -66,8 +69,8 @@ const Button = styled.button`
 const LinkStyled = styled.a`
     display: block;
     text-align: right;
-    margin: 10px 0;
-    color: ${palette.skyblue};
+    margin: 20px 0;
+    color: black;
     cursor: pointer;
     text-decoration: none;
 
