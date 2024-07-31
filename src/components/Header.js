@@ -21,6 +21,7 @@ const StyledLink = styled(Link)`
   font-size: 18px;
   cursor: pointer;
   margin-left: 15px;
+  margin-left: 15px;
 `;
 
 const HeaderGnb = styled.div`
@@ -50,39 +51,19 @@ const LogoutButton = styled.span`
   font-size: 18px;
   cursor: pointer;
   margin-left: 10px;
+  margin-left: 10px;
 `;
 const Header = ({ color }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [nickname, setNickname] = useState('');
-  const navigate = useNavigate();
-
+  const [nickName, setNickname] = useState('');
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
-      const token = localStorage.getItem('accessToken');
-      const memberId = localStorage.getItem('id');
-      setIsLoggedIn(!!token);
-      if (token) {
-        await getMemberInfo(token, memberId);
-      }
+    const checkLoginStatus = () => {
+      const nickName = localStorage.getItem('nickName');
+      setNickname(!!nickName);
     };
 
     checkLoginStatus();
   }, []);
-
-
-  const getMemberInfo = async (token, memberId) => {
-    try {
-      const response = await baseAPI.get(`/api/members/${memberId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setNickname(response.data.nickname);
-    } catch (error) {
-      alert(error.response.data.message);
-    }
-  };
 
   const logoutHandle = async () => {
     if (localStorage != null) {
@@ -90,7 +71,9 @@ const Header = ({ color }) => {
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('tokenType');
       localStorage.removeItem('id');
-      window.document.location= '/';
+      localStorage.removeItem('role');
+      localStorage.removeItem('nickName');
+      window.document.location = '/';
     }
   };
 
@@ -98,6 +81,7 @@ const Header = ({ color }) => {
     background: color,
     color: 'black'
   };
+
 
 
   return (
@@ -119,9 +103,9 @@ const Header = ({ color }) => {
         </GnbMenu>
       </HeaderGnb>
       <HeaderSign style={style}>
-        {isLoggedIn ? (
+        {nickName ? (
           <div>
-            <span>{nickname}</span>
+            <span>{localStorage.getItem('nickName')}</span>
             <StyledLink to="/member">마이페이지</StyledLink>
             <LogoutButton onClick={logoutHandle}>로그아웃</LogoutButton>
           </div>
