@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
@@ -7,6 +7,7 @@ import Header from "../../components/Header";
 import EditorBox from "../../components/posts/EditorBox";
 import EditorViewer from "../../components/posts/EditorViewer";
 import palette from "../../styles/pallete";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   display: flex;
@@ -71,18 +72,21 @@ const SubmitButton = styled.button`
 
 const WritePost = () => {
   const [dataValue, setDataValue] = useState({
-    brdTitle: "",
-    brdContents: "",
+    memberId:localStorage.getItem('id'),
+    title: "",
+    category:"정보게시판",
+    content: "",
     saveEvent: 'N',
   });
 
   const editorRef = useRef();
   const titleRef = useRef();
+  const navigate = useNavigate();
 
   const TitleReceive = (e) => {
     setDataValue((prevDataValue) => ({
       ...prevDataValue,
-      brdTitle: e.target.value,
+      title: e.target.value,
     }));
   };
 
@@ -91,28 +95,24 @@ const WritePost = () => {
       const data = editorRef.current.getInstance().getHTML();
       setDataValue((prevDataValue) => ({
         ...prevDataValue,
-        brdContents: data,
+        content: data,
       }));
     }
   };
+
 
   const onUploadImage = async (blob, callback) => {
     let formData = new FormData();
     formData.append("file", blob);
 
-    const url = await baseAPI.post('/api/upload', formData)
-      .then((res) => {
-        return res.data.url;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const url = await baseAPI.post('/api/upload/post', formData)
+        .then((res)=>res.data)
 
     callback(url, 'alt text');
     return false;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let error = validate(dataValue);
 
     if (Object.keys(error).length === 0) {
@@ -120,8 +120,13 @@ const WritePost = () => {
         ...prevDataValue,
         saveEvent: 'Y',
       }));
-      // 여기서 서버로 전송하는 로직을 추가합니다.
+
+      const response = await baseAPI.post("/api/posts", dataValue);
+        navigate(`/post/${response.data.postId}`)
     }
+    
+    
+
   };
 
   const stripHtmlTags = (str) => {
@@ -130,16 +135,16 @@ const WritePost = () => {
 
   const validate = (dataValue) => {
     let error = {};
-    const strippedTitle = stripHtmlTags(dataValue.brdTitle);
-    const strippedContents = stripHtmlTags(dataValue.brdContents);
+    const strippedTitle = stripHtmlTags(dataValue.title);
+    const strippedContents = stripHtmlTags(dataValue.content);
 
     if (!strippedTitle) {
-      error.brdTitle = "제목을 입력하세요.";
+      error.title = "제목을 입력하세요.";
       alert('제목을 입력하세요.');
     }
 
     if (!strippedContents) {
-      error.brdContents = "내용을 입력 하세요.";
+      error.content = "내용을 입력 하세요.";
       alert('내용을 입력 하세요.');
     }
 
@@ -176,7 +181,7 @@ const WritePost = () => {
           </EditorArea>
         </div>
       </Wrapper>
-      <EditorViewer contents={dataValue.brdContents} />
+      <EditorViewer contents={dataValue.content} />
     </div>
   );
 };

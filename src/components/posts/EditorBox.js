@@ -22,6 +22,7 @@ const EditorBox = forwardRef((props, ref) => {
   return (
     <div className="edit_wrap">
       <Editor
+        initialValue={props.initialValue ?? ''}
         placeholder="내용을 적어주세요!"
         previewStyle="vertical"
         height="600px"
