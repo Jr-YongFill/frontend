@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import CustomLi from '../../components/CustomLi';
 import CustomButton from '../../components/CustomButton';
 import { baseAPI } from '../../config';
-
-const Wrapper = styled.div`
-  display: flex;
-  margin: 10px;
-  justify-content: center;
-  align-content: center;  
-`;
+import Wrapper from '../../components/Wrapper';
 
 const ContainerWrapper = styled.div`
   display: flex;
@@ -51,6 +45,15 @@ const SubContainer = styled.div`
   align-items: center;
   text-align: center;
   margin-left: -4vw;
+`;
+
+
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: var(--color);
+  font-size: 1.5rem;
+  cursor: pointer;
 `;
 
 const CommunityMain = () => {
@@ -159,7 +162,19 @@ const CommunityMain = () => {
           <ContainerRow>
           {data.map((category, categoryIndex) => (
             <Container key={categoryIndex}>
-              <div style={{ fontSize: 25, fontWeight: 'bold' }}>{category.category}</div>
+              <div style={{ fontSize: 25, fontWeight: 'bold' }}>
+                {
+                    category.category == "정보게시판"?(
+                    <StyledLink to={"/community/info"}>
+                      {category.category}
+                    </StyledLink>
+                  ):(
+                    <StyledLink to={"/community/QNA"}>
+                      {category.category}
+                    </StyledLink>
+                  )
+                }
+              </div>
               <HighLight />
               <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>
                 {

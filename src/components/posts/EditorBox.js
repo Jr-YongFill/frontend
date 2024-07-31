@@ -1,31 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { forwardRef } from 'react';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
-import { baseAPI } from '../../config';
 
-function EditorBox() {
-  const editorRef = useRef();
-  const [images, setImages] = useState([]);
+const EditorBox = forwardRef((props, ref) => {
   const onChange = () => {
-    const data = editorRef.current.getInstance().getHTML();
-    console.log(data);
+    const data = ref.current.getInstance().getHTML();
+    props.onChange(data); // 부모 컴포넌트의 onChange 호출
   };
 
   const onUploadImage = async (blob, callback) => {
-    // let formData = new FormData();
-    // formData.append("file", blob);
-    try {
-      // const response = await baseAPI.post('/api/upload?mode=post', formData)
-      // const url = response.data;
-      
-      console.log(blob);
+    let formData = new FormData();
+    formData.append("file", blob);
 
-      // callback(url, 'alt text');
-    } catch (error) {
-      console.error("Image upload failed", error);
-    }
+    const url = await props.onUploadImage(blob, callback);
+    callback(url, 'alt text');
+    return false;
   };
 
   return (
@@ -37,7 +28,7 @@ function EditorBox() {
         initialEditType="wysiwyg"
         useCommandShortcut={true}
         language="ko-KR"
-        ref={editorRef}
+        ref={ref}
         onChange={onChange}
         plugins={[colorSyntax]}
         hooks={{
@@ -46,6 +37,6 @@ function EditorBox() {
       />
     </div>
   );
-}
+});
 
 export default EditorBox;
