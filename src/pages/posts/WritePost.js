@@ -2,12 +2,12 @@ import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
-import { baseAPI } from "../../config";
 import Header from "../../components/Header";
 import EditorBox from "../../components/posts/EditorBox";
 import EditorViewer from "../../components/posts/EditorViewer";
 import palette from "../../styles/pallete";
 import { useNavigate } from "react-router-dom";
+import { baseAPI } from "../../config";
 
 const Wrapper = styled.div`
   display: flex;
@@ -71,10 +71,11 @@ const SubmitButton = styled.button`
 `;
 
 const WritePost = () => {
+  const [blobs, setBlobs] = useState([]);
   const [dataValue, setDataValue] = useState({
-    memberId:localStorage.getItem('id'),
+    memberId: localStorage.getItem('id'),
     title: "",
-    category:"정보게시판",
+    category: "정보게시판",
     content: "",
     saveEvent: 'N',
   });
@@ -97,18 +98,23 @@ const WritePost = () => {
         ...prevDataValue,
         content: data,
       }));
+      console.log(data);
     }
   };
-
 
   const onUploadImage = async (blob, callback) => {
     let formData = new FormData();
     formData.append("file", blob);
 
-    const url = await baseAPI.post('/api/upload/post', formData)
-        .then((res)=>res.data)
+    try {
+      const url = await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
+      setBlobs((prevBlobs) => [...prevBlobs, blob]);
+      callback(url, 'alt text');
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      // 에러 처리 추가
+    }
 
-    callback(url, 'alt text');
     return false;
   };
 
@@ -121,12 +127,23 @@ const WritePost = () => {
         saveEvent: 'Y',
       }));
 
-      const response = await baseAPI.post("/api/posts", dataValue);
-        navigate(`/post/${response.data.postId}`)
-    }
-    
-    
+      try {
+        const postId = await baseAPI.post("/api/posts", dataValue).then(res => res.data.postId);
 
+        // 실제 저장 용
+        await Promise.all(blobs.map(blob => {
+          let formData = new FormData();
+          formData.append("postId", postId);
+          formData.append("file", blob);
+          return baseAPI.post("/api/upload/post", formData);
+        }));
+
+        navigate(`/post/${postId}`);
+      } catch (error) {
+        console.error("Post submission failed:", error);
+        // 에러 처리 추가
+      }
+    }
   };
 
   const stripHtmlTags = (str) => {

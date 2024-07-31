@@ -1,186 +1,43 @@
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
-import '@toast-ui/editor/dist/toastui-editor.css';
+import React, { forwardRef } from 'react';
+import { Editor } from '@toast-ui/react-editor';
+import '@toast-ui/editor/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
-import { baseAPI } from "../../config";
-import Header from "../../components/Header";
-import EditorBox from "../../components/posts/EditorBox";
-import EditorViewer from "../../components/posts/EditorViewer";
-import palette from "../../styles/pallete";
-import { useNavigate } from "react-router-dom";
+import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 
-const Wrapper = styled.div`
-  display: flex;
-  margin: 10px;
-  justify-content: center;
-  align-content: center;  
-`;
-
-const TitleInput = styled.input`
-  border: none;
-  background: transparent;
-  box-sizing: border-box;
-  width: 100%;
-  overflow: hidden;
-  font-size: 20px;
-  &:focus {
-    outline: none;
-  }
-  &::placeholder {
-    color: #767676;
-  }
-`;
-
-const InputWrapper = styled.div`
-  background: whitesmoke;
-  padding: 10px;
-  border-radius: 10px;
-`;
-
-const TitleWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 1vw;
-`;
-
-const EditorArea = styled.div`
-  padding: 0px 10px 40px;
-  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
-    min-height: 600px;
-    margin-bottom: 30px;
-  }
-  .ck.ck-toolbar.ck-toolbar_grouping {
-    width: 100%;
-  }
-  .ck-editor__editable_inline {
-    width: 100%;
-  }
-`;
-
-const SubmitButton = styled.button`
-  background: ${palette.skyblue};
-  width: 150px;
-  height: 60px;
-  border-style: none;
-  border-radius: 20px;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  margin: 30px 0px;
-  cursor: pointer;
-`;
-
-const WritePost = () => {
-  const [dataValue, setDataValue] = useState({
-    title: "",
-    category: "정보게시판",
-    content: "",
-    saveEvent: 'N',
-  });
-
-  const editorRef = useRef();
-  const titleRef = useRef();
-  const navigate = useNavigate();
-
-  const TitleReceive = (e) => {
-    setDataValue((prevDataValue) => ({
-      ...prevDataValue,
-      title: e.target.value,
-    }));
-  };
-
+const EditorBox = forwardRef((props, ref) => {
   const onChange = () => {
-    if (editorRef.current) {
-      const data = editorRef.current.getInstance().getHTML();
-      setDataValue((prevDataValue) => ({
-        ...prevDataValue,
-        content: data,
-      }));
-    }
+    const data = ref.current.getInstance().getHTML();
+    props.onChange(data); // 부모 컴포넌트의 onChange 호출
   };
 
   const onUploadImage = async (blob, callback) => {
     let formData = new FormData();
     formData.append("file", blob);
-    
-    const url = await baseAPI.post('/api/upload/post', formData)
-      .then((res) => res.data);
-    
-    
-    
+
+    const url = await props.onUploadImage(blob, callback);
     callback(url, 'alt text');
     return false;
   };
 
-  const handleSubmit = async () => {
-    let error = validate(dataValue);
-
-    if (Object.keys(error).length === 0) {
-      setDataValue((prevDataValue) => ({
-        ...prevDataValue,
-        saveEvent: 'Y',
-      }));
-
-      const response = await baseAPI.post("/api/posts", dataValue);
-      navigate(`/post/${response.data.postId}`);
-    }
-  };
-
-  const stripHtmlTags = (str) => {
-    return str.replace(/<\/?[^>]+(>|$)/g, "");
-  };
-
-  const validate = (dataValue) => {
-    let error = {};
-    const strippedTitle = stripHtmlTags(dataValue.title);
-    const strippedContents = stripHtmlTags(dataValue.content);
-
-    if (!strippedTitle) {
-      error.title = "제목을 입력하세요.";
-      alert('제목을 입력하세요.');
-    }
-
-    if (!strippedContents) {
-      error.content = "내용을 입력 하세요.";
-      alert('내용을 입력 하세요.');
-    }
-
-    return error;
-  };
-
   return (
-    <div>
-      <Header />
-      <Wrapper>
-        <div>
-          <TitleWrapper>
-            <h1>정보게시판</h1>
-            <h3>제목</h3>
-            <InputWrapper>
-              <TitleInput
-                type="text"
-                placeholder="제목을 작성해주세요"
-                onChange={TitleReceive}
-                ref={titleRef}
-              />
-            </InputWrapper>
-          </TitleWrapper>
-          <TitleWrapper>
-            <h3>내용</h3>
-          </TitleWrapper>
-          <EditorArea>
-            <EditorBox ref={editorRef} onChange={onChange} onUploadImage={onUploadImage} />
-            <div style={{ display: "flex", justifyContent: "end" }}>
-              <SubmitButton onClick={handleSubmit}>
-                저장
-              </SubmitButton>
-            </div>
-          </EditorArea>
-        </div>
-      </Wrapper>
-      <EditorViewer contents={dataValue.content} />
+    <div className="edit_wrap">
+      <Editor
+        initialValue={props.initialValue ?? ''}
+        placeholder="내용을 적어주세요!"
+        previewStyle="vertical"
+        height="600px"
+        initialEditType="wysiwyg"
+        useCommandShortcut={true}
+        language="ko-KR"
+        ref={ref}
+        onChange={onChange}
+        plugins={[colorSyntax]}
+        hooks={{
+          addImageBlobHook: onUploadImage
+        }}
+      />
     </div>
   );
-};
+});
 
-export default WritePost;
+export default EditorBox;
