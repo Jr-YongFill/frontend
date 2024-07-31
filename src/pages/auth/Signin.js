@@ -1,25 +1,22 @@
 //작성자 bbmini96
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../Header';
 import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { baseAPI } from '../../config';
+import Header from '../../components/Header';
 
 const WrapperContainer = styled.div`
-    height: 100vh; 
+    height: 50vh;
     display: flex;
-    flex-direction: column;
-    justify-content: top;
-    align-items: center;
-    background-color: #f0f4ff;
+    justify-content: center;
+    align-items: top;
+    margin-top: 50px;
 `;
 
 const FormContainer = styled.div`
-    width: 50%;
-    height: 50%;
+    width: 400px;
     padding: 40px;
-    margin-top: 50px;
     border: 1px solid ${palette.skyblue};
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -30,7 +27,7 @@ const Title = styled.h1`
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
-    color: black;
+    color: ${palette.skyblue};
 `;
 
 const Input = styled.input`
@@ -51,7 +48,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 100%;
     padding: 15px;
-    margin: 30px 0;
+    margin: 10px 0;
     background-color: ${palette.skyblue};
     color: white;
     border: none;
@@ -69,8 +66,8 @@ const Button = styled.button`
 const LinkStyled = styled.a`
     display: block;
     text-align: right;
-    margin: 20px 0;
-    color: black;
+    margin: 10px 0;
+    color: ${palette.skyblue};
     cursor: pointer;
     text-decoration: none;
 

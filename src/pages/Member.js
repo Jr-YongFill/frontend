@@ -8,21 +8,24 @@ import palette from '../styles/pallete';
 import { baseAPI } from '../config';
 
 const WrapperContainer = styled.div`
-    height: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f0f4f8;
+    background-color: #f0f4ff;
     padding: 20px;
+    box-sizing: border-box;
 `;
 
 const Box = styled.div`
-    width: 80%;
+    width: 90%;
     background-color: white;
-    padding: 50px;
+    padding: 30px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 `;
 
 const Title = styled.h2`
@@ -30,18 +33,39 @@ const Title = styled.h2`
     margin: 0;
 `;
 
-const TitleHeader = styled.div`
+const TopContainer = styled.div`
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    margin-bottom: 20px;
+    align-items: center;
 `;
 
 const Line = styled.hr`
     width: 100%;
     border: 5px solid ${palette.skyblue};
     border-radius: 30px;
-    margin: 0;
+    margin: 20px 0;
+`;
+
+const MiddelContainer = styled.div`
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    margin-bottom: 20px;
+`;
+
+const ImageContainer = styled.div`
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+`;
+
+const ProfileImage = styled.img`
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    cursor: pointer;
 `;
 
 const Button = styled.button`
@@ -49,50 +73,33 @@ const Button = styled.button`
     background-color: ${palette.skyblue};
     border: none;
     border-radius: 20px;
-    padding: 10px 20px;
+    padding: 10px 30px;
     cursor: pointer;
 `;
-
-const ImageContainer = styled.div`
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-`;
-
-const ProfileImage = styled.img`
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    margin: 20px 0;
-    cursor: pointer;
+const StyledButton = styled(Button)`
+    white-space: nowrap;
+    width: auto; 
+    margin-left:10px;
 `;
 
 const ButtonContainer = styled.div`
-    width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
 `;
 
 const FileInput = styled.input`
     width: 50%;
-    margin: 10px 0;
     padding: 10px;
 `;
 
-const ImageUpdateButton = styled.button`
-    width: 50%;
-    color: white;
-    background-color: ${palette.skyblue};
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-    margin-left: auto;
+const ImageUpdateButton = styled(Button)`
+    width: 45%;
 `;
 
 const Input = styled.input`
-    margin: 10px 10px 10px 0px;
+    margin: 10px 0;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -104,121 +111,78 @@ const MemberUpdateContainer = styled.div`
     width: 55%;
     display: flex;
     flex-direction: column;
-    margin-top: auto;
-    margin-left: auto;
+    gap: 20px;
 `;
 
 const NicknameContainer = styled.div`
-    margin-bottom: 20px;
-    box-sizing: border-box;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
 `;
+
 const NicknameInput = styled.div`
     display: flex;
     align-items: center;
 `;
 
-const NicknameLabel = styled.label`
-    margin-bottom: 5px;
-    font-weight: bold;
+const PasswordContainer = styled(NicknameContainer)`
+    margin-top: 20px;
 `;
-const PasswordContainer = styled.div`
-    margin-bottom: 20px;
-    box-sizing: border-box;
+const PasswordButtonContainer = styled.div`
     display: flex;
-    flex-direction: column;
-`;
-const PasswordLabel = styled.label`
-    margin-bottom: 5px;
-    font-weight: bold;
-`;
-const CommunityContainer = styled.div`
+    justify-content: flex-end;
     width: 100%;
-    max-width: 850px;
-    background-color: white;
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-top: 20px;
+`;
+
+const PostContainer = styled.div`
     display: flex;
+    width: 100%;
+    gap: 20px;
 `;
 
 const AnswerNoteBox = styled.div`
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    width: 50%;
-    height: 100%;
+    background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 `;
 
 const PostAndCommentBox = styled.div`
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    width: 50%;
-    hight: 100%
+    gap: 20px;
 `;
 
-const PostBox = styled.div`
-    width: 100%;
-    height: 50%;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-`;
+const PostBox = styled(AnswerNoteBox)``;
 
-const CommentBox = styled.div`
-    width: 100%;
-    height: 50%;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-`;
-
-const List = styled.ul`
-    list-style-type: none;
-    padding: 10px;
-    margin: 10px;
-`;
-
-const ListLi = styled.li`
-    margin: 10px 0;
-`;
-
-const ContainerLi = styled.li`
-  display: flex;
-  justify-content: space-between;
-  margin: 5px 0;
-  list-style: none;
-  padding:3px 0px;
-  cursor:pointer;
-`
+const CommentBox = styled(PostBox)``;
 
 const Member = () => {
-  const [profileImage, setProfileImage] = useState(defaultImage);
+  const [profileImage, setProfileImage] = useState(null);
   const [nickName, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
   const [memberId, setMemberId] = useState(null);
-  const [filePath, setFilePath] = useState('');
-  const [fileName, setFileName] = useState('');
-  const [fileSize, setFileSize] = useState(0);
+  const [file, setFile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const memberId = localStorage.getItem('id');
-    setMemberId(memberId);
+    const fetchMemberData = async () => {
+      try {
+        const memberId = localStorage.getItem('id');
+        setMemberId(memberId);
+        const response = await baseAPI.get(`/api/members/${memberId}`);
+        setProfileImage(response.data.filePath);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchMemberData();
   }, []);
 
   const deleteHandle = async (event) => {
@@ -245,16 +209,14 @@ const Member = () => {
   };
 
   const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
+    const fileInfo = event.target.files[0];
+    if (fileInfo) {
+      setFile(fileInfo);
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result);
-        setFilePath(URL.createObjectURL(file));
-        setFileName(file.name);
-        setFileSize(file.size);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(fileInfo);
     }
   };
 
@@ -287,19 +249,18 @@ const Member = () => {
 
   const UpdateImageHandle = async (event) => {
     event.preventDefault();
+
     try {
       const formData = new FormData();
       formData.append('nickname', nickName);
-      formData.append('file_path', filePath);
-      formData.append('attachment_file_name', fileName);
-      formData.append('attachment_file_size', fileSize);
+      formData.append('file', file);
 
       await baseAPI.patch(`/api/members/${memberId}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
       alert("프로필 수정 성공");
-      window.document.location= '/member';
+      window.location.reload();
     } catch (error) {
       alert("프로필 이미지 수정 실패: " + error.response.data.message);
     }
@@ -310,15 +271,15 @@ const Member = () => {
       <Header />
       <WrapperContainer>
         <Box>
-          <TitleHeader>
+          <TopContainer>
             <Title>마이페이지</Title>
             <Button onClick={deleteHandle}>탈퇴하기</Button>
-          </TitleHeader>
+          </TopContainer>
           <Line />
 
-          <div style={{ display: 'flex' }}>
+          <MiddelContainer>
             <ImageContainer>
-              <ProfileImage src={profileImage} alt="Profile 선택" />
+              <ProfileImage src= {profileImage} alt="Profile 선택" />
               <ButtonContainer>
                 <FileInput type="file" accept="image/*" onChange={handleImageChange} />
                 <ImageUpdateButton onClick={UpdateImageHandle}>수정하기</ImageUpdateButton>
@@ -327,19 +288,19 @@ const Member = () => {
 
             <MemberUpdateContainer>
               <NicknameContainer>
-                <NicknameLabel>닉네임 변경</NicknameLabel>
+                <Title>닉네임 변경</Title>
                 <NicknameInput>
                   <Input
                     type="text"
-                    style={{ width: '80%' }}
                     value={nickName}
+                    placeholder="nickName"
                     onChange={handleNameChange}
                   />
-                  <Button onClick={UpdateImageHandle} style={{ width: '20%' }}>수정하기</Button>
+                  <StyledButton onClick={UpdateImageHandle}>수정하기</StyledButton>
                 </NicknameInput>
               </NicknameContainer>
               <PasswordContainer>
-                <PasswordLabel>비밀번호 변경</PasswordLabel>
+                <Title>비밀번호 변경</Title>
                 <Input
                   type="password"
                   placeholder="새 비밀번호"
@@ -352,47 +313,46 @@ const Member = () => {
                   value={checkPassword}
                   onChange={handleCheckPasswordChange}
                 />
-                <ButtonContainer>
+              <PasswordButtonContainer>
                   <Button onClick={UpdatePasswordHandle}>변경하기</Button>
-                </ButtonContainer>
+                </PasswordButtonContainer>
               </PasswordContainer>
             </MemberUpdateContainer>
-          </div>
+          </MiddelContainer>
+
+          <PostContainer>
+            <AnswerNoteBox>
+              <Title>내 오답노트</Title>
+              <ul>
+                <li>게시글</li>
+                <li>게시글</li>
+                <li>게시글</li>
+                <li>게시글</li>
+                <li>게시글</li>
+              </ul>
+            </AnswerNoteBox>
+
+            <PostAndCommentBox>
+              <PostBox>
+                <Title>내가 쓴 글</Title>
+                <ul>
+                  <li>게시글</li>
+                  <li>게시글</li>
+                  <li>게시글</li>
+                </ul>
+              </PostBox>
+
+              <CommentBox>
+                <Title>내가 쓴 댓글</Title>
+                <ul>
+                  <li>게시글</li>
+                  <li>게시글</li>
+                  <li>게시글</li>
+                </ul>
+              </CommentBox>
+            </PostAndCommentBox>
+          </PostContainer>
         </Box>
-
-        <CommunityContainer>
-          <AnswerNoteBox>
-            <Title>내 오답노트</Title>
-            <List>
-              <ListLi>오답노트</ListLi>
-              <ListLi>오답노트</ListLi>
-              <ListLi>오답노트</ListLi>
-              <ListLi>오답노트</ListLi>
-            </List>
-          </AnswerNoteBox>
-
-          <PostAndCommentBox>
-            <PostBox>
-              <Title>내가 쓴 글</Title>
-              <List>
-                <ListLi>게시글</ListLi>
-                <ListLi>게시글</ListLi>
-                <ListLi>게시글</ListLi>
-                <ListLi>게시글</ListLi>
-              </List>
-            </PostBox>
-
-            <CommentBox>
-              <Title>내가 쓴 댓글</Title>
-              <List>
-                <ListLi>댓글</ListLi>
-                <ListLi>댓글</ListLi>
-                <ListLi>댓글</ListLi>
-                <ListLi>댓글</ListLi>
-              </List>
-            </CommentBox>
-          </PostAndCommentBox>
-        </CommunityContainer>
       </WrapperContainer>
     </>
   );
