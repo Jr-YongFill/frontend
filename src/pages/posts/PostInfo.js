@@ -72,7 +72,7 @@ const SubmitButton = styled.button`
 `;
 
 const PostQNA = () => {
-  const [blobs, setBlobs] = useState([]);
+  const [imageDatas, setimageDatas] = useState([]);
   const [dataValue, setDataValue] = useState({
     memberId: localStorageGetValue('member-id'),
     title: "",
@@ -108,12 +108,17 @@ const PostQNA = () => {
     formData.append("file", blob);
     try {
         // 
+        const fileName = await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
         const url = process.env.REACT_APP_BUCKET_URL
         +"temp/"
-        + await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
+        + fileName;
 
         // 업로드된 블롭을 상태에 추가
-        setBlobs((prevBlobs) => [...prevBlobs, blob]);
+        setimageDatas((prevImageData) => 
+          [...prevImageData,
+           {"file":blob,
+            "fileName":fileName
+           }]);
 
         // 콜백 함수 호출하여 URL을 에디터에 전달
         callback(url, 'alt text');
@@ -126,38 +131,52 @@ const PostQNA = () => {
 };
 
 
-  const handleSubmit = async () => {
-    let error = validate(dataValue);
+const handleSubmit = async () => {
+  let error = validate(dataValue);
+  const replacedContent = replaceTempContent(dataValue.content);
 
-    if (Object.keys(error).length === 0) {
-      setDataValue((prevDataValue) => ({
-        ...prevDataValue,
-        saveEvent: 'Y',
+  if (Object.keys(error).length === 0) {
+    const updatedDataValue = {
+      ...dataValue,
+      content: replacedContent,
+      saveEvent: 'Y',
+    };
+
+    try {
+      console.log("이미지 링크 바뀌었니?!");
+      console.log(updatedDataValue.content);
+
+      const postId = await baseAPI.post("/api/posts", updatedDataValue).then(res => res.data.postId);
+
+      // 실제 저장 용
+      await Promise.all(imageDatas.map(imageData => {
+        let formData = new FormData();
+        formData.append("postId", postId);
+        formData.append("file", imageData.file);
+        formData.append("fileName", imageData.fileName);
+
+        console.log(imageData.fileName);
+        baseAPI.post("/api/upload/post", formData);
       }));
 
-      try {
-        const postId = await baseAPI.post("/api/posts", dataValue).then(res => res.data.postId);
-
-        // 실제 저장 용
-        await Promise.all(blobs.map(blob => {
-          let formData = new FormData();
-          formData.append("postId", postId);
-          formData.append("file", blob);
-          formData.append("fileName", blob.fileName);
-          baseAPI.post("/api/upload/post", formData);
-        }));
-
-        navigate(`/post/${postId}`);
-      } catch (error) {
-        console.error("Post submission failed:", error);
-        // 에러 처리 추가
-      }
+      navigate(`/post/${postId}`);
+    } catch (error) {
+      console.error("Post submission failed:", error);
+      // 에러 처리 추가
     }
-  };
+  }
+};
 
   const stripHtmlTags = (str) => {
     return str.replace(/<\/?[^>]+(>|$)/g, "");
   };
+  
+  const replaceTempContent = (str) => {
+    const tempUrlPattern = /\/temp\//g;
+    const postUrlPattern = '/post/';
+    return str.replace(tempUrlPattern, postUrlPattern);
+
+  }
 
   const validate = (dataValue) => {
     let error = {};
