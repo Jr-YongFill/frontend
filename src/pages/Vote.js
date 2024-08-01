@@ -6,6 +6,8 @@ import palette from '../styles/pallete';
 import Modal from 'react-modal';
 import img from '../assets/default.png';
 import Header from '../components/Header';
+import { RemoveModal } from '../components/modal/RemoveModal';
+import { localStorageGetValue } from '../utils/cryptoUtils';
 
 const Title = styled.div`
   display: flex;
@@ -35,8 +37,8 @@ const MainBody = styled.div`
 
 const QuestionInfoBox = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  justify-content: center;
   border: solid;
   border-radius: 20px;
   background-color: white;
@@ -63,6 +65,31 @@ const VoteBox = styled.div`
   font-size: 20px;
   font-weight: bold;
   cursor: ${(props) => (props.hover ? 'pointer' : 'default')};
+  
+  ${(props) =>
+    props.hover &&
+    css`
+      &:hover {
+        background-color: ${palette.skyblue};
+        color: white;
+      }
+    `}
+`;
+
+const StackBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid;
+  border-radius: 20px;
+  background-color: ${(props) => (props.selected ? palette.skyblue : 'white')};
+  border-color: ${(props) => props.color};
+  width: 200px;
+  height: 80px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: ${(props) => (props.hover ? 'pointer' : 'default')};
+  color: ${(props) => (props.selected ? 'white' : 'black')};
   
   ${(props) =>
     props.hover &&
@@ -115,17 +142,52 @@ const PageButton = styled.button`
 const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+ 	align-items: center;
   padding: 20px;
+`;
+
+const MySmallBtn = styled.button`
+  background-color: ${(props) => props.color};
+  border: none;
+  width: 150px;
+  height: 80px;
+  border-radius: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  margin-top: 30px;
+`;
+
+const ModalStackBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 `;
 
 const Vote = () => {
   const navigate = useNavigate();
+  const memberRole = localStorageGetValue('member-role');
   const [voteInfos, setVoteInfos] = useState(null);
   const [stackInfos, setStackInfos] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newQuestion, setNewQuestion] = useState('');
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [deleteQuestionId, setDeleteQuestionId] = useState(0);
+  const [isInsertStackModalOpen, setIsInsertStackModalOpen] = useState(false);
+  const [insertStackQuestion, setInsertStackQuestion] = useState(null);
+  const [selectedStack, setSelectedStack] = useState(null); // Add state to track selected stack
+
+  const fetchInsertStackQuestion = async (questionId) => {
+    if (!selectedStack) {
+      setIsInsertStackModalOpen(false);
+      return;
+    }
+    await baseAPI.patch(`/api/admin/questions/${questionId}`, {
+      stackId: selectedStack
+    });
+    setIsInsertStackModalOpen(false);
+    window.location.reload();
+  }
 
   const getRatio = (vote, stack) => {
     let sum = 0;
@@ -137,7 +199,7 @@ const Vote = () => {
       }
     }
 
-    return (stackVoteCount / sum) * 100;
+    return sum === 0 ? 0 : Math.round((stackVoteCount / sum) * 100);
   };
 
   const fetchCreateQuestion = async () => {
@@ -164,6 +226,11 @@ const Vote = () => {
     setStackInfos(response.data.stackInfoDtos);
   };
 
+  const fetchDeleteQuestion = async () => {
+    await baseAPI.delete(`/api/admin/questions/${deleteQuestionId}`);
+    fetchVoteInfos();
+  }
+
   const fetchVote = async (questionId, stackId) => {
     await baseAPI.post(`/api/questions/${questionId}/votes`, {
       stackId: stackId
@@ -177,7 +244,6 @@ const Vote = () => {
       setVoteInfos(response.data.pageResponseDTO);
       setStackInfos(response.data.stackInfoDtos);
     };
-
 
     fetchVoteInfos();
   }, [currentPage]);
@@ -211,42 +277,65 @@ const Vote = () => {
         </MainHeader>
         <MainBody>
           {voteInfos &&
-            voteInfos.resultList.map((vote, idx) => (
-              <QuestionInfoBox key={idx}>
-                <div
-                  style={{
-                    marginTop: '50px',
-                    marginBottom: '50px',
-                    fontSize: '35px',
-                  }}
-                >
-                  Q. {vote.question}
-                </div>
-                <VoteInfoBox>
-                  {vote.stackDtos &&
-                    vote.stackDtos.map((stack, idx) => (
-                      <div key={idx} style={{ margin: '20px' }}>
-                        {vote.myVoteStackId > 0 ? (
-                          <div style={{ fontSize: '25px' }}>
-                            ({getRatio(vote.stackDtos, stack)}%)
+            voteInfos.resultList.map((vote, idx) => {
+              return (
+                <QuestionInfoBox key={idx}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div
+                      style={{
+                        marginTop: '50px',
+                        marginBottom: '50px',
+                        fontSize: '35px',
+                      }}
+                    >
+                      Q. {vote.question}
+                    </div>
+                    <VoteInfoBox>
+                      {vote.stackDtos &&
+                        vote.stackDtos.map((stack, idx) => (
+                          <div key={idx} style={{ margin: '20px' }}>
+                            {vote.myVoteStackId > 0 ? (
+                              <div style={{ fontSize: '25px' }}>
+                                ({getRatio(vote.stackDtos, stack)}%)
+                              </div>
+                            ) : null}
+                            <VoteBox
+                              color={(vote.myVoteStackId === 0 || vote.myVoteStackId === stack.stackId ? palette.skyblue : palette.gray)}
+                              hover={vote.myVoteStackId === 0}
+                              onClick={
+                                vote.myVoteStackId === 0
+                                  ? () => fetchVote(vote.questionId, stack.stackId)
+                                  : null
+                              }
+                            >
+                              {findStack(stack.stackId)}
+                            </VoteBox>
                           </div>
-                        ) : null}
-                        <VoteBox
-                          color={(vote.myVoteStackId === 0 || vote.myVoteStackId === stack.stackId ? palette.skyblue : palette.gray)}
-                          hover={vote.myVoteStackId === 0}
-                          onClick={
-                            vote.myVoteStackId === 0
-                              ? () => fetchVote(vote.questionId, stack.stackId)
-                              : null
-                          }
-                        >
-                          {findStack(stack.stackId)}
-                        </VoteBox>
-                      </div>
-                    ))}
-                </VoteInfoBox>
-              </QuestionInfoBox>
-            ))}
+                        ))}
+                    </VoteInfoBox>
+                  </div>
+                  {memberRole === 'ADMIN' && <div
+                    style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <MySmallBtn
+                      color={palette.skyblue}
+                      onClick={() => {
+                        setInsertStackQuestion(vote);
+                        setIsInsertStackModalOpen(true);
+                      }}>
+                      등록
+                    </MySmallBtn>
+                    <MySmallBtn
+                      color={palette.skyblue}
+                      onClick={() => {
+                        setDeleteQuestionId(vote.questionId);
+                        setIsRemoveModalOpen(true);
+                      }}>
+                      삭제
+                    </MySmallBtn>
+                  </div>}
+                </QuestionInfoBox>
+              )
+            })}
         </MainBody>
         {voteInfos && (
           <PaginationContainer>
@@ -280,7 +369,13 @@ const Vote = () => {
           </PaginationContainer>
         )}
       </Main>
-
+      <RemoveModal
+        isModalOpen={isRemoveModalOpen}
+        setIsModalOpen={() => setIsRemoveModalOpen(false)}
+        onClick={() => {
+          fetchDeleteQuestion();
+          setIsRemoveModalOpen(false);
+        }} />
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
@@ -306,6 +401,54 @@ const Vote = () => {
           />
           <MyBtn color={palette.skyblue} onClick={() => fetchCreateQuestion()}>만들기</MyBtn>
         </ModalContent>
+      </Modal>
+      <Modal
+        isOpen={isInsertStackModalOpen}
+        onRequestClose={() => {
+          setSelectedStack(null);
+          setIsInsertStackModalOpen(false);
+        }}
+        style={{
+          content: {
+            top: '100px',
+            left: '400px',
+            right: '400px',
+            bottom: '100px',
+            borderRadius: '30px',
+            border: 'none',
+            background: `${palette.pink}`,
+          }
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div
+            style={{ fontSize: '30px' }}>
+            {insertStackQuestion && insertStackQuestion.question}
+          </div>
+          <ModalStackBox>
+            {insertStackQuestion && insertStackQuestion.stackDtos &&
+              insertStackQuestion.stackDtos.map((stack, idx) => (
+                <div key={idx} style={{ margin: '20px' }}>
+                  <div style={{ fontSize: '25px' }}>
+                    ({getRatio(insertStackQuestion.stackDtos, stack)}%)
+                  </div>
+                  <StackBox
+                    color={palette.skyblue}
+                    selected={selectedStack === stack.stackId} // Check if the stack is selected
+                    hover={true}
+                    onClick={() => setSelectedStack(stack.stackId)} // Set the selected stack
+                  >
+                    {findStack(stack.stackId)}
+                  </StackBox>
+                </div>
+              ))}
+          </ModalStackBox>
+          <MyBtn
+            color={palette.skyblue}
+            onClick={() => fetchInsertStackQuestion(insertStackQuestion.questionId)}>
+            등록
+          </MyBtn>
+        </div>
       </Modal>
     </>
   );
