@@ -8,6 +8,7 @@ import EditorViewer from "../../components/posts/EditorViewer";
 import palette from "../../styles/pallete";
 import { useNavigate } from "react-router-dom";
 import { baseAPI } from "../../config";
+import { localStorageGetValue } from "../../utils/CryptoUtils";
 
 const Wrapper = styled.div`
   display: flex;
@@ -70,12 +71,12 @@ const SubmitButton = styled.button`
   cursor:pointer;
 `;
 
-const WritePost = () => {
-  const [blobs, setBlobs] = useState([]);
+const PostQNA = () => {
+  const [imageDatas, setimageDatas] = useState([]);
   const [dataValue, setDataValue] = useState({
-    memberId: localStorage.getItem('id'),
+    memberId: localStorageGetValue('member-id'),
     title: "",
-    category: "정보게시판",
+    category: "질문게시판",
     content: "",
     saveEvent: 'N',
   });
@@ -105,50 +106,77 @@ const WritePost = () => {
   const onUploadImage = async (blob, callback) => {
     let formData = new FormData();
     formData.append("file", blob);
-
     try {
-      const url = await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
-      setBlobs((prevBlobs) => [...prevBlobs, blob]);
-      callback(url, 'alt text');
+        // 
+        const fileName = await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
+        const url = process.env.REACT_APP_BUCKET_URL
+        +"temp/"
+        + fileName;
+
+        // 업로드된 블롭을 상태에 추가
+        setimageDatas((prevImageData) => 
+          [...prevImageData,
+           {"file":blob,
+            "fileName":fileName
+           }]);
+
+        // 콜백 함수 호출하여 URL을 에디터에 전달
+        callback(url, 'alt text');
     } catch (error) {
-      console.error("Image upload failed:", error);
-      // 에러 처리 추가
+        console.error("Image upload failed:", error);
+        // 에러 처리 추가
     }
 
     return false;
-  };
+};
 
-  const handleSubmit = async () => {
-    let error = validate(dataValue);
 
-    if (Object.keys(error).length === 0) {
-      setDataValue((prevDataValue) => ({
-        ...prevDataValue,
-        saveEvent: 'Y',
+const handleSubmit = async () => {
+  let error = validate(dataValue);
+  const replacedContent = replaceTempContent(dataValue.content);
+
+  if (Object.keys(error).length === 0) {
+    const updatedDataValue = {
+      ...dataValue,
+      content: replacedContent,
+      saveEvent: 'Y',
+    };
+
+    try {
+      console.log("이미지 링크 바뀌었니?!");
+      console.log(updatedDataValue.content);
+
+      const postId = await baseAPI.post("/api/posts", updatedDataValue).then(res => res.data.postId);
+
+      // 실제 저장 용
+      await Promise.all(imageDatas.map(imageData => {
+        let formData = new FormData();
+        formData.append("postId", postId);
+        formData.append("file", imageData.file);
+        formData.append("fileName", imageData.fileName);
+
+        console.log(imageData.fileName);
+        return baseAPI.post("/api/upload/post", formData);
       }));
 
-      try {
-        const postId = await baseAPI.post("/api/posts", dataValue).then(res => res.data.postId);
-
-        // 실제 저장 용
-        await Promise.all(blobs.map(blob => {
-          let formData = new FormData();
-          formData.append("postId", postId);
-          formData.append("file", blob);
-          return baseAPI.post("/api/upload/post", formData);
-        }));
-
-        navigate(`/post/${postId}`);
-      } catch (error) {
-        console.error("Post submission failed:", error);
-        // 에러 처리 추가
-      }
+      navigate(`/post/${postId}`);
+    } catch (error) {
+      console.error("Post submission failed:", error);
+      // 에러 처리 추가
     }
-  };
+  }
+};
 
   const stripHtmlTags = (str) => {
     return str.replace(/<\/?[^>]+(>|$)/g, "");
   };
+  
+  const replaceTempContent = (str) => {
+    const tempUrlPattern = /\/temp\//g;
+    const postUrlPattern = '/post/';
+    return str.replace(tempUrlPattern, postUrlPattern);
+
+  }
 
   const validate = (dataValue) => {
     let error = {};
@@ -174,7 +202,7 @@ const WritePost = () => {
       <Wrapper>
         <div>
           <TitleWrapper>
-            <h1>정보게시판</h1>
+            <h1>질문게시판</h1>
             <h3>제목</h3>
             <InputWrapper>
               <TitleInput
@@ -203,4 +231,4 @@ const WritePost = () => {
   );
 };
 
-export default WritePost;
+export default PostQNA;

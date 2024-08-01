@@ -21,6 +21,8 @@ import Vote from './pages/Vote';
 import Interview from './pages/interview/Interview';
 import InterviewNote from './pages/interview/InterviewNote';
 import PostDetail from './pages/posts/PostDetail';
+import PostQNA from './pages/posts/PostQNA';
+import PostInfo from './pages/posts/PostInfo';
 
 function App() {
 
@@ -50,7 +52,8 @@ function App() {
 
           <Route path="/post/:id" element={<PostDetail/>} />
           <Route path="/post/update" element={<UpdatePost/>}/>
-          <Route path="/post/write" element={<WritePost/>}/>
+          <Route path="/post/qna/write" element={<PostQNA/>}/>
+          <Route path="/post/info/write" element={<PostInfo/>}/>
           
           <Route path="/store" element={<Store/>} />
           <Route path="/vote" element={<Vote/>} />

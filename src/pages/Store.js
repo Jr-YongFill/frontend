@@ -5,6 +5,7 @@ import { baseAPI } from '../config';
 import palette from '../styles/pallete';
 import Modal from 'react-modal';
 import Header from '../components/Header';
+import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
 
 const Title = styled.div`
   display: flex;
@@ -52,19 +53,62 @@ const ModalTextBox = styled.div`
   font-weight: bold;
 `;
 
+
+const StackNameInput = styled.input`
+  flex-grow: 1;
+  padding: 8px 15px;
+  width: 80%;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 10px;
+`;
+
+const StackDescriptInput = styled.textarea`
+  flex-grow: 1;
+  padding: 8px 15px;
+  width: 80%;
+  height: 70px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 10px;
+`;
+
 const Store = () => {
-  const memberId = 1;
+  const memberId = localStorageGetValue('member-id');
+  const memberRole = localStorageGetValue('member-role');
   const [credit, setCredit] = useState(0);
   const [stacks, setStacks] = useState(null);
   const [modalSwitch, setModalSwitch] = useState(false);
+  const [modalAdminSwitch, setModalAdminSwitch] = useState(false);
+  const [modalAdminUpdateSwitch, setModalAdminUpdateSwitch] = useState(false);
+  const [stackDescription, setStackDescript] = useState('');
+  const [stackName, setStackName] = useState('');
   const [modalStack, setModalStack] = useState(null);
   const myModalTextBoxRef = useRef(null);
   const myModalBtnRef = useRef(null);
   const navigate = useNavigate(); // useNavigate를 호출
 
-  const fetchMemberCredit = async () => {
-    const response = await baseAPI.get(`/api/members/${memberId}/credit`);
-    setCredit(response.data);
+  const fetchUpdateStack = (stackId) => {
+    baseAPI.patch(`/api/admin/stacks/${stackId}`, {
+      "stackName": stackName,
+      "price": 100,
+      "description": stackDescription
+    })
+    setModalAdminUpdateSwitch(false);
+    setModalSwitch(false);
+    window.location.reload();
+  }
+
+  const fetchInitStack = () => {
+    baseAPI.post(`/api/admin/stacks`, {
+      "stackName": stackName,
+      "price": 100,
+      "description": stackDescription
+    })
+    setModalAdminSwitch(false);
+    window.location.reload();
   }
 
   const fetchPurchasStack = async (stackId) => {
@@ -85,9 +129,19 @@ const Store = () => {
   }
 
   useEffect(() => {
+
+    const fetchMemberStack = async () => {
+      const response = await baseAPI.get(`/api/members/${memberId}/stacks`);
+      setStacks(response.data);
+    }
+
+    const fetchMemberCredit = async () => {
+      const response = await baseAPI.get(`/api/members/${memberId}/credit`);
+      setCredit(response.data);
+    }
     fetchMemberStack();
     fetchMemberCredit();
-  }, []);
+  }, [memberId]);
 
   return (
     <>
@@ -109,15 +163,114 @@ const Store = () => {
             >{stack.stackName}</MyBtn>
           })}
         </Content>
-        <MyBtn color={palette.skyblue} onClick={() => navigate('/interview/main')}>면접 보러가기</MyBtn>
+        <div
+          style={{ display: 'flex' }}>
+          <MyBtn color={palette.skyblue} onClick={() => navigate('/interview/main')}>면접 보러가기</MyBtn>
+          {memberRole === 'ADMIN' &&
+            <MyBtn
+              color={palette.skyblue}
+              onClick={() => setModalAdminSwitch(true)}
+            >스택 생성</MyBtn>
+          }
+        </div>
+        <Modal
+          isOpen={modalAdminSwitch}
+          onRequestClose={() => setModalAdminSwitch(false)}
+          style={{
+            content: {
+              top: '100px',
+              left: '500px',
+              right: '500px',
+              bottom: '100px',
+              borderRadius: '30px',
+              border: 'none',
+              background: `${palette.pink}`,
+            }
+          }}>
+
+          <ModalContent>
+            <ModalTextBox style={{ 'margin-bottom': '50px' }}>
+              Stack의 정보를 입력해주십시요.
+            </ModalTextBox>
+            <div
+              style={{ fontSize: '20px' }}>
+              Stack Name
+            </div>
+            <StackNameInput
+              type="text"
+              value={stackName}
+              onChange={(e) => setStackName(e.target.value)}
+              placeholder="스택 이름"
+            />
+            <div
+              style={{ fontSize: '20px' }}>
+              Stack 설명
+            </div>
+            <StackDescriptInput
+              value={stackDescription}
+              onChange={(e) => setStackDescript(e.target.value)}
+              placeholder="스택 설명"
+            />
+            <MyBtn
+              color={palette.skyblue}
+              onClick={() => fetchInitStack()}>
+              생성
+            </MyBtn>
+          </ModalContent>
+        </Modal>
+        <Modal
+          isOpen={modalAdminUpdateSwitch}
+          onRequestClose={() => setModalAdminUpdateSwitch(false)}
+          style={{
+            content: {
+              top: '100px',
+              left: '500px',
+              right: '500px',
+              bottom: '100px',
+              borderRadius: '30px',
+              border: 'none',
+              background: `${palette.pink}`,
+            }
+          }}>
+
+          <ModalContent>
+            <ModalTextBox style={{ 'margin-bottom': '50px' }}>
+              Stack의 정보 수정
+            </ModalTextBox>
+            <div
+              style={{ fontSize: '20px' }}>
+              Stack Name
+            </div>
+            <StackNameInput
+              type="text"
+              value={stackName}
+              onChange={(e) => setStackName(e.target.value)}
+              placeholder="스택 이름"
+            />
+            <div
+              style={{ fontSize: '20px' }}>
+              Stack 설명
+            </div>
+            <StackDescriptInput
+              value={stackDescription}
+              onChange={(e) => setStackDescript(e.target.value)}
+              placeholder="스택 설명"
+            />
+            <MyBtn
+              color={palette.skyblue}
+              onClick={() => fetchUpdateStack(modalStack.id)}>
+              수정
+            </MyBtn>
+          </ModalContent>
+        </Modal>
         <Modal
           isOpen={modalSwitch}
           onRequestClose={() => setModalSwitch(false)}
           style={{
             content: {
               top: '200px',
-              left: '500px',
-              right: '500px',
+              left: '450px',
+              right: '450px',
               bottom: '200px',
               borderRadius: '30px',
               border: 'none',
@@ -132,11 +285,25 @@ const Store = () => {
                     <ModalTextBox style={{ 'margin-bottom': '125px' }}>
                       이미 구매한 질문입니다.
                     </ModalTextBox>
-                    <MyBtn
-                      color={palette.skyblue}
-                      onClick={() => setModalSwitch(false)}>
-                      닫기
-                    </MyBtn>
+                    <div
+                      style={{ display: 'flex' }}>
+                      <MyBtn
+                        color={palette.skyblue}
+                        onClick={() => setModalSwitch(false)}>
+                        닫기
+                      </MyBtn>
+                      {memberRole === 'ADMIN' &&
+                        <MyBtn
+                          color={palette.skyblue}
+                          onClick={() => {
+                            setStackName(modalStack.stackName);
+                            setStackDescript(modalStack.description);
+                            setModalSwitch(false);
+                            setModalAdminUpdateSwitch(true);
+                          }}
+                        >스택 수정</MyBtn>
+                      }
+                    </div>
                   </>
                   :
                   <>
@@ -149,14 +316,27 @@ const Store = () => {
                     <ModalTextBox>
                       포인트 : {modalStack.price}
                     </ModalTextBox>
-                    <MyBtn
-                      ref={myModalBtnRef}
-                      color={palette.skyblue}
-                      onClick={() => {
-                        fetchPurchasStack(modalStack.id);
-                      }}>
-                      구매
-                    </MyBtn>
+                    <div
+                      style={{ display: 'flex' }}>
+                      <MyBtn
+                        ref={myModalBtnRef}
+                        color={palette.skyblue}
+                        onClick={() => {
+                          fetchPurchasStack(modalStack.id);
+                        }}>
+                        구매
+                      </MyBtn>
+                      {memberRole === 'ADMIN' &&
+                        <MyBtn
+                          color={palette.skyblue}
+                          onClick={() => {
+                            setStackName(modalStack.stackName);
+                            setStackDescript(modalStack.description);
+                            setModalSwitch(false);
+                            setModalAdminUpdateSwitch(true);
+                          }}
+                        >스택 수정</MyBtn>}
+                    </div>
                   </>}
             </ModalContent>}
         </Modal>

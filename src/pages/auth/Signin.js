@@ -6,6 +6,9 @@ import palette from '../../styles/pallete';
 import { baseAPI } from '../../config';
 import Header from '../../components/Header';
 
+import { localStorageGetValue, localStorageSetValue } from '../../utils/CryptoUtils';
+
+
 const WrapperContainer = styled.div`
     height: 50vh;
     display: flex;
@@ -89,16 +92,19 @@ const Signin = () => {
     try {
       const response = await baseAPI.post('/api/auth/sign-in', userLogin);
 
-      const { id, accessToken, refreshToken, tokenType } = response.data;
-      localStorage.setItem('id', id);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('tokenType', tokenType);
+      const { id, accessToken, refreshToken, tokenType, role, nickName } = response.data;
+      localStorageSetValue('member-id', id);
+      localStorageSetValue('accessToken', accessToken);
+      localStorageSetValue('refreshToken', refreshToken);
+      localStorageSetValue('tokenType', tokenType);
+      localStorageSetValue('member-role', role);
+      localStorageSetValue('member-nickName', nickName);
 
       alert('로그인 성공');
       navigate('/');
     } catch (error) {
-      alert(error.response.message || '로그인 실패');
+      const errorMessage = error.response ? error.response.data.message : '로그인 실패';
+      alert(errorMessage);
     }
   };
 

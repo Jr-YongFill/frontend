@@ -1,43 +1,37 @@
-import React, { useRef, useState } from 'react';
+import React, { forwardRef } from 'react';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
-import { baseAPI } from '../../config';
 
-function EditorBox() {
-  const editorRef = useRef();
-  const [images, setImages] = useState([]);
+const EditorBox = forwardRef((props, ref) => {
   const onChange = () => {
-    const data = editorRef.current.getInstance().getHTML();
-    console.log(data);
+    const data = ref.current.getInstance().getHTML();
+    props.onChange(data); // 부모 컴포넌트의 onChange 호출
   };
 
+  
   const onUploadImage = async (blob, callback) => {
-    // let formData = new FormData();
-    // formData.append("file", blob);
-    try {
-      // const response = await baseAPI.post('/api/upload?mode=post', formData)
-      // const url = response.data;
-      
-      console.log(blob);
+    // 부모 컴포넌트의 onUploadImage 호출
+    const url = await props.onUploadImage(blob, callback);
 
-      // callback(url, 'alt text');
-    } catch (error) {
-      console.error("Image upload failed", error);
-    }
+    // 콜백 함수 호출하여 URL을 에디터에 전달
+    callback(url, 'alt text');
+    return false;
   };
+
 
   return (
     <div className="edit_wrap">
       <Editor
+        initialValue={props.initialValue ?? ''}
         placeholder="내용을 적어주세요!"
         previewStyle="vertical"
         height="600px"
         initialEditType="wysiwyg"
         useCommandShortcut={true}
         language="ko-KR"
-        ref={editorRef}
+        ref={ref}
         onChange={onChange}
         plugins={[colorSyntax]}
         hooks={{
@@ -46,6 +40,6 @@ function EditorBox() {
       />
     </div>
   );
-}
+});
 
 export default EditorBox;

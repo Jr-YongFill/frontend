@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { localStorageGetValue, localStorageSetValue } from './utils/CryptoUtils';
 
-const getTokenType = () => localStorage.getItem('tokenType');
-const getAccessToken = () => localStorage.getItem('accessToken');
-const getRefreshToken = () => localStorage.getItem('refreshToken');
+const getTokenType = () => localStorageGetValue('tokenType')
+const getAccessToken = () => localStorageGetValue('accessToken');
+const getRefreshToken = () => localStorageGetValue('refreshToken');
 
 const BASE_URL = `http://${process.env.REACT_APP_HOST_IP}:${process.env.REACT_APP_HOST_PORT}`;
 
@@ -14,7 +15,7 @@ const refreshAccessToken = async () => {
     try {
         const response = await baseAPI.get(`/api/auth/refresh`);
 
-        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorageSetValue('accessToken', response.data.accessToken);
     } catch (error) {
         localStorage.clear();
         window.location.href = '/';
