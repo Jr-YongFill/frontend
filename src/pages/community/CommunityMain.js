@@ -120,7 +120,7 @@ const CommunityMain = () => {
     fetcInfoData();
     fetchCount();
     fetchQuestion();
-  }, []);
+  }, [memberId]);
 
   return (
     <div>

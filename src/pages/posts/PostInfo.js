@@ -156,7 +156,7 @@ const handleSubmit = async () => {
         formData.append("fileName", imageData.fileName);
 
         console.log(imageData.fileName);
-        baseAPI.post("/api/upload/post", formData);
+        return baseAPI.post("/api/upload/post", formData);
       }));
 
       navigate(`/post/${postId}`);
