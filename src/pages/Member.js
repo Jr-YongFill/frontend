@@ -276,7 +276,7 @@ const Member = () => {
   const UpdateImageHandle = async (event) => {
     event.preventDefault();
 
-    const changeNickName = nickName !== nickName || file !== null;
+    const changeNickName = originalNickName !== nickName || file !== null;
 
     if (!changeNickName) {
       alert("변경된 사항이 없습니다.");

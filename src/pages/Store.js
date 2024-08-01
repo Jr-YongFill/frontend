@@ -86,9 +86,19 @@ const Store = () => {
   }
 
   useEffect(() => {
+
+    const fetchMemberStack = async () => {
+      const response = await baseAPI.get(`/api/members/${memberId}/stacks`);
+      setStacks(response.data);
+    }
+
+    const fetchMemberCredit = async () => {
+      const response = await baseAPI.get(`/api/members/${memberId}/credit`);
+      setCredit(response.data);
+    }
     fetchMemberStack();
     fetchMemberCredit();
-  }, []);
+  }, [memberId]);
 
   return (
     <>
