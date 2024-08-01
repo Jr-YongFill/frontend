@@ -4,8 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import palette from '../styles/pallete';
 import { baseAPI } from '../config';
-import { decoding } from '../utils/decoding';
-import { encrypt } from '../utils/cryptoUtils';
+import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
 
 const WrapperContainer = styled.div`
     height: 100vh;
@@ -163,7 +162,6 @@ const LinkStyled = styled(Link)`
 const Member = () => {
   const [nickName, setNickname] = useState("");
   const [originalNickName, setOriginalNickname] = useState("");
-  const [role, setRole] = useState('');
   const [memberId, setMemberId] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [originalProfileImage, setOriginalProfileImage] = useState(null);
@@ -175,7 +173,8 @@ const Member = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    decoding(setNickname, setMemberId, setRole);
+    setMemberId(localStorageGetValue('member-id'));
+    setMemberId(localStorageGetValue('member-nickName'));
 
     const fetchMemberData = async () => {
       if (memberId) {
@@ -220,12 +219,7 @@ const Member = () => {
     event.preventDefault();
     try {
       await baseAPI.delete(`/api/members/${memberId}`);
-      localStorage.removeItem('id');
-      localStorage.removeItem('tokenType');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('nickName');
-      localStorage.removeItem('role');
+      localStorage.clear();
       alert("회원 탈퇴 성공");
       navigate('/');
     } catch (error) {
@@ -308,7 +302,7 @@ const Member = () => {
       });
 
       if (nickName !== originalNickName) {
-        localStorage.setItem('nickName', encrypt(nickName));
+        localStorageSetValue('member-nickName', nickName);
       }
 
       alert("프로필 수정 성공");

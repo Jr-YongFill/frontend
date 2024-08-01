@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
-import { decoding } from '../utils/decoding';
+import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
 
 const HeaderContainer = styled.header`
   top: 0;
@@ -59,19 +59,15 @@ const Header = ({ color }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const encryptedNickName = localStorage.getItem('nickName');
-    if (encryptedNickName) {
-      decoding(setNickName, setMemberId, setRole);
-    }
+    const nickName = localStorageGetValue('member-nickName');
+    setNickName(nickName);
+    console.log(nickName);
+    const role = localStorageGetValue('member-role');
+    setRole(role);
   }, []);
 
   const logoutHandle = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('tokenType');
-    localStorage.removeItem('id');
-    localStorage.removeItem('role');
-    localStorage.removeItem('nickName');
+    localStorage.clear();
     window.location.href = '/';
   };
 
@@ -109,7 +105,7 @@ const Header = ({ color }) => {
         </GnbMenu>
       </HeaderGnb>
       <HeaderSign style={style}>
-        {localStorage.getItem('nickName') ? (
+        {nickName ? (
           <div>
             <span>{nickName}</span>
             <StyledLink to="/member" onClick={(event) => LinkClick(event, '/member')}>마이페이지</StyledLink>

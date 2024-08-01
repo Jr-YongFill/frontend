@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import defaultImage from '../assets/default.png';
 import Header from '../components/Header';
 import palette from '../styles/pallete';
+import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
 
 const WrapperContainer = styled.div`
     display: flex;
@@ -103,7 +104,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const ButtonClick = (path) => {
-    const role = localStorage.getItem('role');
+    const role = localStorageGetValue('member-role');
     if (!role) {
       alert('로그인이 필요한 페이지입니다.')
       navigate('/auth/sign-in');
@@ -132,7 +133,7 @@ const Home = () => {
           </Container>
 
           <Container flex="2">
-            <Title style={{textAlign: 'center'}}>개발자 정보</Title>
+            <Title style={{ textAlign: 'center' }}>개발자 정보</Title>
             <DeveloperInfoContainer>
               <DeveloperCard>
                 <img src={defaultImage} alt="Developer" />

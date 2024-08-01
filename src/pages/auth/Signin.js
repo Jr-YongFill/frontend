@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { baseAPI } from '../../config';
 import Header from '../../components/Header';
-import { encrypt } from '../../utils/cryptoUtils';
+import { localStorageGetValue, localStorageSetValue } from '../../utils/cryptoUtils';
 
 const WrapperContainer = styled.div`
     height: 50vh;
@@ -91,12 +91,12 @@ const Signin = () => {
       const response = await baseAPI.post('/api/auth/sign-in', userLogin);
 
       const { id, accessToken, refreshToken, tokenType, role, nickName } = response.data;
-      localStorage.setItem('id', encrypt(id));
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('tokenType', tokenType);
-      localStorage.setItem('role', encrypt(role));
-      localStorage.setItem('nickName', encrypt(nickName));
+      localStorageSetValue('member-id', id);
+      localStorageSetValue('accessToken', accessToken);
+      localStorageSetValue('refreshToken', refreshToken);
+      localStorageSetValue('tokenType', tokenType);
+      localStorageSetValue('member-role', role);
+      localStorageSetValue('member-nickName', nickName);
 
       alert('로그인 성공');
       navigate('/');
