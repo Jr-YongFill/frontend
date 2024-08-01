@@ -5,6 +5,7 @@ import { baseAPI } from '../config';
 import palette from '../styles/pallete';
 import Modal from 'react-modal';
 import Header from '../components/Header';
+import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
 
 const Title = styled.div`
   display: flex;
@@ -53,7 +54,7 @@ const ModalTextBox = styled.div`
 `;
 
 const Store = () => {
-  const memberId = 1;
+  const memberId = localStorageGetValue('member-id');
   const [credit, setCredit] = useState(0);
   const [stacks, setStacks] = useState(null);
   const [modalSwitch, setModalSwitch] = useState(false);
@@ -85,9 +86,19 @@ const Store = () => {
   }
 
   useEffect(() => {
+
+    const fetchMemberStack = async () => {
+      const response = await baseAPI.get(`/api/members/${memberId}/stacks`);
+      setStacks(response.data);
+    }
+
+    const fetchMemberCredit = async () => {
+      const response = await baseAPI.get(`/api/members/${memberId}/credit`);
+      setCredit(response.data);
+    }
     fetchMemberStack();
     fetchMemberCredit();
-  }, []);
+  }, [memberId]);
 
   return (
     <>

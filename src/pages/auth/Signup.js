@@ -78,18 +78,18 @@ const Signup = () => {
   const [userLogin, setUserLogin] = useState({ email: "", password: "", nickname: "" });
   const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    setUserLogin((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleInputChange = (event) => {
+    setUserLogin((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   };
 
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    try{
-        const response = await baseAPI.post('/api/auth/sign-up', userLogin);
-        alert('회원가입 성공');
-        navigate('/auth/sign-in');
-    } catch (error){
-      alert(error.response.data.error) 
+    try {
+      await baseAPI.post('/api/auth/sign-up', userLogin);
+      alert('회원가입 성공');
+      navigate('/auth/sign-in');
+    } catch (error) {
+      alert(error.response.data.error)
     }
   };
 

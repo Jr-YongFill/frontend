@@ -1,11 +1,10 @@
-//작성자 bbmini96
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import defaultImage from '../assets/default.png';
 import palette from '../styles/pallete';
 import { baseAPI } from '../config';
+import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
 
 const WrapperContainer = styled.div`
     height: 100vh;
@@ -76,6 +75,7 @@ const Button = styled.button`
     padding: 10px 30px;
     cursor: pointer;
 `;
+
 const StyledButton = styled(Button)`
     white-space: nowrap;
     width: auto; 
@@ -127,6 +127,7 @@ const NicknameInput = styled.div`
 const PasswordContainer = styled(NicknameContainer)`
     margin-top: 20px;
 `;
+
 const PasswordButtonContainer = styled.div`
     display: flex;
     justify-content: flex-end;
@@ -159,65 +160,70 @@ const LinkStyled = styled(Link)`
 `;
 
 const Member = () => {
+  const [nickName, setNickname] = useState("");
+  const [originalNickName, setOriginalNickname] = useState("");
+  const [memberId, setMemberId] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
+  const [originalProfileImage, setOriginalProfileImage] = useState(null);
   const [postData, setPostData] = useState([]);
   const [commentData, setCommentData] = useState([]);
-  const [nickName, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
-  const [memberId, setMemberId] = useState(null);
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const memberId = localStorage.getItem('id');
-    setMemberId(memberId);
+    setMemberId(localStorageGetValue('member-id'));
+    setMemberId(localStorageGetValue('member-nickName'));
 
-    // member 조회
     const fetchMemberData = async () => {
-      try {
-        const response = await baseAPI.get(`/api/members/${memberId}`);
-        setProfileImage(response.data.filePath);
-      } catch (error) {
-        console.error(error);
+      if (memberId) {
+        try {
+          const response = await baseAPI.get(`/api/members/${memberId}`);
+          setProfileImage(response.data.filePath);
+          setOriginalProfileImage(response.data.filePath);
+          setOriginalNickname(response.data.nickName);
+        } catch (error) {
+          console.error(error);
+        }
       }
     };
     fetchMemberData();
 
-    // post조회
     const fetchPostData = async () => {
-      try {
-        const response = await baseAPI.get(`/api/members/${memberId}/posts?page=0&size=5`);
-        setPostData(response.data.resultList);
-      } catch (error) {
+      if (memberId) {
+        try {
+          const response = await baseAPI.get(`/api/members/${memberId}/posts?page=0&size=5`);
+          setPostData(response.data.resultList);
+        } catch (error) {
+          console.error(error);
+        }
       }
     };
     fetchPostData();
 
-    // comment 조회
     const fetchCommentData = async () => {
-      try {
-        const response = await baseAPI.get(`/api/members/${memberId}/comments?page=0&size=5`);
-        setCommentData(response.data.resultList);
-      } catch (error) {
+      if (memberId) {
+        try {
+          const response = await baseAPI.get(`/api/members/${memberId}/comments?page=0&size=5`);
+          setCommentData(response.data.resultList);
+        } catch (error) {
+          console.error(error);
+        }
       }
     };
     fetchCommentData();
-  }, []);
+  }, [memberId]);
 
   const deleteHandle = async (event) => {
     event.preventDefault();
     try {
       await baseAPI.delete(`/api/members/${memberId}`);
-      localStorage.removeItem('id');
-      localStorage.removeItem('tokenType');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('nickName');
+      localStorage.clear();
       alert("회원 탈퇴 성공");
       navigate('/');
     } catch (error) {
-      alert("회원 탈퇴 실패: " + error.response.data.message);
+      alert(error.response.data.message);
     }
   };
 
@@ -245,11 +251,10 @@ const Member = () => {
     setNickname(event.target.value);
   };
 
-
   const UpdatePasswordHandle = async (event) => {
     event.preventDefault();
-    if (password !== checkPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
+    if (password === "" || checkPassword === "" || password !== checkPassword) {
+      alert("비밀번호가 일치하지 않거나 비밀번호가 입력되지 않았습니다.");
       return;
     }
 
@@ -264,26 +269,46 @@ const Member = () => {
       alert("비밀번호 변경이 완료되었습니다.");
       navigate('/member');
     } catch (error) {
-      alert("비밀번호 변경 실패: " + error.response.data.message);
+      alert(error.response.data.message);
     }
   };
 
   const UpdateImageHandle = async (event) => {
     event.preventDefault();
 
+    const changeNickName = originalNickName !== nickName || file !== null;
+
+    if (!changeNickName) {
+      alert("변경된 사항이 없습니다.");
+      return;
+    }
+
+    if (nickName.trim() === "") {
+      alert("닉네임을 입력하세요.");
+      return;
+    }
+
     try {
       const formData = new FormData();
-      formData.append('nickname', nickName);
-      formData.append('file', file);
+      if (nickName !== originalNickName) {
+        formData.append('nickname', nickName);
+      }
+      if (file) {
+        formData.append('file', file);
+      }
 
       await baseAPI.patch(`/api/members/${memberId}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
+      if (nickName !== originalNickName) {
+        localStorageSetValue('member-nickName', nickName);
+      }
+
       alert("프로필 수정 성공");
       window.location.reload();
     } catch (error) {
-      alert("프로필 이미지 수정 실패: " + error.response.data.message);
+      alert(error.response.data.message);
     }
   };
 
@@ -313,8 +338,8 @@ const Member = () => {
                 <NicknameInput>
                   <Input
                     type="text"
+                    placeholder="닉네임"
                     value={nickName}
-                    placeholder="nickName"
                     onChange={handleNameChange}
                   />
                   <StyledButton onClick={UpdateImageHandle}>수정하기</StyledButton>
@@ -335,7 +360,7 @@ const Member = () => {
                   onChange={handleCheckPasswordChange}
                 />
                 <PasswordButtonContainer>
-                  <Button onClick={UpdatePasswordHandle}>변경하기</Button>
+                  <StyledButton onClick={UpdatePasswordHandle}>변경하기</StyledButton>
                 </PasswordButtonContainer>
               </PasswordContainer>
             </MemberUpdateContainer>
@@ -349,10 +374,10 @@ const Member = () => {
                   <li key={index}>{post.title}</li>
                 ))}
               </ul>
-              <LinkStyled to='/post/:id' style={{textAlign: 'right'}}>게시글 조회</LinkStyled>
+              <LinkStyled to='/post/:id' style={{ textAlign: 'right' }}>게시글 조회</LinkStyled>
             </PostContainer>
             <CommentContainer>
-            <Title>내가 쓴 댓글</Title> 
+              <Title>내가 쓴 댓글</Title>
               <ul>
                 {commentData.map((comment, index) => (
                   <li key={index}>{comment.content}</li>
@@ -365,4 +390,5 @@ const Member = () => {
     </>
   );
 };
-export default Member;  
+
+export default Member;
