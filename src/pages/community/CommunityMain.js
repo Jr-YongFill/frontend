@@ -6,6 +6,7 @@ import palette from '../../styles/pallete';
 import CustomLi from '../../components/CustomLi';
 import CustomButton from '../../components/CustomButton';
 import { baseAPI } from '../../config';
+import { localStorageGetValue } from '../../utils/CryptoUtils';
 
 const Wrapper = styled.div`
   display: flex;
@@ -62,6 +63,7 @@ const CommunityMain = () => {
   const [count, setCount] = useState(0);
   const [question, setQuestion] = useState("");
 
+  const memberId =  localStorageGetValue("member-id");
   const navigateHandler = (url) => () => {
     navigate(url);
   };
@@ -89,9 +91,11 @@ const CommunityMain = () => {
 
     const fetchCount = async () => {
       try {
-        // TODO: localStorage에서 멤버 id 가져오기
-        const response = await baseAPI.get('/api/members/1/answers');
-        setCount(response.data.count);
+        if(memberId!=null){
+          const response = await baseAPI.get(`/api/members/${memberId}/answers`);
+          setCount(response.data.count);
+        }
+        // 
       } catch (error) {
         // console.error('Error fetching data', error);
       }
@@ -116,7 +120,7 @@ const CommunityMain = () => {
     fetcInfoData();
     fetchCount();
     fetchQuestion();
-  }, []);
+  }, [memberId]);
 
   return (
     <div>

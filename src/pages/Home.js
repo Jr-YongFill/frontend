@@ -2,9 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import defaultImage from '../assets/default.png';
+import csRandingImage from '../assets/rending1.png';
+import communityRandingImage from '../assets/rending2.png';
 import Header from '../components/Header';
 import palette from '../styles/pallete';
-import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
+import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
 
 const WrapperContainer = styled.div`
     display: flex;
@@ -27,14 +29,19 @@ const ContainerWrapper = styled.div`
 
 const Container = styled.div`
     width: 100%;
+    display: flex;
+    flex-direction: column;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin: 10px 0;
     padding: 20px;
     text-align: left;
-    flex: 4;
 `;
+const Image = styled.img`
+  width: 200px;
+
+`
 
 const Title = styled.h1`
     font-weight: bold;
@@ -48,6 +55,7 @@ const Description = styled.p`
 
 const Button = styled.button`
     background-color: #0056b3;
+    width:20%;
     color: white;
     border: none;
     border-radius: 5px;
@@ -121,15 +129,33 @@ const Home = () => {
           <Container>
             <Label>개발자들을 위한</Label>
             <Title>CS 랜덤 디펜스</Title>
-            <Description>멘트주세요</Description>
+            <Description>
+              I’m on the Next Level 저 너머의 문을 열어
+              <br />
+              Next Level 널 결국엔 내가 부셔
+              <br />
+              Next Level Devop에 닿을 때까지
+              <br />
+              Next Level 제껴라 제껴라 제껴라
+            </Description>
+            <Image src={csRandingImage} alt="RandingImage" />
             <Button onClick={() => ButtonClick('/interview/choice-mode')}>면접 페이지 이동</Button>
           </Container>
 
           <Container>
             <Label>개발자들을 위한</Label>
             <Title>취준생을 위한 커뮤니티</Title>
-            <Description>멘트주세요</Description>
-            <Button onClick={() => ButtonClick('/community/main')}>커뮤니티 이동</Button>
+            <Description>
+              대화가 필요해 우린 대화가 부족해
+              <br />
+              항상 내 곁에 있어서
+              <br />
+              너의 소중함과 고마움까지도 다 잊고 살았어
+              <br />
+              대화가 필요해
+            </Description>
+            <Image src={communityRandingImage} alt="RandingImage" />
+            <Button onClick={()=>navigate('/community/main')}>커뮤니티 이동</Button>
           </Container>
 
           <Container flex="2">
