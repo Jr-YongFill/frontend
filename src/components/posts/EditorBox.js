@@ -3,7 +3,6 @@ import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
-import uuid from 'react-uuid';
 
 const EditorBox = forwardRef((props, ref) => {
   const onChange = () => {
