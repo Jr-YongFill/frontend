@@ -155,7 +155,7 @@ const Home = () => {
               대화가 필요해
             </Description>
             <Image src={communityRandingImage} alt="RandingImage" />
-            <Button onClick={() => ButtonClick('/community/main')}>커뮤니티 이동</Button>
+            <Button onClick={()=>navigate('/community/main')}>커뮤니티 이동</Button>
           </Container>
 
           <Container flex="2">
