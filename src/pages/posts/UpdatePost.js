@@ -110,7 +110,7 @@ const UpdatePost = () => {
     let formData = new FormData();
     formData.append("file", blob);
 
-    const url = await baseAPI.post('/api/upload/post', formData)
+    const url = await baseAPI.post('/api/upload/temp', formData)
       .then((res) => res.data);
 
     callback(url, 'alt text');
