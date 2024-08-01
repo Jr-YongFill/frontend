@@ -1,14 +1,13 @@
-// UpdatePost.js
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
-import { baseAPI } from "../../config";
 import Header from "../../components/Header";
 import EditorBox from "../../components/posts/EditorBox";
 import EditorViewer from "../../components/posts/EditorViewer";
 import palette from "../../styles/pallete";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { baseAPI } from "../../config";
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,7 +18,7 @@ const Wrapper = styled.div`
 
 const TitleInput = styled.input`
   border: none;
-  background: transparent;
+  background:transparent;
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
@@ -33,9 +32,9 @@ const TitleInput = styled.input`
 `;
 
 const InputWrapper = styled.div`
-  background: whitesmoke;
+  background:whitesmoke;
   padding: 10px;
-  border-radius: 10px;
+  border-radius:10px;
 `;
 
 const TitleWrapper = styled.div`
@@ -59,28 +58,25 @@ const EditorArea = styled.div`
 `;
 
 const SubmitButton = styled.button`
-  background: ${palette.skyblue};
+  background:${palette.skyblue};
   width: 150px;
   height: 60px;
-  border-style: none;
+  border-style:none;
   border-radius: 20px;
   font-size: 18px;
   font-weight: bold;
   color: white;
-  margin: 30px 0px;
-  cursor: pointer;
+  margin: 30px 0px;;
+  cursor:pointer;
 `;
 
-const UpdatePost = () => {
-  const location = useLocation();
-  const { data } = location.state;
-  console.log(data);
-
-  const postId = data.postId;
+const PostQNA = () => {
+  const [blobs, setBlobs] = useState([]);
   const [dataValue, setDataValue] = useState({
-    title: data.title,
-    category: data.category,
-    content: data.content,
+    memberId: localStorage.getItem('id'),
+    title: "",
+    category: "질문게시판",
+    content: "",
     saveEvent: 'N',
   });
 
@@ -102,7 +98,7 @@ const UpdatePost = () => {
         ...prevDataValue,
         content: data,
       }));
-
+      console.log(data);
     }
   };
 
@@ -110,10 +106,15 @@ const UpdatePost = () => {
     let formData = new FormData();
     formData.append("file", blob);
 
-    const url = await baseAPI.post('/api/upload/temp', formData)
-      .then((res) => res.data);
+    try {
+      const url = await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
+      setBlobs((prevBlobs) => [...prevBlobs, blob]);
+      callback(url, 'alt text');
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      // 에러 처리 추가
+    }
 
-    callback(url, 'alt text');
     return false;
   };
 
@@ -126,8 +127,22 @@ const UpdatePost = () => {
         saveEvent: 'Y',
       }));
 
-      const response = await baseAPI.patch(`/api/posts/${postId}`, dataValue);
-      navigate(`/post/${response.data.postId}`);
+      try {
+        const postId = await baseAPI.post("/api/posts", dataValue).then(res => res.data.postId);
+
+        // 실제 저장 용
+        await Promise.all(blobs.map(blob => {
+          let formData = new FormData();
+          formData.append("postId", postId);
+          formData.append("file", blob);
+          return baseAPI.post("/api/upload/post", formData);
+        }));
+
+        navigate(`/post/${postId}`);
+      } catch (error) {
+        console.error("Post submission failed:", error);
+        // 에러 처리 추가
+      }
     }
   };
 
@@ -164,7 +179,6 @@ const UpdatePost = () => {
             <InputWrapper>
               <TitleInput
                 type="text"
-                defaultValue={dataValue.title}
                 placeholder="제목을 작성해주세요"
                 onChange={TitleReceive}
                 ref={titleRef}
@@ -175,7 +189,7 @@ const UpdatePost = () => {
             <h3>내용</h3>
           </TitleWrapper>
           <EditorArea>
-            <EditorBox ref={editorRef} onChange={onChange} onUploadImage={onUploadImage} initialValue={dataValue.content}/>
+            <EditorBox ref={editorRef} onChange={onChange} onUploadImage={onUploadImage} />
             <div style={{ display: "flex", justifyContent: "end" }}>
               <SubmitButton onClick={handleSubmit}>
                 저장
@@ -184,8 +198,9 @@ const UpdatePost = () => {
           </EditorArea>
         </div>
       </Wrapper>
+      <EditorViewer contents={dataValue.content} />
     </div>
   );
 };
 
-export default UpdatePost;
+export default PostQNA;
