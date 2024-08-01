@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import palette from '../styles/pallete';
 import { baseAPI } from '../config';
-import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
+import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
 
 const WrapperContainer = styled.div`
     height: 100vh;
@@ -162,7 +162,7 @@ const LinkStyled = styled(Link)`
 const Member = () => {
   const [nickName, setNickname] = useState("");
   const [originalNickName, setOriginalNickname] = useState("");
-  const [memberId, setMemberId] = useState(null);
+  const [memberId, setMemberId] = useState(localStorageGetValue('member-id'));
   const [profileImage, setProfileImage] = useState(null);
   const [originalProfileImage, setOriginalProfileImage] = useState(null);
   const [postData, setPostData] = useState([]);
@@ -174,7 +174,7 @@ const Member = () => {
 
   useEffect(() => {
     setMemberId(localStorageGetValue('member-id'));
-    setMemberId(localStorageGetValue('member-nickName'));
+    setNickname(localStorageGetValue('member-nickName'));
 
     const fetchMemberData = async () => {
       if (memberId) {

@@ -5,7 +5,7 @@ import { baseAPI } from '../config';
 import palette from '../styles/pallete';
 import Modal from 'react-modal';
 import Header from '../components/Header';
-import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
+import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
 
 const Title = styled.div`
   display: flex;
