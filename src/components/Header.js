@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
-import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
+import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
 
 const HeaderContainer = styled.header`
   top: 0;
@@ -61,7 +61,6 @@ const Header = ({ color }) => {
   useEffect(() => {
     const nickName = localStorageGetValue('member-nickName');
     setNickName(nickName);
-    console.log(nickName);
     const role = localStorageGetValue('member-role');
     setRole(role);
   }, []);

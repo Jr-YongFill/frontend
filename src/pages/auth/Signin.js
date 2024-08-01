@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { baseAPI } from '../../config';
 import Header from '../../components/Header';
-import { localStorageGetValue, localStorageSetValue } from '../../utils/cryptoUtils';
+import { localStorageGetValue, localStorageSetValue } from '../../utils/CryptoUtils';
 
 const WrapperContainer = styled.div`
     height: 50vh;

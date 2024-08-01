@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { localStorageGetValue, localStorageSetValue } from './utils/cryptoUtils';
+import { localStorageGetValue, localStorageSetValue } from './utils/CryptoUtils';
 
 const getTokenType = () => localStorageGetValue('tokenType')
 const getAccessToken = () => localStorageGetValue('accessToken');

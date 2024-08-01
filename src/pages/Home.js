@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import defaultImage from '../assets/default.png';
 import Header from '../components/Header';
 import palette from '../styles/pallete';
-import { localStorageGetValue, localStorageSetValue } from '../utils/cryptoUtils';
+import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
 
 const WrapperContainer = styled.div`
     display: flex;
