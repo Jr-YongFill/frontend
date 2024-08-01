@@ -8,6 +8,7 @@ import EditorViewer from "../../components/posts/EditorViewer";
 import palette from "../../styles/pallete";
 import { useNavigate } from "react-router-dom";
 import { baseAPI } from "../../config";
+import { localStorageGetValue } from "../../utils/CryptoUtils";
 
 const Wrapper = styled.div`
   display: flex;
@@ -70,10 +71,10 @@ const SubmitButton = styled.button`
   cursor:pointer;
 `;
 
-const PostInfo = () => {
+const PostQNA = () => {
   const [blobs, setBlobs] = useState([]);
   const [dataValue, setDataValue] = useState({
-    memberId: localStorage.getItem('id'),
+    memberId: localStorageGetValue('member-id'),
     title: "",
     category: "정보게시판",
     content: "",
@@ -105,18 +106,25 @@ const PostInfo = () => {
   const onUploadImage = async (blob, callback) => {
     let formData = new FormData();
     formData.append("file", blob);
-
     try {
-      const url = await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
-      setBlobs((prevBlobs) => [...prevBlobs, blob]);
-      callback(url, 'alt text');
+        // 
+        const url = process.env.REACT_APP_BUCKET_URL
+        +"temp/"
+        + await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
+
+        // 업로드된 블롭을 상태에 추가
+        setBlobs((prevBlobs) => [...prevBlobs, blob]);
+
+        // 콜백 함수 호출하여 URL을 에디터에 전달
+        callback(url, 'alt text');
     } catch (error) {
-      console.error("Image upload failed:", error);
-      // 에러 처리 추가
+        console.error("Image upload failed:", error);
+        // 에러 처리 추가
     }
 
     return false;
-  };
+};
+
 
   const handleSubmit = async () => {
     let error = validate(dataValue);
@@ -135,7 +143,8 @@ const PostInfo = () => {
           let formData = new FormData();
           formData.append("postId", postId);
           formData.append("file", blob);
-          return baseAPI.post("/api/upload/post", formData);
+          formData.append("fileName", blob.fileName);
+          baseAPI.post("/api/upload/post", formData);
         }));
 
         navigate(`/post/${postId}`);
@@ -203,4 +212,4 @@ const PostInfo = () => {
   );
 };
 
-export default PostInfo;
+export default PostQNA;

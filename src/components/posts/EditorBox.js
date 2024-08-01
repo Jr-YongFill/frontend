@@ -3,6 +3,7 @@ import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
+import uuid from 'react-uuid';
 
 const EditorBox = forwardRef((props, ref) => {
   const onChange = () => {
@@ -10,14 +11,16 @@ const EditorBox = forwardRef((props, ref) => {
     props.onChange(data); // 부모 컴포넌트의 onChange 호출
   };
 
+  
   const onUploadImage = async (blob, callback) => {
-    let formData = new FormData();
-    formData.append("file", blob);
-
+    // 부모 컴포넌트의 onUploadImage 호출
     const url = await props.onUploadImage(blob, callback);
+
+    // 콜백 함수 호출하여 URL을 에디터에 전달
     callback(url, 'alt text');
     return false;
   };
+
 
   return (
     <div className="edit_wrap">
