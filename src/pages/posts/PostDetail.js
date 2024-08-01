@@ -8,6 +8,7 @@ import palette from '../../styles/pallete';
 import styled from 'styled-components';
 import EditorViewer from '../../components/posts/EditorViewer';
 import CustomButton from '../../components/CustomButton';
+import { localStorageGetValue } from '../../utils/CryptoUtils';
 
 /* data객체 정보 예시
 {
@@ -206,7 +207,7 @@ function PostDetail() {
   const [data, setData] = useState(null);
   const [comments, setComments] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  const memberId = localStorage.getItem('id');
+  const memberId = localStorageGetValue('member-id');
   const [commentText, setCommentText] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [editCommentId, setEditCommentId] = useState(null);
