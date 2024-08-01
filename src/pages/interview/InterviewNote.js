@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import CustomButton from "../../components/CustomButton";
 import { palette } from "@mui/system";
+import {baseAPI} from "../../config";
 
 const TitleContainer = styled(Box)`
     display: grid;
@@ -53,7 +54,7 @@ const InterviewNote = () => {
   useEffect(() => {
     const fetchStacks = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/members/1/stacks');
+        const response = await baseAPI.get('http://localhost:8080/api/members/1/stacks');
         setStacks(response.data.filter(stack => stack.isPurchase));
         if (response.data.length > 0) {
           setSelectedStack(response.data[0].id); // 기본적으로 첫 번째 스택 선택
@@ -73,7 +74,7 @@ const InterviewNote = () => {
     const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:8080/api/members/1/stacks/${selectedStack}/answers?page=${currentPage - 1}&size=6`);
+        const response = await baseAPI.get(`http://localhost:8080/api/members/1/stacks/${selectedStack}/answers?page=${currentPage - 1}&size=6`);
         setQuestions(response.data.content);
         setTotalPages(response.data.totalPages);
         setLoading(false);
