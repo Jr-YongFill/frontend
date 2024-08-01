@@ -4,7 +4,6 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import Header from "../../components/Header";
 import EditorBox from "../../components/posts/EditorBox";
-import EditorViewer from "../../components/posts/EditorViewer";
 import palette from "../../styles/pallete";
 import { useNavigate } from "react-router-dom";
 import { baseAPI } from "../../config";
@@ -226,7 +225,6 @@ const handleSubmit = async () => {
           </EditorArea>
         </div>
       </Wrapper>
-      <EditorViewer contents={dataValue.content} />
     </div>
   );
 };
