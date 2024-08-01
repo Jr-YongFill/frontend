@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { baseAPI } from '../../config'
+import CustomButton from '../../components/CustomButton';
 
 const Title = styled.div`
   display: flex;
@@ -115,6 +116,10 @@ const CommunityQNA = () => {
     return date.toISOString().split('T')[0]; // '2024-07-24' 형식으로 변환
   };
 
+  const handleWrite = ()=> {
+    navigate("/post/info/write");
+  }
+
   useEffect(() => {
 
     const fetchData = async () => {
@@ -134,6 +139,7 @@ const CommunityQNA = () => {
       <Header />
       <Title>
         <h1>정보 공유 게시판</h1>
+        <CustomButton onClick={handleWrite} color={palette.skyblue}>글 작성</CustomButton>
       </Title>
       <Main>
         <MainHeader>
