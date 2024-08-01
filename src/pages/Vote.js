@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 import img from '../assets/default.png';
 import Header from '../components/Header';
 import { RemoveModal } from '../components/modal/RemoveModal';
-import { localStorageGetValue } from '../utils/cryptoUtils';
+import { localStorageGetValue } from '../utils/CryptoUtils';
 
 const Title = styled.div`
   display: flex;
