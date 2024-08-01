@@ -98,7 +98,7 @@ const Header = ({ color }) => {
           <StyledLink to="/store" onClick={(event) => LinkClick(event, '/store')}>
             <span>상점</span>
           </StyledLink>
-          <StyledLink to="/community/main" onClick={(event) => LinkClick(event, '/community/main')}>
+          <StyledLink to="/community/main">
             <span>커뮤니티</span>
           </StyledLink>
         </GnbMenu>
