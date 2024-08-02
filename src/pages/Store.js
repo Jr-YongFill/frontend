@@ -6,6 +6,8 @@ import palette from '../styles/pallete';
 import Modal from 'react-modal';
 import Header from '../components/Header';
 import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
+import Wrapper from '../components/Wrapper';
+import Block from '../components/Block';
 
 const Title = styled.div`
   display: flex;
@@ -146,6 +148,9 @@ const Store = () => {
   return (
     <>
       <Header />
+      <Wrapper>
+        <Block></Block>
+        <div>
       <Title>
         <h1>Stack 상점</h1>
         <h1>내 크레딧: {credit}</h1>
@@ -341,6 +346,8 @@ const Store = () => {
             </ModalContent>}
         </Modal>
       </Main >
+      </div>
+      </Wrapper>
     </>
   );
 };
