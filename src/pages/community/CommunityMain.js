@@ -84,16 +84,18 @@ const CommunityMain = () => {
     };
 
     const fetchQuestion = async () => {
+      console.log("바보야!0");
+      console.log(localStorageGetValue('member-id'));
       try {
-        const response = await baseAPI.get('/api/votes');
-        const resultList = response.data.pageResponseDTO.resultList;
+        if(localStorageGetValue('member-id')){
+          const response = await baseAPI.get('/api/votes');
+          const resultList = response.data.pageResponseDTO.resultList;
 
-        if (resultList && resultList.length > 0) {
-          setQuestion(resultList[0]);
-        } else {
-          setQuestion("");
+          if (resultList && resultList.length > 0) {
+            setQuestion(resultList[0]);
+          } 
         }
-      } catch (error) {
+      }catch (error) {
         // console.error('Error fetching data', error);
       }
     };
@@ -103,6 +105,24 @@ const CommunityMain = () => {
     fetchCount();
     fetchQuestion();
   }, [memberId]);
+
+  const HandleVote = ()=>{
+    if(memberId){
+      navigate("/vote");
+    }else{
+      alert('로그인 후 이용 가능합니다.');
+      navigate("/auth/sign-in");
+    }
+  }
+
+  const HandleInterview = ()=>{
+    if(memberId){
+      navigate("/vote");
+    }else{
+      alert('로그인 후 이용 가능합니다.');
+      navigate("/auth/sign-in");
+    }
+  }
 
   return (
     <div>
@@ -119,7 +139,7 @@ const CommunityMain = () => {
                 {count === 0 ? (
                   <div>
                     <div style={{ marginBottom: '-3vh' }}>오늘 면접 본 기록이 없어요!</div>
-                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/interview/main")}>
+                    <CustomButton color={palette.skyblue} onClick={HandleInterview}>
                       면접 보러 가기
                     </CustomButton>
                   </div>
@@ -140,14 +160,14 @@ const CommunityMain = () => {
                 {question === "" ? (
                   <div>
                     <div style={{ marginBottom: '-3vh' }}>새로 질문을 등록하고 크레딧을 받아봐요!</div>
-                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/vote")}>
+                    <CustomButton color={palette.skyblue} onClick={HandleVote}>
                       질문 등록 하기
                     </CustomButton>
                   </div>
                 ) : (
                   <div>
                     <div style={{ marginBottom: '-3vh' }}>{question.question}</div>
-                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/vote")}>
+                    <CustomButton color={palette.skyblue} onClick={HandleVote}>
                       투표하러 가기
                     </CustomButton>
                   </div>
