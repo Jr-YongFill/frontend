@@ -1,18 +1,33 @@
 import styled from "styled-components";
+import background from "../assets/background.png"
 
 const CustomWrapper = styled.div`
   display: flex;
-  margin: 10px;
+  margin:  0 10vw;
   justify-content: center;
-  align-content: center;  
+  align-content: center;
+`;
+const WrapperContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url(${background});
+  background-size: cover; 
+  background-position: center;
+  padding: 20px;
+  box-sizing: border-box;
+  min-height: 100vh;
 `;
 
 const Wrapper = ({ children }) => {
 
     return(
-        <CustomWrapper>
+        <WrapperContainer>
+            <CustomWrapper>
             {children}
-        </CustomWrapper>
+            </CustomWrapper>
+        </WrapperContainer>
+        
     )
 
 }

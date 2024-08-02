@@ -7,32 +7,16 @@ import CustomLi from '../../components/CustomLi';
 import CustomButton from '../../components/CustomButton';
 import { baseAPI } from '../../config';
 import { localStorageGetValue } from '../../utils/CryptoUtils';
+import Wrapper from '../../components/Wrapper';
+import GlassCard from '../../components/GlassCard';
+import Block from '../../components/Block';
 
-const Wrapper = styled.div`
-  display: flex;
-  margin: 10px;
-  justify-content: center;
-  align-content: center;  
-`;
-
-const ContainerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;  
-`;
 
 const ContainerRow = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
-const Container = styled.div`
-  background: white;
-  width: 35vw;
-  margin: 5px 5px 0px 5px;
-  height: 38vh;
-`;
 
 const HighLight = styled.div`
   background: ${palette.skyblue};
@@ -43,7 +27,6 @@ const HighLight = styled.div`
 
 const SubContainer = styled.div`
   margin-right: 30px;
-  background: white;
   width: 100%;
   height: 30vh;
   margin-top: 3px;
@@ -51,7 +34,6 @@ const SubContainer = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-left: -4vw;
 `;
 
 const CommunityMain = () => {
@@ -126,9 +108,11 @@ const CommunityMain = () => {
     <div>
       <Header />
       <Wrapper>
-        <ContainerWrapper>
+        <div style={{display:'flex', flexDirection:'column'}}>
+          
+          <Block></Block>
           <ContainerRow>
-            <Container>
+            <GlassCard>
               <div style={{ fontSize: 25, fontWeight: 'bold' }}>오늘의 면접</div>
               <HighLight />
               <SubContainer>
@@ -148,8 +132,8 @@ const CommunityMain = () => {
                   </div>
                 )}
               </SubContainer>
-            </Container>
-            <Container>
+            </GlassCard>
+            <GlassCard>
               <div style={{ fontSize: 25, fontWeight: 'bold' }}>CS 투표</div>
               <HighLight />
               <SubContainer>
@@ -169,10 +153,10 @@ const CommunityMain = () => {
                   </div>
                 )}
               </SubContainer>
-            </Container>
+            </GlassCard>
           </ContainerRow>
           <ContainerRow>
-            <Container>
+            <GlassCard>
               <div
                 style={{ fontSize: 25, fontWeight: 'bold', cursor:'pointer'}}
                 onClick={navigateHandler("/community/qna")}>Q & A</div>
@@ -188,8 +172,8 @@ const CommunityMain = () => {
                   (<div>게시글이 없네요!</div>)
                 }
               </ul>
-            </Container>
-            <Container>
+            </GlassCard>
+            <GlassCard>
               <div
                 style={{ fontSize: 25, fontWeight: 'bold' ,cursor:'pointer' }}
                 onClick={navigateHandler("/community/info")}>정보 공유</div>
@@ -205,9 +189,9 @@ const CommunityMain = () => {
                   (<div>게시글이 없네요!</div>)
                 }
               </ul>
-            </Container>
+            </GlassCard>
           </ContainerRow>
-        </ContainerWrapper>
+          </div>
       </Wrapper>
     </div >
   );

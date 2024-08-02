@@ -1,32 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
-import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
+import { localStorageGetValue } from '../utils/CryptoUtils';
+
+const Logo = styled.div`
+  font-size: 1.5rem;
+  color: white;
+`
 
 const HeaderContainer = styled.header`
+  position: absolute;
   top: 0;
-  height: 80px;
+  height: 10vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 30px;
-  z-index: 9;
-  background: ${palette.skyblue};
+  width:90vw;
+  z-index: 999;
+  background: transparent;
 `;
-
 const StyledLink = styled(Link)`
   text-decoration: none;
-  color: var(--color);
-  font-size: 18px;
+  color: ${props => props.active ? 'white' : palette.gray};
+  font-size: 1rem;
   cursor: pointer;
   margin-left: 15px;
+
+  &:hover {
+    color: white;
+  }
 `;
 
 const HeaderGnb = styled.div`
   display: flex;
-  justify-content: flex-start;
-  gap: 100px;
+  justify-content: space-between;
 `;
 
 const MainLink = styled(StyledLink)`
@@ -36,27 +45,32 @@ const MainLink = styled(StyledLink)`
 
 const GnbMenu = styled.div`
   display: flex;
-  gap: 30px;
+  gap: 3vw;
   align-items: center;
+  margin-left:5vw;
 `;
 
 const HeaderSign = styled.div`
-  display: flex;
-  gap: 30px;
+ display: flex;
+  gap: 3vw;
+  align-items: center;
 `;
 
 const LogoutButton = styled.span`
-  color: var(--color);
-  font-size: 18px;
+  color: ${palette.gray};
   cursor: pointer;
   margin-left: 10px;
+
+  &:hover {
+    color: white;
+  }
 `;
 
 const Header = ({ color }) => {
-  const [memberId, setMemberId] = useState('')
   const [nickName, setNickName] = useState('');
   const [role, setRole] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const nickName = localStorageGetValue('member-nickName');
@@ -70,15 +84,10 @@ const Header = ({ color }) => {
     window.location.href = '/';
   };
 
-  const style = {
-    background: color,
-    color: 'black'
-  };
-
   const LinkClick = (event, path) => {
     if (!role) {
       event.preventDefault();
-      alert('로그인이 필요한 페이지 입니다.')
+      alert('로그인이 필요한 페이지 입니다.');
       navigate('/auth/sign-in');
     } else {
       navigate(path);
@@ -86,37 +95,56 @@ const Header = ({ color }) => {
   };
 
   return (
-    <HeaderContainer style={style}>
-      <HeaderGnb style={style}>
+    <HeaderContainer style={{ background: color }}>
+      <HeaderGnb>
         <MainLink to="/">
-          <span>용가리</span>
+          <Logo>모시모시</Logo>
         </MainLink>
-        <GnbMenu>
-          <StyledLink to="/interview/main" onClick={(event) => LinkClick(event, '/interview/main')}>
-            <span>면접보러가기</span>
-          </StyledLink>
-          <StyledLink to="/store" onClick={(event) => LinkClick(event, '/store')}>
-            <span>상점</span>
-          </StyledLink>
-          <StyledLink to="/community/main">
-            <span>커뮤니티</span>
-          </StyledLink>
-        </GnbMenu>
+        
       </HeaderGnb>
-      <HeaderSign style={style}>
-        {nickName ? (
-          <div>
-            <span>{nickName}</span>
-            <StyledLink to="/member" onClick={(event) => LinkClick(event, '/member')}>마이페이지</StyledLink>
-            <LogoutButton onClick={logoutHandle}>로그아웃</LogoutButton>
-          </div>
-        ) : (
-          <div>
-            <StyledLink to="/auth/sign-in">로그인</StyledLink>
-            <StyledLink to="/auth/sign-up">회원가입</StyledLink>
-          </div>
-        )}
-      </HeaderSign>
+          <GnbMenu>
+            <StyledLink
+              to="/interview/main"
+              onClick={(event) => LinkClick(event, '/interview/main')}
+              active={location.pathname === '/interview/main'}
+            >
+              <span>면접보러가기</span>
+            </StyledLink>
+            <StyledLink
+              to="/store"
+              onClick={(event) => LinkClick(event, '/store')}
+              active={location.pathname === '/store'}
+            >
+              <span>상점</span>
+            </StyledLink>
+            <StyledLink
+              to="/community/main"
+              active={location.pathname === '/community/main' || location.pathname === '/post'}
+            >
+              <span>커뮤니티</span>
+            </StyledLink>
+          </GnbMenu>
+          <HeaderSign>
+          {nickName ? (
+            <div>
+              <span>{nickName}</span>
+              <StyledLink
+                to="/member"
+                onClick={(event) => LinkClick(event, '/member')}
+                active={location.pathname === '/member'}
+              >
+                마이페이지
+              </StyledLink>
+              <LogoutButton onClick={logoutHandle}>로그아웃</LogoutButton>
+            </div>
+          ) : (
+            <div>
+              <StyledLink to="/auth/sign-in">로그인</StyledLink>
+              <StyledLink to="/auth/sign-up">회원가입</StyledLink>
+            </div>
+          )}
+          </HeaderSign>
+      
     </HeaderContainer>
   );
 };
