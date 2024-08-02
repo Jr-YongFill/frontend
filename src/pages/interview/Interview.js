@@ -1,10 +1,32 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
+import MyBtn from '../../components/CustomButton';
 import { baseAPI } from "../../config";
+import Timer from "../../components/Timer";
+import pallete from "../../styles/pallete";
+import styled from "styled-components";
+
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px 0;
+  gap: 50px;
+`;
+
+const GridContainer = styled.div`
+    display: flex;
+    grid-column: 1 / -1; /* 변경: 그리드의 모든 열을 차지하도록 설정 */
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+`;
 
 const Interview = () => {
-  const totalQuestions = 10;
+  const memberId = 1;
+  const totalQuestions = 2;
   const navigate = useNavigate();
   const location = useLocation();
   const { stackids, apiKey } = location.state || {};
@@ -148,6 +170,7 @@ const Interview = () => {
 
     // 새로운 답변 저장
     const newAnswer = {
+      questionId: questions[currentQuestion].questionId,
       question: questions[currentQuestion].question,
       memberAnswer: memberAnswer,
       gptAnswer: gptAnswer
@@ -156,8 +179,6 @@ const Interview = () => {
     // 기존의 답변 리스트에 새 답변 추가
     setAnswers(prevAnswers => [...prevAnswers, newAnswer]);
 
-    // 다음 질문으로 이동
-    setCurrentQuestion(prevQuestion => prevQuestion + 1);
 
     // 다음 질문에 대한 녹음 시작
     startRecording();
@@ -167,37 +188,63 @@ const Interview = () => {
   const handleNext = async () => {
     // 마지막 질문인 경우 결과 페이지로 이동
 
-
     try {
       // 녹음을 멈추고 완전히 처리되기를 기다림
-      stopRecording();
+      await stopRecording();
     } catch (error) {
       console.error('다음 질문 처리 중 오류 발생:', error);
     }
 
-    if (currentQuestion > totalQuestions - 1) {
-      alert("모든 문제가 종료되었습니다. \n면접 결과 화면으로 이동합니다.");
-      navigate('/interview/result');
-      return;
-    }
+
+    (currentQuestion >= totalQuestions - 1) && await handleSubmit();
+
+    setCurrentQuestion(currentQuestion + 1);
+
   };
 
   const handleSkip = async () => {
     const gptAnswer = await askQuestion("모르겠습니다.");
     const newAnswer = {
+      questionId: questions[currentQuestion].questionId,
       question: questions[currentQuestion].question,
       memberAnswer: "모르겠습니다.",
       gptAnswer: gptAnswer
     };
 
-    setAnswers([...answers, newAnswer]);
+    await setAnswers([...answers, newAnswer]);
+
+    (currentQuestion >= totalQuestions - 1) && await handleSubmit();
+
     setCurrentQuestion(currentQuestion + 1);
-    if (currentQuestion > totalQuestions - 1) {
-      alert("모든 문제가 종료되었습니다. \n면접 결과 화면으로 이동합니다.");
-      navigate('/interview/result');
-      return;
-    }
+
   };
+
+  const handleSubmit = async () => {
+
+    const url = `/api/members/${memberId}/answers`;
+    const data = answers.map(item => ({
+      questionId: item.questionId,
+      memberAnswer: item.memberAnswer,
+      gptAnswer: item.gptAnswer,
+      interviewMode: "REAL"
+    }));
+
+    try {
+      const response = await baseAPI.post(url, data);
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
+
+    alert("모든 문제가 종료되었습니다. \n면접 결과 화면으로 이동합니다.");
+    navigate('/interview/result', {
+      state: answers.map(item => ({
+        question: item.question,
+        memberAnswer: item.memberAnswer,
+        gptAnswer: item.gptAnswer
+      }))
+    });
+  }
 
 
   useEffect(() => {
@@ -256,11 +303,15 @@ const Interview = () => {
   return (
     <div>
       <Header />
-      <h2>실전 면접</h2>
-      {stackids.map(id => (
-        <h2 key={id}> Stack ID: {id}</h2>
-      ))}
-      <h2>apiKey : {apiKey}</h2>
+      {/*<h2>실전 면접</h2>*/}
+      {/*{stackids.map(id => (*/}
+      {/*  <h2 key={id}> Stack ID: {id}</h2>*/}
+      {/*))}*/}
+      {/*<h2>apiKey : {apiKey}</h2>*/}
+
+      {questions.length > 0 &&
+        <h1>Q{currentQuestion + 1}. {questions[currentQuestion].question}</h1>}
+
       <video
         className='container'
         ref={videoRef}
@@ -280,12 +331,13 @@ const Interview = () => {
         </div>
       ))}
 
-      {questions.length > 0 &&
-        <h1>Q{currentQuestion + 1}. {questions[currentQuestion].question}</h1>}
-      <button onClick={handleNext}>Next</button>
-      <button onClick={handleSkip}>Skip</button>
-      <div>{recording ? '됨' : '멈춤'}</div>
+
+
       {/*<button onClick={() => navigate('/interview/result')}>면접 결과</button>*/}
+
+      {recording && <Timer handleNext= {handleNext} ></Timer>}
+      <MyBtn color={pallete.skyblue} onClick={handleNext}>Next</MyBtn>
+      <MyBtn color={pallete.skyblue} onClick={handleSkip}>Skip</MyBtn>
     </div>
   );
 };
