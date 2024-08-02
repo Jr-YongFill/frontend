@@ -7,105 +7,105 @@ import communityRandingImage from '../assets/rending2.png';
 import Header from '../components/Header';
 import palette from '../styles/pallete';
 import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
-import GlassCard from '../components/GlassCard';
-import Wrapper from '../components/Wrapper';
-import Block from '../components/Block';
 
 const WrapperContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #5a8db1;
-  background-image: linear-gradient(0deg, #5a8db1 0%, #16193c 100%);
-  padding: 20px;
-  box-sizing: border-box;
-  min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f4ff;
+    padding: 20px;
+    box-sizing: border-box;
 `;
 
 const ContainerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  justify-content: center; 
-  width: 90%;
-  margin: 0 auto;
-  flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    width: 90%;
+    margin: 0 auto;
+    flex: 1;
 `;
 
-const Image = styled.img`
-  width: 20vw;
+const Container = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    padding: 20px;
+    text-align: left;
 `;
+const Image = styled.img`
+  width: 200px;
+
+`
 
 const Title = styled.h1`
-  font-weight: bold;
-  margin: 10px 0;
-  color: white;
+    font-weight: bold;
+    margin: 10px 0;
 `;
 
 const Description = styled.p`
-  font-size: 16px;
-  margin: 15px 0;
-  color: ${palette.gray};
+    font-size: 16px;
+    margin: 10px 0;
 `;
 
 const Button = styled.button`
-  background-color: rgba(0, 86, 179, 0.7);
-  width: 20vw;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  cursor: pointer;
-  margin-top: 40px;
+    background-color: #0056b3;
+    width:20%;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
 
-  &:hover {
-    background-color: ${palette.skyblue};
-  }
+    &:hover {
+        background-color: ${palette.skyblue};
+    }
 `;
 
 const Label = styled.label`
-  display: block;
-  color: white;
-  margin-bottom: 10px;
+    display: block;
+    color: #333;
+    margin-bottom: 10px;
 `;
 
 const DeveloperInfoContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
 `;
 
 const DeveloperCard = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-  width: 150px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: #e7f3ff;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 150px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
-  img {
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-    object-fit: cover;
-  }
+    img {
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+    }
 
-  h3 {
-    margin: 10px 0 5px;
-    font-size: 18px;
-    color:white
-  }
+    h3 {
+        margin: 10px 0 5px;
+        font-size: 18px;
+    }
 
-  p {
-    margin: 5px 0;
-    font-size: 14px;
-    
-    color:${palette.gray};
-  }
+    p {
+        margin: 5px 0;
+        font-size: 14px;
+    }
 `;
 
 const Home = () => {
@@ -114,7 +114,7 @@ const Home = () => {
   const ButtonClick = (path) => {
     const role = localStorageGetValue('member-role');
     if (!role) {
-      alert('로그인이 필요한 페이지입니다.');
+      alert('로그인이 필요한 페이지입니다.')
       navigate('/auth/sign-in');
     } else {
       navigate(path);
@@ -124,50 +124,41 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <Wrapper>
+      <WrapperContainer>
         <ContainerWrapper>
-        <Block></Block>
-          <GlassCard>
-            <div style={{margin:'40px',display:'flex',justifyContent:'space-between'}}>
-              <div style={{width:'40vw'}}>
-                <Label>개발자들을 위한</Label>
-                <Title>모의면접</Title>
-                <Title>시뮬레이터</Title>
-                <Description>
-                  어쩌구저쩌구
-                  <br></br>
-                  저쩌구
-                </Description>
-                <Button onClick={() => ButtonClick('/interview/choice-mode')}>면접 페이지 이동</Button>
-              </div>
-              <div style={{display:'block', alignContent:'center',paddingRight:'10vw'}}>
-                <Image src={csRandingImage} alt="RandingImage"/>
-              </div>
-            
-            </div>
-          </GlassCard>
+          <Container>
+            <Label>개발자들을 위한</Label>
+            <Title>CS 랜덤 디펜스</Title>
+            <Description>
+              I’m on the Next Level 저 너머의 문을 열어
+              <br />
+              Next Level 널 결국엔 내가 부셔
+              <br />
+              Next Level Devop에 닿을 때까지
+              <br />
+              Next Level 제껴라 제껴라 제껴라
+            </Description>
+            <Image src={csRandingImage} alt="RandingImage" />
+            <Button onClick={() => ButtonClick('/interview/choice-mode')}>면접 페이지 이동</Button>
+          </Container>
 
-          <GlassCard>
-            <div style={{margin:'40px',display:'flex',justifyContent:'space-between'}}>
-              <div style={{width:'40vw'}}>
-                <Label>개발자들을 위한</Label>
-                <Title>취준생</Title>
-                <Title>커뮤니티</Title>
-                <Description>
-                  취준생을 위한
-                  <br></br>
-                  커뮤니티 기능
-                </Description>
-                <Button onClick={() => ButtonClick('/community/main')}>커뮤니티 페이지 이동</Button>
-              </div>
-              <div style={{display:'block', alignContent:'center',paddingRight:'10vw'}}>
-                <Image src={communityRandingImage} alt="RandingImage"/>
-              </div>
-            
-            </div>
-          </GlassCard>
+          <Container>
+            <Label>개발자들을 위한</Label>
+            <Title>취준생을 위한 커뮤니티</Title>
+            <Description>
+              대화가 필요해 우린 대화가 부족해
+              <br />
+              항상 내 곁에 있어서
+              <br />
+              너의 소중함과 고마움까지도 다 잊고 살았어
+              <br />
+              대화가 필요해
+            </Description>
+            <Image src={communityRandingImage} alt="RandingImage" />
+            <Button onClick={()=>navigate('/community/main')}>커뮤니티 이동</Button>
+          </Container>
 
-          <GlassCard flex="2">
+          <Container flex="2">
             <Title style={{ textAlign: 'center' }}>개발자 정보</Title>
             <DeveloperInfoContainer>
               <DeveloperCard>
@@ -195,10 +186,9 @@ const Home = () => {
                 <p>contact: changmin38@gmail.com</p>
               </DeveloperCard>
             </DeveloperInfoContainer>
-          </GlassCard>
+          </Container>
         </ContainerWrapper>
-        </Wrapper>
-    
+      </WrapperContainer>
     </div>
   );
 };
