@@ -192,12 +192,12 @@ const PracticeInterview = () => {
 
   const insertAnswer = async (memberAnswer, gptAnswer) => {
     const url = `/api/members/${memberId}/answers`;
-    const data = {
+    const data = [{
       questionId: questionId,
       memberAnswer: memberAnswer,
       gptAnswer: gptAnswer,
       interviewMode: "PRACTICE"
-    };
+    }];
 
     try {
       const response = await baseAPI.post(url, data);
