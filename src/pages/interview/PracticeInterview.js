@@ -6,6 +6,7 @@ import MyBtn from '../../components/CustomButton';
 import pallete from '../../styles/pallete';
 import styled from 'styled-components';
 import Modal from 'react-modal';
+import {localStorageGetValue} from "../../utils/CryptoUtils";
 
 const GridContainer = styled.div`
     display: grid;
@@ -96,7 +97,7 @@ const AnswerContainer = styled.div`
 const PracticeInterview = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const memberId = localStorage.getItem('id');
+  const memberId = localStorageGetValue('member-id');
   const { stackids, apiKey } = location.state || {};
   const [questionId, setQuestionId] = useState(0);
   const [question, setQuestion] = useState("");
@@ -332,6 +333,7 @@ const PracticeInterview = () => {
 
       mediaRecorder.addEventListener('stop', () => {
         const blob = new Blob(audioChunks, { type: 'audio/wav' });
+
         const audioUrl = URL.createObjectURL(blob);
         setAudioURL(audioUrl);
         setAudioBlob(blob);
