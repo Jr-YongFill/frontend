@@ -16,10 +16,10 @@ const MyBtn = styled.button`
 
 
 const CustomButton = ({ color, children, onClick }) => {
-    return (
-      <MyBtn color={color} onClick={onClick}>
-        {children}
-      </MyBtn>
-    );
-  };
+  return (
+    <MyBtn color={color} onClick={onClick}>
+      {children}
+    </MyBtn>
+  );
+};
 export default CustomButton;
