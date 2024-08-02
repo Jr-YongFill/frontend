@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import Header from '../../components/Header';
 import {baseAPI} from "../../config";
-import axios from "axios";
 
 const PracticeInterview = () => {
   const navigate = useNavigate(); // useNavigate를 호출

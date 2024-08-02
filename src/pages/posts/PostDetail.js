@@ -371,7 +371,7 @@ function PostDetail() {
             </div>
             <div style={{ display: 'flex' }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                {memberId == data.memberId && <MyBtn
+                {memberId === data.memberId && <MyBtn
                   color={palette.skyblue}
                   onClick={handleUpdate}>
                   수정
@@ -381,7 +381,7 @@ function PostDetail() {
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                {(memberId == data.memberId || memberRole === 'ADMIN') && <MyBtn
+                {(memberId === data.memberId || memberRole === 'ADMIN') && <MyBtn
                   color={palette.skyblue}
                   onClick={() => setIsDeletePostModalOpen(true)}>
                   삭제
@@ -433,14 +433,14 @@ function PostDetail() {
                       </div>
                       <div style={{ display: 'flex' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                          {memberId == comment.memberId && <MyBtn
+                          {memberId === comment.memberId && <MyBtn
                             color={palette.skyblue}
                             onClick={() => handleEditComment(comment.id, comment.content)}>
                             수정
                           </MyBtn>}
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                          {(memberId == comment.memberId || memberRole === 'ADMIN') &&
+                          {(memberId === comment.memberId || memberRole === 'ADMIN') &&
                             <MyBtn
                               color={palette.skyblue}
                               onClick={() => {

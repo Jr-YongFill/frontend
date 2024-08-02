@@ -1,138 +1,150 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import palette from '../styles/pallete';
-import { baseAPI } from '../config';
-import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import palette from "../styles/pallete";
+import { baseAPI } from "../config";
+import {
+  localStorageGetValue,
+  localStorageSetValue,
+} from "../utils/CryptoUtils";
+import Wrapper from "../components/Wrapper";
+import Block from "../components/Block";
+import GlassCard from "../components/GlassCard";
+import CustomLi from "../components/CustomLi";
+import NPGlassCard from "../components/NoPaddingGlassCard";
+import CustomButton from "../components/CustomButton";
 
 const WrapperContainer = styled.div`
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f0f4ff;
-    padding: 20px;
-    box-sizing: border-box;
-`;
-
-const Box = styled.div`
-    width: 90%;
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f4ff;
+  padding: 20px;
+  box-sizing: border-box;
 `;
 
 const Title = styled.h2`
-    font-weight: bold;
-    margin: 0;
+  font-weight: bold;
+  margin: 0;
 `;
 
 const TopContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  height: 100%;
+  padding: 20px;
 `;
 
 const Line = styled.hr`
-    width: 100%;
-    border: 5px solid ${palette.skyblue};
-    border-radius: 30px;
-    margin: 20px 0;
+  width: 100%;
+  border: 5px solid ${palette.dark};
+  border-radius: 30px;
+  margin: 20px 0;
 `;
 
 const MiddelContainer = styled.div`
-    display: flex;
-    width: 100%;
-    gap: 20px;
-    margin-bottom: 20px;
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  margin-bottom: 20px;
 `;
 
 const ImageContainer = styled.div`
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 `;
 
 const ProfileImage = styled.img`
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    cursor: pointer;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  cursor: pointer;
 `;
 
 const Button = styled.button`
-    color: white;
-    background-color: ${palette.skyblue};
-    border: none;
-    border-radius: 20px;
-    padding: 10px 30px;
-    cursor: pointer;
+  color: white;
+  background-color: ${palette.dark};
+  border: none;
+  border-radius: 20px;
+  padding: 10px 30px;
+  cursor: pointer;
 `;
 
 const StyledButton = styled(Button)`
-    white-space: nowrap;
-    width: auto; 
-    margin-left:10px;
+  white-space: nowrap;
+  width: auto;
+  margin-left: 10px;
 `;
 
 const ButtonContainer = styled.div`
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
 `;
 
 const FileInput = styled.input`
-    width: 50%;
-    padding: 10px;
-`;
-
-const ImageUpdateButton = styled(Button)`
-    width: 45%;
+  width: 50%;
+  padding: 10px;
 `;
 
 const Input = styled.input`
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    box-sizing: border-box;
-`;
+  margin: 10px 0;
+  padding: 15px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  width: 100%;
+  box-sizing: border-box;
 
+  &::placeholder {
+    color: #ccc;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
 const MemberUpdateContainer = styled.div`
-    width: 55%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const NicknameContainer = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const NicknameInput = styled.div`
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 `;
 
 const PasswordContainer = styled(NicknameContainer)`
-    margin-top: 20px;
+  margin-top: 20px;
 `;
 
 const PasswordButtonContainer = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 20px;
 `;
 
 const BottomContainer = styled(MiddelContainer)``;
@@ -145,24 +157,13 @@ const PostContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
-`;
-
-const CommentContainer = styled(PostContainer)``;
-
-const LinkStyled = styled(Link)`
-  text-decoration: none;
-  color: blue;
-  font-size: 16px;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  color: ${palette.dark};
 `;
 
 const Member = () => {
   const [nickName, setNickname] = useState("");
   const [originalNickName, setOriginalNickname] = useState("");
-  const [memberId, setMemberId] = useState(localStorageGetValue('member-id'));
+  const [memberId, setMemberId] = useState(localStorageGetValue("member-id"));
   const [profileImage, setProfileImage] = useState(null);
   const [originalProfileImage, setOriginalProfileImage] = useState(null);
   const [postData, setPostData] = useState([]);
@@ -173,8 +174,8 @@ const Member = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setMemberId(localStorageGetValue('member-id'));
-    setNickname(localStorageGetValue('member-nickName'));
+    setMemberId(localStorageGetValue("member-id"));
+    setNickname(localStorageGetValue("member-nickName"));
 
     const fetchMemberData = async () => {
       if (memberId) {
@@ -193,7 +194,9 @@ const Member = () => {
     const fetchPostData = async () => {
       if (memberId) {
         try {
-          const response = await baseAPI.get(`/api/members/${memberId}/posts?page=0&size=5`);
+          const response = await baseAPI.get(
+            `/api/members/${memberId}/posts?page=0&size=5`
+          );
           setPostData(response.data.resultList);
         } catch (error) {
           console.error(error);
@@ -205,7 +208,9 @@ const Member = () => {
     const fetchCommentData = async () => {
       if (memberId) {
         try {
-          const response = await baseAPI.get(`/api/members/${memberId}/comments?page=0&size=5`);
+          const response = await baseAPI.get(
+            `/api/members/${memberId}/comments?page=0&size=5`
+          );
           setCommentData(response.data.resultList);
         } catch (error) {
           console.error(error);
@@ -221,7 +226,7 @@ const Member = () => {
       await baseAPI.delete(`/api/members/${memberId}`);
       localStorage.clear();
       alert("회원 탈퇴 성공");
-      navigate('/');
+      navigate("/");
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -260,14 +265,14 @@ const Member = () => {
 
     try {
       const formData = new FormData();
-      formData.append('password', password);
+      formData.append("password", password);
 
       await baseAPI.patch(`/api/members/${memberId}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       alert("비밀번호 변경이 완료되었습니다.");
-      navigate('/member');
+      navigate("/member");
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -291,18 +296,18 @@ const Member = () => {
     try {
       const formData = new FormData();
       if (nickName !== originalNickName) {
-        formData.append('nickname', nickName);
+        formData.append("nickname", nickName);
       }
       if (file) {
-        formData.append('file', file);
+        formData.append("file", file);
       }
 
       await baseAPI.patch(`/api/members/${memberId}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (nickName !== originalNickName) {
-        localStorageSetValue('member-nickName', nickName);
+        localStorageSetValue("member-nickName", nickName);
       }
 
       alert("프로필 수정 성공");
@@ -315,78 +320,94 @@ const Member = () => {
   return (
     <>
       <Header />
-      <WrapperContainer>
-        <Box>
-          <TopContainer>
-            <Title>마이페이지</Title>
-            <Button onClick={deleteHandle}>탈퇴하기</Button>
-          </TopContainer>
-          <Line />
+      <Wrapper>
+        <div>
+          <Block></Block>
+          <NPGlassCard>
+            <TopContainer>
+              <Title>마이페이지</Title>
+              <Button onClick={deleteHandle}>탈퇴하기</Button>
+            </TopContainer>
+            <div style={{ padding: "20px" }}>
+              <MiddelContainer>
+                <ImageContainer>
+                  <ProfileImage src={profileImage} alt="Profile 선택" />
+                  <ButtonContainer>
+                    <FileInput
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                    />
+                    <CustomButton onClick={UpdateImageHandle} width={"100px"}>
+                      수정하기
+                    </CustomButton>
+                  </ButtonContainer>
+                </ImageContainer>
 
-          <MiddelContainer>
-            <ImageContainer>
-              <ProfileImage src={profileImage} alt="Profile 선택" />
-              <ButtonContainer>
-                <FileInput type="file" accept="image/*" onChange={handleImageChange} />
-                <ImageUpdateButton onClick={UpdateImageHandle}>수정하기</ImageUpdateButton>
-              </ButtonContainer>
-            </ImageContainer>
+                <MemberUpdateContainer>
+                  <NicknameContainer>
+                    <Title>닉네임 변경</Title>
+                    <NicknameInput>
+                      <Input
+                        type="text"
+                        placeholder="닉네임"
+                        value={nickName}
+                        onChange={handleNameChange}
+                      />
+                      <StyledButton onClick={UpdateImageHandle}>
+                        수정하기
+                      </StyledButton>
+                    </NicknameInput>
+                  </NicknameContainer>
+                  <PasswordContainer>
+                    <Title>비밀번호 변경</Title>
+                    <Input
+                      type="password"
+                      placeholder="새 비밀번호"
+                      value={password}
+                      onChange={handlePasswordChange}
+                    />
+                    <Input
+                      type="password"
+                      placeholder="비밀번호 확인"
+                      value={checkPassword}
+                      onChange={handleCheckPasswordChange}
+                    />
+                    <PasswordButtonContainer>
+                      <StyledButton onClick={UpdatePasswordHandle}>
+                        변경하기
+                      </StyledButton>
+                    </PasswordButtonContainer>
+                  </PasswordContainer>
+                </MemberUpdateContainer>
+              </MiddelContainer>
 
-            <MemberUpdateContainer>
-              <NicknameContainer>
-                <Title>닉네임 변경</Title>
-                <NicknameInput>
-                  <Input
-                    type="text"
-                    placeholder="닉네임"
-                    value={nickName}
-                    onChange={handleNameChange}
-                  />
-                  <StyledButton onClick={UpdateImageHandle}>수정하기</StyledButton>
-                </NicknameInput>
-              </NicknameContainer>
-              <PasswordContainer>
-                <Title>비밀번호 변경</Title>
-                <Input
-                  type="password"
-                  placeholder="새 비밀번호"
-                  value={password}
-                  onChange={handlePasswordChange}
-                />
-                <Input
-                  type="password"
-                  placeholder="비밀번호 확인"
-                  value={checkPassword}
-                  onChange={handleCheckPasswordChange}
-                />
-                <PasswordButtonContainer>
-                  <StyledButton onClick={UpdatePasswordHandle}>변경하기</StyledButton>
-                </PasswordButtonContainer>
-              </PasswordContainer>
-            </MemberUpdateContainer>
-          </MiddelContainer>
-
-          <BottomContainer>
-            <PostContainer>
-              <Title>내가 쓴 글</Title>
-              <ul>
-                {postData.map((post, index) => (
-                  <li key={index}>{post.title}</li>
-                ))}
-              </ul>
-              <LinkStyled to='/post/:id' style={{ textAlign: 'right' }}>게시글 조회</LinkStyled>
-            </PostContainer>
-            <CommentContainer>
-              <Title>내가 쓴 댓글</Title>
-              <ul>
-                {commentData.map((comment, index) => (
-                  <li key={index}>{comment.content}</li>
-                ))}
-              </ul>
-            </CommentContainer>
-          </BottomContainer>
-        </Box>
-      </WrapperContainer>
+              <BottomContainer>
+                <GlassCard>
+                  <Title>내가 쓴 글</Title>
+                  <ul>
+                    {postData.map((post, index) => (
+                      <CustomLi key={index} data={post}>
+                        {post.title}
+                      </CustomLi>
+                    ))}
+                  </ul>
+                </GlassCard>
+                <GlassCard>
+                  <Title>내가 쓴 댓글</Title>
+                  <ul>
+                    {commentData.map((comment, index) => (
+                      <CustomLi key={index} data={comment}>
+                        {comment.title}
+                      </CustomLi>
+                    ))}
+                  </ul>
+                </GlassCard>
+              </BottomContainer>
+            </div>
+          </NPGlassCard>
+        </div>
+      </Wrapper>
     </>
   );
 };
