@@ -1,15 +1,19 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import defaultImage from '../assets/default.png';
-import csRandingImage from '../assets/rending1.png';
-import communityRandingImage from '../assets/rending2.png';
-import Header from '../components/Header';
-import palette from '../styles/pallete';
-import { localStorageGetValue, localStorageSetValue } from '../utils/CryptoUtils';
-import GlassCard from '../components/GlassCard';
-import Wrapper from '../components/Wrapper';
-import Block from '../components/Block';
+import React from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import defaultImage from "../assets/default.png";
+import csRandingImage from "../assets/planet.png";
+import communityRandingImage from "../assets/rending2.png";
+import Header from "../components/Header";
+import palette from "../styles/pallete";
+import {
+  localStorageGetValue,
+  localStorageSetValue,
+} from "../utils/CryptoUtils";
+import GlassCard from "../components/GlassCard";
+import Wrapper from "../components/Wrapper";
+import Block from "../components/Block";
+import CustomButton from "../components/CustomButton";
 
 const WrapperContainer = styled.div`
   display: flex;
@@ -25,8 +29,8 @@ const WrapperContainer = styled.div`
 const ContainerWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center; 
-  justify-content: center; 
+  align-items: center;
+  justify-content: center;
   width: 90%;
   margin: 0 auto;
   flex: 1;
@@ -48,21 +52,6 @@ const Description = styled.p`
   color: ${palette.gray};
 `;
 
-const Button = styled.button`
-  background-color: rgba(0, 86, 179, 0.7);
-  width: 20vw;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  cursor: pointer;
-  margin-top: 40px;
-
-  &:hover {
-    background-color: ${palette.skyblue};
-  }
-`;
-
 const Label = styled.label`
   display: block;
   color: white;
@@ -75,6 +64,7 @@ const DeveloperInfoContainer = styled.div`
   justify-content: center;
   gap: 20px;
   margin-top: 20px;
+  padding: 30px 0px;
 `;
 
 const DeveloperCard = styled.div`
@@ -97,14 +87,14 @@ const DeveloperCard = styled.div`
   h3 {
     margin: 10px 0 5px;
     font-size: 18px;
-    color:white
+    color: white;
   }
 
   p {
     margin: 5px 0;
     font-size: 14px;
-    
-    color:${palette.gray};
+
+    color: ${palette.gray};
   }
 `;
 
@@ -112,10 +102,10 @@ const Home = () => {
   const navigate = useNavigate();
 
   const ButtonClick = (path) => {
-    const role = localStorageGetValue('member-role');
+    const role = localStorageGetValue("member-role");
     if (!role) {
-      alert('로그인이 필요한 페이지입니다.');
-      navigate('/auth/sign-in');
+      alert("로그인이 필요한 페이지입니다.");
+      navigate("/auth/sign-in");
     } else {
       navigate(path);
     }
@@ -126,10 +116,17 @@ const Home = () => {
       <Header />
       <Wrapper>
         <ContainerWrapper>
-        <Block></Block>
-          <GlassCard>
-            <div style={{margin:'40px',display:'flex',justifyContent:'space-between'}}>
-              <div style={{width:'40vw'}}>
+          <Block></Block>
+          <GlassCard width={"60vw"}>
+            <div
+              style={{
+                margin: "40px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ width: "40vw" }}>
                 <Label>개발자들을 위한</Label>
                 <Title>모의면접</Title>
                 <Title>시뮬레이터</Title>
@@ -138,18 +135,29 @@ const Home = () => {
                   <br></br>
                   저쩌구
                 </Description>
-                <Button onClick={() => ButtonClick('/interview/choice-mode')}>면접 페이지 이동</Button>
+                <CustomButton
+                  width={"15vw"}
+                  onClick={() => ButtonClick("/interview/choice-mode")}
+                >
+                  면접 보기
+                </CustomButton>
               </div>
-              <div style={{display:'block', alignContent:'center',paddingRight:'10vw'}}>
-                <Image src={csRandingImage} alt="RandingImage"/>
+              <div style={{ display: "block", alignContent: "center" }}>
+                <Image src={csRandingImage} alt="RandingImage" />
               </div>
-            
             </div>
           </GlassCard>
 
-          <GlassCard>
-            <div style={{margin:'40px',display:'flex',justifyContent:'space-between'}}>
-              <div style={{width:'40vw'}}>
+          <GlassCard width={"60vw"}>
+            <div
+              style={{
+                margin: "40px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ width: "40vw" }}>
                 <Label>개발자들을 위한</Label>
                 <Title>취준생</Title>
                 <Title>커뮤니티</Title>
@@ -158,17 +166,21 @@ const Home = () => {
                   <br></br>
                   커뮤니티 기능
                 </Description>
-                <Button onClick={() => ButtonClick('/community/main')}>커뮤니티 페이지 이동</Button>
+                <CustomButton
+                  width={"15vw"}
+                  onClick={() => ButtonClick("/community/main")}
+                >
+                  커뮤니티 보기
+                </CustomButton>
               </div>
-              <div style={{display:'block', alignContent:'center',paddingRight:'10vw'}}>
-                <Image src={communityRandingImage} alt="RandingImage"/>
+              <div style={{ display: "block", alignContent: "center" }}>
+                <Image src={communityRandingImage} alt="RandingImage" />
               </div>
-            
             </div>
           </GlassCard>
 
-          <GlassCard flex="2">
-            <Title style={{ textAlign: 'center' }}>개발자 정보</Title>
+          <GlassCard width={"60vw"}>
+            <Title style={{ textAlign: "center" }}>개발자 정보</Title>
             <DeveloperInfoContainer>
               <DeveloperCard>
                 <img src={defaultImage} alt="Developer" />
@@ -197,8 +209,7 @@ const Home = () => {
             </DeveloperInfoContainer>
           </GlassCard>
         </ContainerWrapper>
-        </Wrapper>
-    
+      </Wrapper>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import background from "../assets/background.png"
 
 const CustomWrapper = styled.div`
   display: flex;
-  margin:  0 10vw;
+  margin:  auto 10vw;
   justify-content: center;
   align-content: center;
 `;
@@ -24,6 +24,7 @@ const Wrapper = ({ children }) => {
     return(
         <WrapperContainer>
             <CustomWrapper>
+              
             {children}
             </CustomWrapper>
         </WrapperContainer>

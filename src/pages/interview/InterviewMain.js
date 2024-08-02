@@ -1,13 +1,13 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from '../../components/Header';
-import palette from '../../styles/pallete';
-import styled from 'styled-components';
-import img from '../../assets/default.png';
-import Wrapper from '../../components/Wrapper';
-import GlassCard from '../../components/GlassCard';
-import Block from '../../components/Block';
-import CustomButton from '../../components/CustomButton';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "../../components/Header";
+import palette from "../../styles/pallete";
+import styled from "styled-components";
+import img from "../../assets/default.png";
+import Wrapper from "../../components/Wrapper";
+import GlassCard from "../../components/GlassCard";
+import Block from "../../components/Block";
+import CustomButton from "../../components/CustomButton";
 
 const Title = styled.div`
   display: flex;
@@ -73,40 +73,53 @@ const InterviewMain = () => {
     <div>
       <Header />
       <Wrapper>
-      <div style={{display:'flex', flexDirection:'column'}}>
-        <Block></Block>
-      <GlassCard>
-        <div style={{margin:'10px 30px'}}>
-        <Title>
-          <TitleTextGroup>
-            <TitleText>면접 시뮬레이션</TitleText>
-            <SubTitleText>
-              CS 면접, 잘 준비 되셨나요?<br />
-              아는 만큼 대답해주세요!<br /><br />
-              GPT가 면접 답변을 평가해줘요!
-            </SubTitleText>
-            <DescriptionText>
-              기능 사용을 위해서는 Open AI API키가 필요합니다.<br /><br />
-              API키 생성 방법
-            </DescriptionText>
-          </TitleTextGroup>
-          <img src={img} width={'20%'} alt={'기본 이미지'}></img>
-        </Title>
+        <div style={{ margin: "auto 0" }}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <Block></Block>
+            <GlassCard>
+              <div style={{ margin: "10px 30px" }}>
+                <Title>
+                  <TitleTextGroup>
+                    <TitleText>면접 시뮬레이션</TitleText>
+                    <SubTitleText>
+                      CS 면접, 잘 준비 되셨나요?
+                      <br />
+                      아는 만큼 대답해주세요!
+                      <br />
+                      <br />
+                      GPT가 면접 답변을 평가해줘요!
+                    </SubTitleText>
+                    <DescriptionText>
+                      기능 사용을 위해서는 Open AI API키가 필요합니다.
+                      <br />
+                      <br />
+                      API키 생성 방법
+                    </DescriptionText>
+                  </TitleTextGroup>
+                  <img src={img} width={"20%"} alt={"기본 이미지"}></img>
+                </Title>
+              </div>
+              <BtnGroup>
+                <BtnBox>
+                  <CustomButton
+                    onClick={() => navigate("/interview/practice-choice-stack")}
+                  >
+                    연습 선택 스택
+                  </CustomButton>
+                  <InfoText># 무한모드 #1문제씩_정답_확인가능</InfoText>
+                </BtnBox>
+                <BtnBox>
+                  <CustomButton
+                    onClick={() => navigate("/interview/choice-stack")}
+                  >
+                    면접 선택 스택
+                  </CustomButton>
+                  <InfoText># 10개씩 #한번에_정답_확인가능</InfoText>
+                </BtnBox>
+              </BtnGroup>
+            </GlassCard>
+          </div>
         </div>
-        <BtnGroup>
-          <BtnBox>
-            <CustomButton color={palette.skyblue} onClick={() => navigate('/interview/practice-choice-stack')}>연습 선택 스택</CustomButton>
-            <InfoText># 무한모드 #1문제씩_정답_확인가능</InfoText>
-          </BtnBox>
-          <BtnBox>
-            <CustomButton color={palette.skyblue} onClick={() => navigate('/interview/choice-stack')}>면접 선택 스택</CustomButton>
-            <InfoText># 10개씩 #한번에_정답_확인가능</InfoText>
-          </BtnBox>
-        </BtnGroup>
-      </GlassCard>
-      
-
-      </div>
       </Wrapper>
     </div>
   );

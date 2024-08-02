@@ -5,6 +5,9 @@ import styled from "styled-components";
 import palette from "../../styles/pallete";
 import {baseAPI} from "../../config";
 import Modal from "react-modal";
+import Wrapper from '../../components/Wrapper';
+import Block from '../../components/Block';
+import CustomButton from '../../components/CustomButton';
 
 
 
@@ -96,6 +99,9 @@ const PracticeChoiceStack = () => {
   return (
     <>
       <Header />
+      <Wrapper>
+        <Block></Block>
+        <div style={{display:'flex', flexDirection:'column'}}>
       <Title>
           <h1>이력서에 어떤 스택으로 지원하셨나요?</h1>
           <h3>잠긴 스택은 상점에서 구매가 필요합니다.</h3>
@@ -118,8 +124,7 @@ const PracticeChoiceStack = () => {
             >{stack.stackName}</MyBtn>
           })}
         </Content>
-        <MyBtn color={palette.blue} onClick={() => setModalSwitch(true)}>면접 보러가기</MyBtn>
-        {/*<MyBtn color={palette.blue} onClick={() => navigate('/interview/practice')}>면접 보러가기</MyBtn>*/}
+        <CustomButton onClick={() => setModalSwitch(true)}>면접 보러가기</CustomButton>
         <Modal
           isOpen={modalSwitch}
           onRequestClose={() => setModalSwitch(false)}
@@ -180,6 +185,8 @@ const PracticeChoiceStack = () => {
             </ModalContent>
         </Modal>
       </Main>
+      </div>
+      </Wrapper>
     </>
   );
 };
