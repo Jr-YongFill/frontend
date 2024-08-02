@@ -114,8 +114,10 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <Wrapper>
+      <Wrapper> 
+        {/* Wrapper 아래 태그는 display:flex, flex-direction:column으로 감싸진 곳이어야함 */}
         <ContainerWrapper>
+          {/* 헤더가 보여질 공간을 띄워주긴 위한 Block컴포넌트(MUI아님!!!!)을 배치해야함 */}
           <Block></Block>
           <GlassCard width={"60vw"}>
             <div
