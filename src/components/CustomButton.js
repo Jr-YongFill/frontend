@@ -13,6 +13,7 @@ const MyBtn = styled.button`
   color: white;
   cursor:pointer;
   padding: 10px;
+  type:${props => props.type || 'submit'}
 
   ${(props) => props.isNotHover ?
     null
@@ -23,11 +24,13 @@ const MyBtn = styled.button`
 `;
 
 
-const CustomButton = ({ color, children, onClick, width, myRef, isNotHover }) => {
+const CustomButton = ({ color, children, onClick, width, myRef, isNotHover, type}) => {
   return (
-    <MyBtn ref={myRef} color={color} onClick={onClick} width={width} isNotHover={isNotHover}>
+    <MyBtn ref={myRef} color={color} onClick={onClick} width={width} isNotHover={isNotHover}  type={type}>
       {children}
     </MyBtn>
   );
 };
 export default CustomButton;
+
+

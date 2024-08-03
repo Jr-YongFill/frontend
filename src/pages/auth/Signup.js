@@ -8,44 +8,32 @@ import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
 import Header from '../../components/Header';
 import GlassModal from "../../components/modal/GlassModal";
+import CustomButton from '../../components/CustomButton';
 
 const Title = styled.h1`
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
-    color: ${palette.skyblue};
 `;
 
 const Input = styled.input`
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
+  margin: 10px 0;
+  padding: 15px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  width: 100%;
+  box-sizing: border-box;
 
-    &:focus {
-        border-color: ${palette.skyblue};
-        outline: none;
-    }
-`;
+  &::placeholder {
+    color: #ccc;
+  }
 
-const Button = styled.button`
-    width: 100%;
-    padding: 15px;
-    margin: 30px 0 10px 0;
-    background-color: ${palette.skyblue};
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-
-    &:hover {
-        background-color: ${palette.gray};
-    }
+  &:focus {
+    outline: none;
+  }
 `;
 
 const LinkStyled = styled.a`
@@ -95,9 +83,9 @@ const Signup = () => {
     <>
       <Header />
       <Wrapper>
-        <GlassCard>
+        <GlassCard width={'500px'} height={'450px'}>
           <Title>회원가입</Title>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Input
               type="email"
               name="email"
@@ -119,8 +107,10 @@ const Signup = () => {
               onChange={handleInputChange}
               required
             />
-            <Button type="submit">회원가입</Button>
-            <LinkStyled onClick={() => navigate('/auth/sign-in')}>로그인</LinkStyled>
+            <div style={{ paddingLeft: '80%' }}>
+              <LinkStyled onClick={() => navigate('/auth/sign-in')}>로그인</LinkStyled>
+            </div>
+            <CustomButton type="submit">회원가입</CustomButton>
           </form>
         </GlassCard>
       </Wrapper>
