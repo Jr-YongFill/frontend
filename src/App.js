@@ -4,13 +4,11 @@ import Home from './pages/Home';
 import Member from './pages/Member';
 import Signin from './pages/auth/Signin';
 import Signup from './pages/auth/Signup';
-import ChoiceInterviewMode from './pages/interview/ChoiceInterviewMode';
 import InterviewChoiceStack from './pages/interview/InterviewChoiceStack';
 import InterviewMain from './pages/interview/InterviewMain';
 import InterviewResult from './pages/interview/InterviewResult';
 import PracticeChoiceStack from './pages/interview/PracticeChoiceStack';
 import PracticeInterview from './pages/interview/PracticeInterview';
-import PracticeInterviewMain from './pages/interview/PracticeInterviewMain';
 import CommunityMain from './pages/community/CommunityMain';
 import CommunityInfo from './pages/community/CommunityInfo';
 import CommunityQNA from './pages/community/CommunityQNA';
@@ -34,7 +32,6 @@ function App() {
           <Route path="/auth/sign-in" element={<Signin />} />
           <Route path="/auth/sign-up" element={<Signup />} />
 
-          <Route path="/interview/choice-mode" element={<ChoiceInterviewMode />} />
           <Route path="/interview" element={<Interview />} />
           <Route path="/interview/choice-stack" element={<InterviewChoiceStack />} />
           <Route path="/interview/main" element={<InterviewMain />} />
@@ -43,7 +40,6 @@ function App() {
 
           <Route path="/interview/practice-choice-stack" element={<PracticeChoiceStack />} />
           <Route path="/interview/practice" element={<PracticeInterview />} />
-          <Route path="/interview/practice-main" element={<PracticeInterviewMain />} />
 
           <Route path="/community/main" element={<CommunityMain />} />
           <Route path="/community/info" element={<CommunityInfo />} />

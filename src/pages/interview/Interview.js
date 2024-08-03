@@ -7,7 +7,11 @@ import Timer from "../../components/Timer";
 import pallete from "../../styles/pallete";
 import styled from "styled-components";
 import palette from "../../styles/pallete";
-import {localStorageGetValue} from "../../utils/CryptoUtils";
+import { localStorageGetValue } from "../../utils/CryptoUtils";
+import Wrapper from '../../components/Wrapper';
+import CustomButton from '../../components/CustomButton';
+import GlassCard from '../../components/GlassCard';
+import GlassModal from '../../components/modal/GlassModal';
 
 const ButtonContainer = styled.div`
     display: flex;
@@ -55,6 +59,11 @@ const Interview = () => {
   const [wait, setWait] = useState(false);
   const [isSkip, setIsSkip] = useState(false);
 
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
+
   const getUserCamera = () => {
     navigator.mediaDevices.getUserMedia({
       video: true,
@@ -67,7 +76,12 @@ const Interview = () => {
         }
       })
       .catch((error) => {
-        console.error('Failed to access camera:', error);
+
+        setModalText(error.response.data.message);
+        setModalOnClick(() => () => {
+          setIsModalOpen(false);
+        })
+        setIsModalOpen(true);
       });
   };
 
@@ -105,7 +119,12 @@ const Interview = () => {
       const response = await baseAPI.get(`/api/questions?${params.toString()}`);
       setQuestions(response.data);
     } catch (error) {
-      console.error("Failed to fetch questions:", error);
+
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
   }, [stackids]);
 
@@ -140,7 +159,7 @@ const Interview = () => {
       return result.choices[0].message.content;
 
     } catch (error) {
-      console.error('Error generating question or getting response from AI:', error);
+      throw error;
     }
   };
 
@@ -172,44 +191,54 @@ const Interview = () => {
       return result.text;
 
     } catch (error) {
-      console.error('Error transcribing audio:', error);
+      throw error;
     }
   };
 
   const getGptAnswer = async () => {
+    try {
 
-    let memberAnswer, gptAnswer;
 
-    if(isSkip) {
-      memberAnswer = "모르겠습니다.";
+      let memberAnswer, gptAnswer;
 
-      gptAnswer = await askQuestion(memberAnswer);
-    } else {
-      // 오디오를 텍스트로 변환
-      memberAnswer = await transcribeAudio();
+      if (isSkip) {
+        memberAnswer = "모르겠습니다.";
 
-      // GPT에게 답변 평가 요청
-      gptAnswer = await askQuestion(memberAnswer);
+        gptAnswer = await askQuestion(memberAnswer);
+      } else {
+        // 오디오를 텍스트로 변환
+        memberAnswer = await transcribeAudio();
+
+        // GPT에게 답변 평가 요청
+        gptAnswer = await askQuestion(memberAnswer);
+      }
+
+
+      // 새로운 답변 저장
+      const newAnswer = {
+        questionId: questions[currentQuestion].questionId,
+        question: questions[currentQuestion].question,
+        memberAnswer: memberAnswer,
+        gptAnswer: gptAnswer
+      };
+
+      // 기존의 답변 리스트에 새 답변 추가
+      setAnswers(prevAnswers => [...prevAnswers, newAnswer]);
+
+
+
+
+      // 다음 질문에 대한 녹음 시작
+      startRecording();
+      setWait(false);
+    } catch (error) {
+
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
-
-
-    // 새로운 답변 저장
-    const newAnswer = {
-      questionId: questions[currentQuestion].questionId,
-      question: questions[currentQuestion].question,
-      memberAnswer: memberAnswer,
-      gptAnswer: gptAnswer
-    };
-
-    // 기존의 답변 리스트에 새 답변 추가
-    setAnswers(prevAnswers => [...prevAnswers, newAnswer]);
-
-
-
-
-    // 다음 질문에 대한 녹음 시작
-    startRecording();
-    setWait(false);
   }
 
   useEffect(() => {
@@ -229,20 +258,27 @@ const Interview = () => {
       // 녹음을 멈추고 완전히 처리되기를 기다림
       await stopRecording();
     } catch (error) {
-      console.error('다음 질문 처리 중 오류 발생:', error);
+
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
 
   };
 
   const handleSkip = async () => {
-
     setIsSkip(true);
-
     try {
       // 녹음을 멈추고 완전히 처리되기를 기다림
       await stopRecording();
     } catch (error) {
-      console.error('다음 질문 처리 중 오류 발생:', error);
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
 
   };
@@ -259,19 +295,26 @@ const Interview = () => {
 
     try {
       const response = await baseAPI.post(url, data);
-      console.log('Response:', response.data);
     } catch (error) {
-      console.error('Error posting data:', error);
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
 
-    alert("모든 문제가 종료되었습니다. \n면접 결과 화면으로 이동합니다.");
-    navigate('/interview/result', {
-      state: answers.map(item => ({
-        question: item.question,
-        memberAnswer: item.memberAnswer,
-        gptAnswer: item.gptAnswer
-      }))
-    });
+    setModalText("모든 문제가 종료되었습니다. \n면접 결과 화면으로 이동합니다.");
+    setModalOnClick(() => () => {
+      setIsModalOpen(false);
+      navigate('/interview/result', {
+        state: answers.map(item => ({
+          question: item.question,
+          memberAnswer: item.memberAnswer,
+          gptAnswer: item.gptAnswer
+        }))
+      });
+    })
+    setIsModalOpen(true);
   }
 
 
@@ -329,34 +372,45 @@ const Interview = () => {
   }, [wait]);
 
   return (
-    <div>
+    <>
       <Header />
+      <Wrapper>
+        <GlassCard>
+          <div>
+            {questions[currentQuestion] &&
+              <h1>Q{currentQuestion + 1}. {questions[currentQuestion].question}</h1>}
+            <GridContainer>
+              <video
+                className='container'
+                ref={videoRef}
+                style={{
+                  transform: 'scaleX(-1)',
+                  width: 'auto',
+                  height: '45%',
+                  borderRadius: '25px',
+                }}
+              />
+            </GridContainer>
 
-      {questions[currentQuestion] &&
-        <h1>Q{currentQuestion + 1}. {questions[currentQuestion].question}</h1>}
-      <GridContainer>
-        <video
-          className='container'
-          ref={videoRef}
-          style={{
-            transform: 'scaleX(-1)',
-            width: 'auto',
-            height: '45%',
-            borderRadius: '25px',
-          }}
-        />
-      </GridContainer>
+            <GridContainer>
 
-      <GridContainer>
+              {recording ? <Timer handleNext={handleNext} /> : <TimerWaitInfo>문제를 준비하고 있습니다.</TimerWaitInfo>}
 
-        {recording ? <Timer handleNext= {handleNext} /> : <TimerWaitInfo>문제를 준비하고 있습니다.</TimerWaitInfo>}
+              <ButtonContainer>
+                <CustomButton onClick={handleNext}>Next</CustomButton>
+                <CustomButton onClick={handleSkip}>Skip</CustomButton>
+              </ButtonContainer>
+            </GridContainer>
+          </div>
+        </GlassCard>
+      </Wrapper>
 
-        <ButtonContainer>
-          <MyBtn color={pallete.skyblue} onClick={handleNext}>Next</MyBtn>
-          <MyBtn color={pallete.skyblue} onClick={handleSkip}>Skip</MyBtn>
-        </ButtonContainer>
-      </GridContainer>
-    </div>
+      <GlassModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={() => setIsModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick} />
+    </>
   );
 };
 

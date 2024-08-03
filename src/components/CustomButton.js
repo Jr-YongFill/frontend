@@ -27,9 +27,9 @@ const MyBtn = styled.button.attrs(props => ({
 `;
 
 
-const CustomButton = ({ color, children, onClick, width, myRef, isNotHover, type }) => {
+const CustomButton = ({ color, children, onClick, width, myRef, isNotHover, type, disabled }) => {
   return (
-    <MyBtn ref={myRef} color={color} onClick={onClick} width={width} isNotHover={isNotHover} type={type} >
+    <MyBtn ref={myRef} color={color} onClick={onClick} width={width} disabled={disabled} isNotHover={isNotHover} type={type} >
       {children}
     </MyBtn>
   );
