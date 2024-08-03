@@ -11,8 +11,9 @@ const TimerComponent = styled.div`
   text-align:center;
   padding-bottom:2vw;
   border-radius:20px;
-
+  min-width: 300px;
 `
+
 
 
 //TimerPage에 setQuestionIdx라는 함수가 있다면....

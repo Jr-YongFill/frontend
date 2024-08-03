@@ -9,16 +9,18 @@ import styled from "styled-components";
 
 const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   margin: 20px 0;
   gap: 50px;
 `;
 
 const GridContainer = styled.div`
+    margin-top: 20px;
     display: flex;
     grid-column: 1 / -1; /* 변경: 그리드의 모든 열을 차지하도록 설정 */
     justify-content: center;
+    gap: 5rem;
     align-items: center;
     width: 100%;
     box-sizing: border-box;
@@ -26,7 +28,7 @@ const GridContainer = styled.div`
 
 const Interview = () => {
   const memberId = 1;
-  const totalQuestions = 2;
+  const totalQuestions = 3;
   const navigate = useNavigate();
   const location = useLocation();
   const { stackids, apiKey } = location.state || {};
@@ -180,10 +182,21 @@ const Interview = () => {
     setAnswers(prevAnswers => [...prevAnswers, newAnswer]);
 
 
+
+
     // 다음 질문에 대한 녹음 시작
     startRecording();
     setWait(false);
   }
+
+  useEffect(() => {
+    console.log("effect");
+    (currentQuestion >= totalQuestions - 1) && handleSubmit();
+    setCurrentQuestion(answers.length);
+    console.log("current" + currentQuestion);
+  }, [answers]);
+
+
 
   const handleNext = async () => {
     // 마지막 질문인 경우 결과 페이지로 이동
@@ -196,14 +209,13 @@ const Interview = () => {
     }
 
 
-    (currentQuestion >= totalQuestions - 1) && await handleSubmit();
 
-    setCurrentQuestion(currentQuestion + 1);
 
   };
 
   const handleSkip = async () => {
     const gptAnswer = await askQuestion("모르겠습니다.");
+
     const newAnswer = {
       questionId: questions[currentQuestion].questionId,
       question: questions[currentQuestion].question,
@@ -211,11 +223,7 @@ const Interview = () => {
       gptAnswer: gptAnswer
     };
 
-    await setAnswers([...answers, newAnswer]);
-
-    (currentQuestion >= totalQuestions - 1) && await handleSubmit();
-
-    setCurrentQuestion(currentQuestion + 1);
+    setAnswers([...answers, newAnswer]);
 
   };
 
@@ -309,19 +317,21 @@ const Interview = () => {
       {/*))}*/}
       {/*<h2>apiKey : {apiKey}</h2>*/}
 
-      {questions.length > 0 &&
+      {questions[currentQuestion] &&
         <h1>Q{currentQuestion + 1}. {questions[currentQuestion].question}</h1>}
 
+      <GridContainer>
       <video
         className='container'
         ref={videoRef}
         style={{
           transform: 'scaleX(-1)',
-          width: '65%',
-          height: 'auto',
+          width: 'auto',
+          height: '45%',
           borderRadius: '25px',
         }}
       />
+      </GridContainer>
 
       {answers.length > 0 && answers.map((a, index) => (
         <div key={index}>
@@ -332,12 +342,16 @@ const Interview = () => {
       ))}
 
 
-
+      <GridContainer>
       {/*<button onClick={() => navigate('/interview/result')}>면접 결과</button>*/}
 
       {recording && <Timer handleNext= {handleNext} ></Timer>}
-      <MyBtn color={pallete.skyblue} onClick={handleNext}>Next</MyBtn>
-      <MyBtn color={pallete.skyblue} onClick={handleSkip}>Skip</MyBtn>
+
+        <ButtonContainer>
+          <MyBtn color={pallete.skyblue} onClick={handleNext}>Next</MyBtn>
+          <MyBtn color={pallete.skyblue} onClick={handleSkip}>Skip</MyBtn>
+        </ButtonContainer>
+      </GridContainer>
     </div>
   );
 };
