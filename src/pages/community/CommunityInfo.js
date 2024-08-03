@@ -8,6 +8,7 @@ import { baseAPI } from '../../config'
 import CustomButton from '../../components/CustomButton';
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
+import PageButtonController from '../../components/PageButtonController';
 
 const Title = styled.div`
   display: flex;
@@ -179,37 +180,11 @@ const CommunityQNA = () => {
                   ))
                 }
               </MainContent>
-              {data && (
-                <PaginationContainer>
-                  <PageButton
-                    onClick={() => {
-                      setCurrentPage(currentPage - 1);
-                    }}
-                    disabled={currentPage === 0}
-                  >
-                    이전
-                  </PageButton>
-                  {data.pageList.map((page) => (
-                    <PageButton
-                      key={page}
-                      onClick={() => {
-                        setCurrentPage(page - 1);
-                      }}
-                      active={currentPage === page - 1}
-                    >
-                      {page}
-                    </PageButton>
-                  ))}
-                  <PageButton
-                    onClick={() => {
-                      setCurrentPage(currentPage + 1);
-                    }}
-                    disabled={currentPage === data.totalPage - 1}
-                  >
-                    다음
-                  </PageButton>
-                </PaginationContainer>
-              )}
+              <PageButtonController
+                data={data}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+              />
             </MainBody>
           </Main>
         </div>

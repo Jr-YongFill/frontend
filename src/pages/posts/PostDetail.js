@@ -11,6 +11,7 @@ import { localStorageGetValue } from '../../utils/CryptoUtils';
 import { RemoveModal } from '../../components/modal/RemoveModal';
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
+import PageButtonController from '../../components/PageButtonController';
 
 /* data객체 정보 예시
 {
@@ -474,37 +475,11 @@ function PostDetail() {
                   );
                 })
               }
-              {comments && (
-                <PaginationContainer>
-                  <PageButton
-                    onClick={() => {
-                      setCurrentPage(currentPage - 1);
-                    }}
-                    disabled={currentPage === 0}
-                  >
-                    이전
-                  </PageButton>
-                  {comments.pageList.map((page) => (
-                    <PageButton
-                      key={page}
-                      onClick={() => {
-                        setCurrentPage(page - 1);
-                      }}
-                      active={currentPage === page - 1}
-                    >
-                      {page}
-                    </PageButton>
-                  ))}
-                  <PageButton
-                    onClick={() => {
-                      setCurrentPage(currentPage + 1);
-                    }}
-                    disabled={currentPage === comments.totalPage - 1}
-                  >
-                    다음
-                  </PageButton>
-                </PaginationContainer>
-              )}
+              <PageButtonController
+                data={comments}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+              />
             </CommentContainer>
           </GlassCard>
         </Container>
