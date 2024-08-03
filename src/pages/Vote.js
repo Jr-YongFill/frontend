@@ -10,6 +10,7 @@ import Wrapper from "../components/Wrapper";
 import GlassCard from "../components/GlassCard";
 import { RemoveModal } from '../components/modal/RemoveModal';
 import { localStorageGetValue } from '../utils/CryptoUtils';
+import GlassModal from '../components/modal/GlassModal';
 
 const Title = styled.div`
   display: flex;
@@ -373,9 +374,10 @@ const Vote = () => {
               </PaginationContainer>
             )}
           </Main>
-          <RemoveModal
+          <GlassModal
             isModalOpen={isRemoveModalOpen}
             setIsModalOpen={() => setIsRemoveModalOpen(false)}
+            message={'정말 삭제하시겠습니까?'}
             onClick={() => {
               fetchDeleteQuestion();
               setIsRemoveModalOpen(false);
