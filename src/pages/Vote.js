@@ -12,6 +12,8 @@ import { RemoveModal } from '../components/modal/RemoveModal';
 import { localStorageGetValue } from '../utils/CryptoUtils';
 import GlassModal from '../components/modal/GlassModal';
 import PageButtonController from '../components/PageButtonController';
+import GlassModalChildren from "../components/modal/GlassModalChildren";
+import CustomButton from '../components/CustomButton';
 
 const Title = styled.div`
   display: flex;
@@ -39,102 +41,16 @@ const MainBody = styled.div`
   flex-direction: column;
 `;
 
-const QuestionInfoBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  border: solid;
-  border-radius: 20px;
-  background-color: white;
-  border-color: ${palette.skyblue};
-  width: 100%;
-  margin-top: 30px;
-`;
-
 const VoteInfoBox = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 `;
-
-const VoteBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: solid;
-  border-radius: 20px;
-  background-color: white;
-  border-color: ${(props) => props.color};
-  width: 200px;
-  height: 80px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: ${(props) => (props.hover ? 'pointer' : 'default')};
-  
-  ${(props) =>
-    props.hover &&
-    css`
-      &:hover {
-        background-color: ${palette.skyblue};
-        color: white;
-      }
-    `}
-`;
-
-const StackBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: solid;
-  border-radius: 20px;
-  background-color: ${(props) => (props.selected ? palette.skyblue : 'white')};
-  border-color: ${(props) => props.color};
-  width: 200px;
-  height: 80px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: ${(props) => (props.hover ? 'pointer' : 'default')};
-  color: ${(props) => (props.selected ? 'white' : 'black')};
-  
-  ${(props) =>
-    props.hover &&
-    css`
-      &:hover {
-        background-color: ${palette.skyblue};
-        color: white;
-      }
-    `}
-`;
-
-const MyBtn = styled.button`
-  background-color: ${(props) => props.color};
-  border: none;
-  width: 300px;
-  height: 100px;
-  border-radius: 20px;
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  margin-top: 30px;
-`;
-
 
 const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
  	align-items: center;
   padding: 20px;
-`;
-
-const MySmallBtn = styled.button`
-  background-color: ${(props) => props.color};
-  border: none;
-  width: 150px;
-  height: 80px;
-  border-radius: 20px;
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  margin-top: 30px;
 `;
 
 const ModalStackBox = styled.div`
@@ -156,16 +72,28 @@ const Vote = () => {
   const [insertStackQuestion, setInsertStackQuestion] = useState(null);
   const [selectedStack, setSelectedStack] = useState(null); // Add state to track selected stack
 
+  const [isGlassModalOpen, setIsGlassModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
+
   const fetchInsertStackQuestion = async (questionId) => {
     if (!selectedStack) {
       setIsInsertStackModalOpen(false);
       return;
     }
-    await baseAPI.patch(`/api/admin/questions/${questionId}`, {
-      stackId: selectedStack
-    });
-    setIsInsertStackModalOpen(false);
-    window.location.reload();
+    try {
+      await baseAPI.patch(`/api/admin/questions/${questionId}`, {
+        stackId: selectedStack
+      });
+      setIsInsertStackModalOpen(false);
+      window.location.reload();
+    } catch (error) {
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsGlassModalOpen(false);
+      })
+      setIsGlassModalOpen(true);
+    }
   }
 
   const getRatio = (vote, stack) => {
@@ -182,11 +110,21 @@ const Vote = () => {
   };
 
   const fetchCreateQuestion = async () => {
-    await baseAPI.post('/api/questions', {
-      question: newQuestion,
-    });
-    await fetchVoteInfos(currentPage);
-    setIsModalOpen(false);
+    try {
+      await baseAPI.post('/api/questions', {
+        question: newQuestion,
+      });
+      await fetchVoteInfos(currentPage);
+      setNewQuestion('');
+      setIsModalOpen(false);
+    } catch (error) {
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsGlassModalOpen(false);
+      })
+      setIsGlassModalOpen(true);
+      setNewQuestion('');
+    }
   }
 
   const findStack = (stackId) => {
@@ -200,28 +138,60 @@ const Vote = () => {
   };
 
   const fetchVoteInfos = async () => {
-    const response = await baseAPI.get(`/api/votes?page=${currentPage}&size=10`);
-    setVoteInfos(response.data.pageResponseDTO);
-    setStackInfos(response.data.stackInfoDtos);
+    try {
+      const response = await baseAPI.get(`/api/votes?page=${currentPage}&size=10`);
+      setVoteInfos(response.data.pageResponseDTO);
+      setStackInfos(response.data.stackInfoDtos);
+    } catch (error) {
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsGlassModalOpen(false);
+      })
+      setIsGlassModalOpen(true);
+    }
   };
 
   const fetchDeleteQuestion = async () => {
-    await baseAPI.delete(`/api/admin/questions/${deleteQuestionId}`);
-    fetchVoteInfos();
+    try {
+      await baseAPI.delete(`/api/admin/questions/${deleteQuestionId}`);
+      fetchVoteInfos();
+    } catch (error) {
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsGlassModalOpen(false);
+      })
+      setIsGlassModalOpen(true);
+    }
   }
 
   const fetchVote = async (questionId, stackId) => {
-    await baseAPI.post(`/api/questions/${questionId}/votes`, {
-      stackId: stackId
-    });
-    fetchVoteInfos(currentPage);
+    try {
+      await baseAPI.post(`/api/questions/${questionId}/votes`, {
+        stackId: stackId
+      });
+      fetchVoteInfos(currentPage);
+    } catch (error) {
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsGlassModalOpen(false);
+      })
+      setIsGlassModalOpen(true);
+    }
   };
 
   useEffect(() => {
     const fetchVoteInfos = async () => {
-      const response = await baseAPI.get(`/api/votes?page=${currentPage}&size=10`);
-      setVoteInfos(response.data.pageResponseDTO);
-      setStackInfos(response.data.stackInfoDtos);
+      try {
+        const response = await baseAPI.get(`/api/votes?page=${currentPage}&size=10`);
+        setVoteInfos(response.data.pageResponseDTO);
+        setStackInfos(response.data.stackInfoDtos);
+      } catch (error) {
+        setModalText(error.response.data.message);
+        setModalOnClick(() => () => {
+          setIsGlassModalOpen(false);
+        })
+        setIsGlassModalOpen(true);
+      }
     };
 
     fetchVoteInfos();
@@ -245,7 +215,10 @@ const Vote = () => {
           </Title>
           <Main>
             <MainHeader>
-              <MyBtn color={palette.skyblue} onClick={() => setIsModalOpen(true)}>질문 생성</MyBtn>
+              <CustomButton
+                onClick={() => setIsModalOpen(true)}>
+                질문 생성
+              </CustomButton>
               <div
                 style={{
                   marginTop: '80px',
@@ -280,9 +253,9 @@ const Vote = () => {
                                     ({getRatio(vote.stackDtos, stack)}%)
                                   </div>
                                 ) : null}
-                                <VoteBox
-                                  color={(vote.myVoteStackId === 0 || vote.myVoteStackId === stack.stackId ? palette.skyblue : palette.gray)}
-                                  hover={vote.myVoteStackId === 0}
+                                <CustomButton
+                                  color={(vote.myVoteStackId === stack.stackId ? palette.purple : palette.dark)}
+                                  isNotHover={vote.myVoteStackId !== 0}
                                   onClick={
                                     vote.myVoteStackId === 0
                                       ? () => fetchVote(vote.questionId, stack.stackId)
@@ -290,29 +263,27 @@ const Vote = () => {
                                   }
                                 >
                                   {findStack(stack.stackId)}
-                                </VoteBox>
+                                </CustomButton>
                               </div>
                             ))}
                         </VoteInfoBox>
                       </div>
                       {memberRole === 'ADMIN' && <div
-                        style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <MySmallBtn
-                          color={palette.skyblue}
+                        style={{ marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+                        <CustomButton
                           onClick={() => {
                             setInsertStackQuestion(vote);
                             setIsInsertStackModalOpen(true);
                           }}>
                           등록
-                        </MySmallBtn>
-                        <MySmallBtn
-                          color={palette.skyblue}
+                        </CustomButton>
+                        <CustomButton
                           onClick={() => {
                             setDeleteQuestionId(vote.questionId);
                             setIsRemoveModalOpen(true);
                           }}>
                           삭제
-                        </MySmallBtn>
+                        </CustomButton>
                       </div>}
                     </GlassCard>
                   )
@@ -324,29 +295,16 @@ const Vote = () => {
               data={voteInfos}
             />
           </Main>
-          <GlassModal
+          <RemoveModal
             isModalOpen={isRemoveModalOpen}
             setIsModalOpen={() => setIsRemoveModalOpen(false)}
-            message={'정말 삭제하시겠습니까?'}
             onClick={() => {
               fetchDeleteQuestion();
               setIsRemoveModalOpen(false);
             }} />
-          <Modal
-            isOpen={isModalOpen}
-            onRequestClose={() => setIsModalOpen(false)}
-            style={{
-              content: {
-                top: '200px',
-                left: '500px',
-                right: '500px',
-                bottom: '100px',
-                borderRadius: '30px',
-                border: 'none',
-                background: `${palette.pink}`,
-              }
-            }}
-          >
+          <GlassModalChildren
+            isModalOpen={isModalOpen}
+            setIsModalOpen={() => setIsModalOpen(false)}>
             <ModalContent>
               <h2>새로운 질문 생성</h2>
               <textarea
@@ -355,27 +313,19 @@ const Vote = () => {
                 onChange={(e) => setNewQuestion(e.target.value)}
                 style={{ width: '100%', height: '150px', padding: '10px', fontSize: '18px', marginBottom: '20px' }}
               />
-              <MyBtn color={palette.skyblue} onClick={() => fetchCreateQuestion()}>만들기</MyBtn>
+              <CustomButton
+                onClick={() => fetchCreateQuestion()}>
+                만들기
+              </CustomButton>
             </ModalContent>
-          </Modal>
-          <Modal
-            isOpen={isInsertStackModalOpen}
-            onRequestClose={() => {
+          </GlassModalChildren>
+          <GlassModalChildren
+            isModalOpen={isInsertStackModalOpen}
+            setIsModalOpen={() => {
               setSelectedStack(null);
               setIsInsertStackModalOpen(false);
             }}
-            style={{
-              content: {
-                top: '100px',
-                left: '400px',
-                right: '400px',
-                bottom: '100px',
-                borderRadius: '30px',
-                border: 'none',
-                background: `${palette.pink}`,
-              }
-            }}
-          >
+            width={'700px'}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div
                 style={{ fontSize: '30px' }}>
@@ -388,27 +338,30 @@ const Vote = () => {
                       <div style={{ fontSize: '25px' }}>
                         ({getRatio(insertStackQuestion.stackDtos, stack)}%)
                       </div>
-                      <StackBox
-                        color={palette.skyblue}
-                        selected={selectedStack === stack.stackId} // Check if the stack is selected
-                        hover={true}
+                      <CustomButton
+                        color={selectedStack === stack.stackId ? palette.purple : palette.dark}
                         onClick={() => setSelectedStack(stack.stackId)} // Set the selected stack
                       >
                         {findStack(stack.stackId)}
-                      </StackBox>
+                      </CustomButton>
                     </div>
                   ))}
               </ModalStackBox>
-              <MyBtn
-                color={palette.skyblue}
+              <CustomButton
                 onClick={() => fetchInsertStackQuestion(insertStackQuestion.questionId)}>
                 등록
-              </MyBtn>
+              </CustomButton>
             </div>
-          </Modal>
+          </GlassModalChildren>
 
         </div>
       </Wrapper>
+
+      <GlassModal
+        isModalOpen={isGlassModalOpen}
+        setIsModalOpen={() => setIsGlassModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick} />
     </>
   );
 };

@@ -9,7 +9,7 @@ const MyGlassModal = styled(Modal)`
   right: auto;
   bottom: auto;
   transform: translate(-50%, -50%);
-  width: 500px;
+  width: ${(props) => props.width || '500px'};
   padding: 20px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.2);
@@ -19,7 +19,7 @@ const MyGlassModal = styled(Modal)`
   color: #000;
 `;
 
-const GlassModalChildren = ({ isModalOpen, setIsModalOpen, onClick, children }) => {
+const GlassModalChildren = ({ isModalOpen, setIsModalOpen, onClick, children, width }) => {
 
     return (
         <>
@@ -27,6 +27,7 @@ const GlassModalChildren = ({ isModalOpen, setIsModalOpen, onClick, children }) 
                 isOpen={isModalOpen}
                 onRequestClose={setIsModalOpen}
                 ariaHideApp={false}
+                width={width}
             >
                 {children}
             </MyGlassModal>

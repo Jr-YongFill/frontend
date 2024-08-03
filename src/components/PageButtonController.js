@@ -9,20 +9,23 @@ const PaginationContainer = styled.div`
 `;
 
 const PageButton = styled.button`
-  background-color: ${(props) => (props.active ? palette.skyblue : '#ccc')};
+  background-color: ${(props) => (props.active ? palette.purple : palette.dark)};
   border: none;
   margin: 0 10px;
   padding: 10px 20px;
   border-radius: 10px;
-  color: ${(props) => (props.active ? 'white' : '#333')};
+  color: white;
   font-size: 18px;
   
   &:hover {
-    background-color: ${(props) => (props.active ? '#0080ff' : '#bbb')};
+    background-color: ${palette.purple};
   }
 
   &:disabled {
-    background-color: #eee;
+    background: transparent;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    color: ${palette.gray};
     cursor: not-allowed;
     pointer-events: none;
   }

@@ -14,14 +14,18 @@ const MyBtn = styled.button`
   cursor:pointer;
   padding: 10px;
 
-  &:hover{
-  background-color:${palette.purple}}
+  ${(props) => props.isNotHover ?
+    null
+    :
+    `&:hover{
+      background-color:${palette.purple}
+    }`} 
 `;
 
 
-const CustomButton = ({ color, children, onClick, width, myRef }) => {
+const CustomButton = ({ color, children, onClick, width, myRef, isNotHover }) => {
   return (
-    <MyBtn ref={myRef} color={color} onClick={onClick} width={width}>
+    <MyBtn ref={myRef} color={color} onClick={onClick} width={width} isNotHover={isNotHover}>
       {children}
     </MyBtn>
   );
