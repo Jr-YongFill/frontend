@@ -10,11 +10,11 @@ import palette from "../../styles/pallete";
 import {localStorageGetValue} from "../../utils/CryptoUtils";
 
 const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 20px 0;
-  gap: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 20px 0;
+    gap: 50px;
 `;
 
 const GridContainer = styled.div`
@@ -217,7 +217,7 @@ const Interview = () => {
     (currentQuestion >= totalQuestions - 1) && handleSubmit();
     setCurrentQuestion(answers.length);
     console.log("current" + currentQuestion);
-  }, [answers, currentQuestion, handleSubmit]);
+  }, [answers]);
 
 
 
@@ -320,50 +320,34 @@ const Interview = () => {
         recorder.stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [recorder]);
+  }, []);
 
   useEffect(() => {
-    if (wait === true) {
+    if (wait == true) {
       getGptAnswer();
     }
-  }, [wait, getGptAnswer]);
+  }, [wait]);
 
   return (
     <div>
       <Header />
-      {/*<h2>실전 면접</h2>*/}
-      {/*{stackids.map(id => (*/}
-      {/*  <h2 key={id}> Stack ID: {id}</h2>*/}
-      {/*))}*/}
-      {/*<h2>apiKey : {apiKey}</h2>*/}
 
       {questions[currentQuestion] &&
         <h1>Q{currentQuestion + 1}. {questions[currentQuestion].question}</h1>}
-
       <GridContainer>
-      <video
-        className='container'
-        ref={videoRef}
-        style={{
-          transform: 'scaleX(-1)',
-          width: 'auto',
-          height: '45%',
-          borderRadius: '25px',
-        }}
-      />
+        <video
+          className='container'
+          ref={videoRef}
+          style={{
+            transform: 'scaleX(-1)',
+            width: 'auto',
+            height: '45%',
+            borderRadius: '25px',
+          }}
+        />
       </GridContainer>
 
-      {answers.length > 0 && answers.map((a, index) => (
-        <div key={index}>
-          <div>Question: {a.question}</div>
-          <div>Member Answer: {a.memberAnswer}</div>
-          <div>GPT Answer: {a.gptAnswer}</div>
-        </div>
-      ))}
-
-
       <GridContainer>
-      {/*<button onClick={() => navigate('/interview/result')}>면접 결과</button>*/}
 
         {recording ? <Timer handleNext= {handleNext} /> : <TimerWaitInfo>문제를 준비하고 있습니다.</TimerWaitInfo>}
 

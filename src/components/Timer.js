@@ -1,40 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
 
-
 const TimerComponent = styled.div`
-  background:${palette.skyblue};
-  color: white;
-  font-size:10rem;
-  width:20vw;
-  text-align:center;
-  padding-bottom:2vw;
-  border-radius:20px;
-  min-width: 300px;
-`
-
-
-
-//TimerPage에 setQuestionIdx라는 함수가 있다면....
-//<Timer timeOut= {setQuestionIdx} ></Timer>라는 식으로 삽입 후
+    background:${palette.skyblue};
+    color: white;
+    font-size:10rem;
+    width:20vw;
+    text-align:center;
+    padding-bottom:2vw;
+    border-radius:20px;
+    min-width: 300px;
+`;
 
 const Timer = (props) => {
   const [seconds, setSeconds] = useState(10);
 
-  const timeOut = () => {
+  // 메모이제이션된 timeOut 함수
+  const timeOut = useCallback(() => {
     setSeconds(0);
     props.handleNext();
     // props.timeOut((prev)=>prev+1); 문제 인덱스 1 추가
-  }
+  }, [props.handleNext]);
 
   useEffect(() => {
-
     if (seconds >= 0) {
-      const timer = setInterval(() => setSeconds(seconds - 1), 1000);
-      return() => clearTimeout(timer);
-    }else{
-      //0이 될 경우
+      const timer = setInterval(() => setSeconds(prev => prev - 1), 1000);
+      return () => clearInterval(timer);  // clearInterval이 아니라 clearTimeout입니다
+    } else {
+      // seconds가 0이 될 경우 timeOut 호출
       timeOut();
     }
   }, [seconds, timeOut]);
