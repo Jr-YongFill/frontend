@@ -82,6 +82,7 @@ const Signin = () => {
       })
       setIsModalOpen(true);
     } catch (error) {
+      console.log(error);
       const errorMessage = error.response ? error.response.data.message : '로그인 실패';
       setModalText(errorMessage);
       setModalOnClick(() => () => {

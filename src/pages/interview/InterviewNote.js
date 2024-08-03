@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   Tabs,
   Tab,
@@ -21,6 +20,8 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import CustomButton from "../../components/CustomButton";
 import { palette } from "@mui/system";
+import {baseAPI} from "../../config";
+import {localStorageGetValue} from "../../utils/CryptoUtils";
 
 const TitleContainer = styled(Box)`
     display: grid;
@@ -39,6 +40,7 @@ const CenteredBox = styled(Box)`
 `;
 
 const InterviewNote = () => {
+  const memberId = localStorageGetValue('member-id');;
   const [stacks, setStacks] = useState([]);
   const [selectedStack, setSelectedStack] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -53,7 +55,7 @@ const InterviewNote = () => {
   useEffect(() => {
     const fetchStacks = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/members/1/stacks');
+        const response = await baseAPI.get(`http://localhost:8080/api/members/${memberId}/stacks`);
         setStacks(response.data.filter(stack => stack.isPurchase));
         if (response.data.length > 0) {
           setSelectedStack(response.data[0].id); // 기본적으로 첫 번째 스택 선택
@@ -73,7 +75,7 @@ const InterviewNote = () => {
     const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:8080/api/members/1/stacks/${selectedStack}/answers?page=${currentPage - 1}&size=6`);
+        const response = await baseAPI.get(`http://localhost:8080/api/members/${memberId}/stacks/${selectedStack}/answers?page=${currentPage - 1}&size=6`);
         setQuestions(response.data.content);
         setTotalPages(response.data.totalPages);
         setLoading(false);
@@ -84,7 +86,7 @@ const InterviewNote = () => {
     };
 
     fetchQuestions();
-  }, [selectedStack, currentPage]);
+  }, [selectedStack, currentPage, memberId]);
 
   if (loading) return <CenteredBox><CircularProgress /></CenteredBox>;
   if (error) return <CenteredBox><Alert severity="error">Error loading data!</Alert></CenteredBox>;
