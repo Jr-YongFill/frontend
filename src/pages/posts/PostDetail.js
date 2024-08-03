@@ -65,7 +65,6 @@ const PageHeaderWriter = styled.div`
 
 const Title = styled.h1`
   font-size: 24px;
-  color: #333;
 `;
 
 const Meta = styled.div`
@@ -397,9 +396,7 @@ function PostDetail() {
                   </div>
                 </div>
               </PageHeader>
-              <Wrapper>
                 <EditorViewer contents={data.content}></EditorViewer>
-              </Wrapper>
 
               {memberId && <LikeButton liked={data.liked} onClick={fetchLike}>
                 Like
