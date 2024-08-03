@@ -11,6 +11,7 @@ import GlassCard from "../components/GlassCard";
 import { RemoveModal } from '../components/modal/RemoveModal';
 import { localStorageGetValue } from '../utils/CryptoUtils';
 import GlassModal from '../components/modal/GlassModal';
+import PageButtonController from '../components/PageButtonController';
 
 const Title = styled.div`
   display: flex;
