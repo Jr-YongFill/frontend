@@ -64,12 +64,6 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const StyledButton = styled(Button)`
-  white-space: nowrap;
-  width: auto;
-  margin-left: 10px;
-`;
-
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -381,9 +375,9 @@ const Member = () => {
                         value={nickName}
                         onChange={handleNameChange}
                       />
-                      <StyledButton onClick={UpdateImageHandle}>
+                      <CustomButton onClick={UpdateImageHandle}>
                         수정하기
-                      </StyledButton>
+                      </CustomButton>
                     </NicknameInput>
                   </NicknameContainer>
                   <PasswordContainer>
@@ -401,9 +395,9 @@ const Member = () => {
                       onChange={handleCheckPasswordChange}
                     />
                     <PasswordButtonContainer>
-                      <StyledButton onClick={UpdatePasswordHandle}>
+                      <CustomButton onClick={UpdatePasswordHandle}>
                         변경하기
-                      </StyledButton>
+                      </CustomButton>
                     </PasswordButtonContainer>
                   </PasswordContainer>
                 </MemberUpdateContainer>
