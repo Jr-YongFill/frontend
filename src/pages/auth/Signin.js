@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { baseAPI } from '../../config';
 import Header from '../../components/Header';
-
+import Wrapper from "../../components/Wrapper";
+import GlassCard from "../../components/GlassCard";
 import { localStorageGetValue, localStorageSetValue } from '../../utils/CryptoUtils';
 
 
@@ -111,8 +112,8 @@ const Signin = () => {
   return (
     <>
       <Header />
-      <WrapperContainer>
-        <FormContainer>
+      <Wrapper>
+        <GlassCard>
           <Title>로그인</Title>
           <form onSubmit={handleSubmit}>
             <Input
@@ -134,8 +135,8 @@ const Signin = () => {
             <LinkStyled onClick={() => navigate('/auth/sign-up')}>회원가입</LinkStyled>
             <Button type="submit">로그인</Button>
           </form>
-        </FormContainer>
-      </WrapperContainer>
+        </GlassCard>
+      </Wrapper>
     </>
   );
 };

@@ -6,6 +6,8 @@ import palette from '../styles/pallete';
 import Modal from 'react-modal';
 import img from '../assets/default.png';
 import Header from '../components/Header';
+import Wrapper from "../components/Wrapper";
+import GlassCard from "../components/GlassCard";
 import { RemoveModal } from '../components/modal/RemoveModal';
 import { localStorageGetValue } from '../utils/CryptoUtils';
 
@@ -251,205 +253,210 @@ const Vote = () => {
   return (
     <>
       <Header />
-      <Title>
-        <TitleTextGroup>
-          <div style={{ fontSize: '60px', fontWeight: 'bold' }}>CS 투표</div>
-          <div style={{ marginTop: '40px', fontSize: '30px' }}>
-            추가했으면 좋을 것 같은 질문이 있나요?
-            <br />
-            질문을 등록하고, 다른 사람의 질문의 카테고리를 투표해주세요!
-          </div>
-        </TitleTextGroup>
-        <img src={img} width={'20%'} alt={'기본 이미지'}></img>
-      </Title>
-      <Main>
-        <MainHeader>
-          <MyBtn color={palette.skyblue} onClick={() => setIsModalOpen(true)}>질문 생성</MyBtn>
-          <div
+      <Wrapper>
+        <div style={{ marginTop: '30px' }}>
+          <Title>
+            <TitleTextGroup>
+              <div style={{ fontSize: '60px', fontWeight: 'bold' }}>CS 투표</div>
+              <div style={{ marginTop: '40px', fontSize: '30px' }}>
+                추가했으면 좋을 것 같은 질문이 있나요?
+                <br />
+                질문을 등록하고, 다른 사람의 질문의 카테고리를 투표해주세요!
+              </div>
+            </TitleTextGroup>
+            <img src={img} width={'20%'} alt={'기본 이미지'}></img>
+          </Title>
+          <Main>
+            <MainHeader>
+              <MyBtn color={palette.skyblue} onClick={() => setIsModalOpen(true)}>질문 생성</MyBtn>
+              <div
+                style={{
+                  marginTop: '80px',
+                  fontSize: '25px',
+                  marginLeft: '150px',
+                }}
+              >
+                투표 결과를 바탕으로 질문이 DB에 추가될 예정이예요!
+              </div>
+            </MainHeader>
+            <MainBody>
+              {voteInfos &&
+                voteInfos.resultList.map((vote, idx) => {
+                  return (
+                    <GlassCard key={idx}>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <div
+                          style={{
+                            marginTop: '50px',
+                            marginBottom: '50px',
+                            fontSize: '35px',
+                          }}
+                        >
+                          Q. {vote.question}
+                        </div>
+                        <VoteInfoBox>
+                          {vote.stackDtos &&
+                            vote.stackDtos.map((stack, idx) => (
+                              <div key={idx} style={{ margin: '20px' }}>
+                                {vote.myVoteStackId > 0 ? (
+                                  <div style={{ fontSize: '25px' }}>
+                                    ({getRatio(vote.stackDtos, stack)}%)
+                                  </div>
+                                ) : null}
+                                <VoteBox
+                                  color={(vote.myVoteStackId === 0 || vote.myVoteStackId === stack.stackId ? palette.skyblue : palette.gray)}
+                                  hover={vote.myVoteStackId === 0}
+                                  onClick={
+                                    vote.myVoteStackId === 0
+                                      ? () => fetchVote(vote.questionId, stack.stackId)
+                                      : null
+                                  }
+                                >
+                                  {findStack(stack.stackId)}
+                                </VoteBox>
+                              </div>
+                            ))}
+                        </VoteInfoBox>
+                      </div>
+                      {memberRole === 'ADMIN' && <div
+                        style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <MySmallBtn
+                          color={palette.skyblue}
+                          onClick={() => {
+                            setInsertStackQuestion(vote);
+                            setIsInsertStackModalOpen(true);
+                          }}>
+                          등록
+                        </MySmallBtn>
+                        <MySmallBtn
+                          color={palette.skyblue}
+                          onClick={() => {
+                            setDeleteQuestionId(vote.questionId);
+                            setIsRemoveModalOpen(true);
+                          }}>
+                          삭제
+                        </MySmallBtn>
+                      </div>}
+                    </GlassCard>
+                  )
+                })}
+            </MainBody>
+            {voteInfos && (
+              <PaginationContainer>
+                <PageButton
+                  onClick={() => {
+                    setCurrentPage(currentPage - 1);
+                  }}
+                  disabled={currentPage === 0}
+                >
+                  이전
+                </PageButton>
+                {voteInfos.pageList.map((page) => (
+                  <PageButton
+                    key={page}
+                    onClick={() => {
+                      setCurrentPage(page - 1);
+                    }}
+                    active={currentPage === page - 1}
+                  >
+                    {page}
+                  </PageButton>
+                ))}
+                <PageButton
+                  onClick={() => {
+                    setCurrentPage(currentPage + 1);
+                  }}
+                  disabled={currentPage === voteInfos.totalPage - 1}
+                >
+                  다음
+                </PageButton>
+              </PaginationContainer>
+            )}
+          </Main>
+          <RemoveModal
+            isModalOpen={isRemoveModalOpen}
+            setIsModalOpen={() => setIsRemoveModalOpen(false)}
+            onClick={() => {
+              fetchDeleteQuestion();
+              setIsRemoveModalOpen(false);
+            }} />
+          <Modal
+            isOpen={isModalOpen}
+            onRequestClose={() => setIsModalOpen(false)}
             style={{
-              marginTop: '80px',
-              fontSize: '25px',
-              marginLeft: '150px',
+              content: {
+                top: '200px',
+                left: '500px',
+                right: '500px',
+                bottom: '100px',
+                borderRadius: '30px',
+                border: 'none',
+                background: `${palette.pink}`,
+              }
             }}
           >
-            투표 결과를 바탕으로 질문이 DB에 추가될 예정이예요!
-          </div>
-        </MainHeader>
-        <MainBody>
-          {voteInfos &&
-            voteInfos.resultList.map((vote, idx) => {
-              return (
-                <QuestionInfoBox key={idx}>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div
-                      style={{
-                        marginTop: '50px',
-                        marginBottom: '50px',
-                        fontSize: '35px',
-                      }}
-                    >
-                      Q. {vote.question}
+            <ModalContent>
+              <h2>새로운 질문 생성</h2>
+              <textarea
+                placeholder="질문을 입력하세요"
+                value={newQuestion}
+                onChange={(e) => setNewQuestion(e.target.value)}
+                style={{ width: '100%', height: '150px', padding: '10px', fontSize: '18px', marginBottom: '20px' }}
+              />
+              <MyBtn color={palette.skyblue} onClick={() => fetchCreateQuestion()}>만들기</MyBtn>
+            </ModalContent>
+          </Modal>
+          <Modal
+            isOpen={isInsertStackModalOpen}
+            onRequestClose={() => {
+              setSelectedStack(null);
+              setIsInsertStackModalOpen(false);
+            }}
+            style={{
+              content: {
+                top: '100px',
+                left: '400px',
+                right: '400px',
+                bottom: '100px',
+                borderRadius: '30px',
+                border: 'none',
+                background: `${palette.pink}`,
+              }
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div
+                style={{ fontSize: '30px' }}>
+                {insertStackQuestion && insertStackQuestion.question}
+              </div>
+              <ModalStackBox>
+                {insertStackQuestion && insertStackQuestion.stackDtos &&
+                  insertStackQuestion.stackDtos.map((stack, idx) => (
+                    <div key={idx} style={{ margin: '20px' }}>
+                      <div style={{ fontSize: '25px' }}>
+                        ({getRatio(insertStackQuestion.stackDtos, stack)}%)
+                      </div>
+                      <StackBox
+                        color={palette.skyblue}
+                        selected={selectedStack === stack.stackId} // Check if the stack is selected
+                        hover={true}
+                        onClick={() => setSelectedStack(stack.stackId)} // Set the selected stack
+                      >
+                        {findStack(stack.stackId)}
+                      </StackBox>
                     </div>
-                    <VoteInfoBox>
-                      {vote.stackDtos &&
-                        vote.stackDtos.map((stack, idx) => (
-                          <div key={idx} style={{ margin: '20px' }}>
-                            {vote.myVoteStackId > 0 ? (
-                              <div style={{ fontSize: '25px' }}>
-                                ({getRatio(vote.stackDtos, stack)}%)
-                              </div>
-                            ) : null}
-                            <VoteBox
-                              color={(vote.myVoteStackId === 0 || vote.myVoteStackId === stack.stackId ? palette.skyblue : palette.gray)}
-                              hover={vote.myVoteStackId === 0}
-                              onClick={
-                                vote.myVoteStackId === 0
-                                  ? () => fetchVote(vote.questionId, stack.stackId)
-                                  : null
-                              }
-                            >
-                              {findStack(stack.stackId)}
-                            </VoteBox>
-                          </div>
-                        ))}
-                    </VoteInfoBox>
-                  </div>
-                  {memberRole === 'ADMIN' && <div
-                    style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <MySmallBtn
-                      color={palette.skyblue}
-                      onClick={() => {
-                        setInsertStackQuestion(vote);
-                        setIsInsertStackModalOpen(true);
-                      }}>
-                      등록
-                    </MySmallBtn>
-                    <MySmallBtn
-                      color={palette.skyblue}
-                      onClick={() => {
-                        setDeleteQuestionId(vote.questionId);
-                        setIsRemoveModalOpen(true);
-                      }}>
-                      삭제
-                    </MySmallBtn>
-                  </div>}
-                </QuestionInfoBox>
-              )
-            })}
-        </MainBody>
-        {voteInfos && (
-          <PaginationContainer>
-            <PageButton
-              onClick={() => {
-                setCurrentPage(currentPage - 1);
-              }}
-              disabled={currentPage === 0}
-            >
-              이전
-            </PageButton>
-            {voteInfos.pageList.map((page) => (
-              <PageButton
-                key={page}
-                onClick={() => {
-                  setCurrentPage(page - 1);
-                }}
-                active={currentPage === page - 1}
-              >
-                {page}
-              </PageButton>
-            ))}
-            <PageButton
-              onClick={() => {
-                setCurrentPage(currentPage + 1);
-              }}
-              disabled={currentPage === voteInfos.totalPage - 1}
-            >
-              다음
-            </PageButton>
-          </PaginationContainer>
-        )}
-      </Main>
-      <RemoveModal
-        isModalOpen={isRemoveModalOpen}
-        setIsModalOpen={() => setIsRemoveModalOpen(false)}
-        onClick={() => {
-          fetchDeleteQuestion();
-          setIsRemoveModalOpen(false);
-        }} />
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        style={{
-          content: {
-            top: '200px',
-            left: '500px',
-            right: '500px',
-            bottom: '100px',
-            borderRadius: '30px',
-            border: 'none',
-            background: `${palette.pink}`,
-          }
-        }}
-      >
-        <ModalContent>
-          <h2>새로운 질문 생성</h2>
-          <textarea
-            placeholder="질문을 입력하세요"
-            value={newQuestion}
-            onChange={(e) => setNewQuestion(e.target.value)}
-            style={{ width: '100%', height: '150px', padding: '10px', fontSize: '18px', marginBottom: '20px' }}
-          />
-          <MyBtn color={palette.skyblue} onClick={() => fetchCreateQuestion()}>만들기</MyBtn>
-        </ModalContent>
-      </Modal>
-      <Modal
-        isOpen={isInsertStackModalOpen}
-        onRequestClose={() => {
-          setSelectedStack(null);
-          setIsInsertStackModalOpen(false);
-        }}
-        style={{
-          content: {
-            top: '100px',
-            left: '400px',
-            right: '400px',
-            bottom: '100px',
-            borderRadius: '30px',
-            border: 'none',
-            background: `${palette.pink}`,
-          }
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div
-            style={{ fontSize: '30px' }}>
-            {insertStackQuestion && insertStackQuestion.question}
-          </div>
-          <ModalStackBox>
-            {insertStackQuestion && insertStackQuestion.stackDtos &&
-              insertStackQuestion.stackDtos.map((stack, idx) => (
-                <div key={idx} style={{ margin: '20px' }}>
-                  <div style={{ fontSize: '25px' }}>
-                    ({getRatio(insertStackQuestion.stackDtos, stack)}%)
-                  </div>
-                  <StackBox
-                    color={palette.skyblue}
-                    selected={selectedStack === stack.stackId} // Check if the stack is selected
-                    hover={true}
-                    onClick={() => setSelectedStack(stack.stackId)} // Set the selected stack
-                  >
-                    {findStack(stack.stackId)}
-                  </StackBox>
-                </div>
-              ))}
-          </ModalStackBox>
-          <MyBtn
-            color={palette.skyblue}
-            onClick={() => fetchInsertStackQuestion(insertStackQuestion.questionId)}>
-            등록
-          </MyBtn>
+                  ))}
+              </ModalStackBox>
+              <MyBtn
+                color={palette.skyblue}
+                onClick={() => fetchInsertStackQuestion(insertStackQuestion.questionId)}>
+                등록
+              </MyBtn>
+            </div>
+          </Modal>
+
         </div>
-      </Modal>
+      </Wrapper>
     </>
   );
 };

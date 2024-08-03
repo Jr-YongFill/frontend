@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
-import Wrapper from '../../components/Wrapper';
 import { baseAPI } from '../../config';
 import palette from '../../styles/pallete';
 import styled from 'styled-components';
@@ -10,6 +9,8 @@ import EditorViewer from '../../components/posts/EditorViewer';
 import CustomButton from '../../components/CustomButton';
 import { localStorageGetValue } from '../../utils/CryptoUtils';
 import { RemoveModal } from '../../components/modal/RemoveModal';
+import Wrapper from "../../components/Wrapper";
+import GlassCard from "../../components/GlassCard";
 
 /* data객체 정보 예시
 {
@@ -354,171 +355,175 @@ function PostDetail() {
   return (
     <>
       <Header />
-      <Container>
-        <PageContainer>
-          <Title>{data.title}</Title>
-          <PageHeader>
-            <div style={{ display: 'flex' }}>
-              <ProfileImage src={data.filePath} alt="작성자 프로필" />
-              <PageHeaderWriter>
-                <div>
-                  작성자: {data.writerName}
-                </div>
-                <div>
-                  작성알: {data.createTime}
-                </div>
-              </PageHeaderWriter>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                {memberId === data.memberId && <MyBtn
-                  color={palette.skyblue}
-                  onClick={handleUpdate}>
-                  수정
-                </MyBtn>}
-                <div>
-                  좋아요: {data.likeCount}
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                {(memberId === data.memberId || memberRole === 'ADMIN') && <MyBtn
-                  color={palette.skyblue}
-                  onClick={() => setIsDeletePostModalOpen(true)}>
-                  삭제
-                </MyBtn>}
-                <div>
-                  조회수: {data.viewCount}
-                </div>
-              </div>
-            </div>
-          </PageHeader>
-          <Wrapper>
-            <EditorViewer contents={data.content}></EditorViewer>
-          </Wrapper>
+      <Wrapper>
 
-          {memberId && <LikeButton liked={data.liked} onClick={fetchLike}>
-            Like
-          </LikeButton>}
-          <CommentContainer>
-            <Title>댓글</Title>
-            <HighLight />
-            {memberId &&
-              <WriteComment>
-                <form onSubmit={handleCommentSubmit}>
-                  <CommentInput
-                    type="text"
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="댓글을 입력하세요..."
-                  />
-                  <CommentSubmitButton type="submit">댓글 작성</CommentSubmitButton>
-                </form>
-              </WriteComment>
-            }
-            {
-              comments && comments.resultList.map((comment, idx) => {
-                return (
-                  <Comment key={idx}>
-                    <CommentHeader>
-                      <div style={{ display: 'flex' }}>
-                        <ProfileImage src={comment.filePath} alt="작성자 프로필" />
-                        <PageHeaderWriter>
-                          <div>
-                            작성자: {comment.memberNickname}
-                          </div>
-                          <div>
-                            작성알: {comment.createDate}
-                          </div>
-                        </PageHeaderWriter>
-                      </div>
-                      <div style={{ display: 'flex' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                          {memberId === comment.memberId && <MyBtn
-                            color={palette.skyblue}
-                            onClick={() => handleEditComment(comment.id, comment.content)}>
-                            수정
-                          </MyBtn>}
+        <Container>
+          <GlassCard>
+            <Title>{data.title}</Title>
+            <PageHeader>
+              <div style={{ display: 'flex' }}>
+                <ProfileImage src={data.filePath} alt="작성자 프로필" />
+                <PageHeaderWriter>
+                  <div>
+                    작성자: {data.writerName}
+                  </div>
+                  <div>
+                    작성알: {data.createTime}
+                  </div>
+                </PageHeaderWriter>
+              </div>
+              <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
+                  {memberId === String(data.memberId) && <MyBtn
+                    color={palette.skyblue}
+                    onClick={handleUpdate}>
+                    수정
+                  </MyBtn>}
+                  <div>
+                    좋아요: {data.likeCount}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                  {(memberId === String(data.memberId) || memberRole === 'ADMIN') && <MyBtn
+                    color={palette.skyblue}
+                    onClick={() => setIsDeletePostModalOpen(true)}>
+                    삭제
+                  </MyBtn>}
+                  <div>
+                    조회수: {data.viewCount}
+                  </div>
+                </div>
+              </div>
+            </PageHeader>
+            <Wrapper>
+              <EditorViewer contents={data.content}></EditorViewer>
+            </Wrapper>
+
+            {memberId && <LikeButton liked={data.liked} onClick={fetchLike}>
+              Like
+            </LikeButton>}
+            <CommentContainer>
+              <Title>댓글</Title>
+              <HighLight />
+              {memberId &&
+                <WriteComment>
+                  <form onSubmit={handleCommentSubmit}>
+                    <CommentInput
+                      type="text"
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      placeholder="댓글을 입력하세요..."
+                    />
+                    <CommentSubmitButton type="submit">댓글 작성</CommentSubmitButton>
+                  </form>
+                </WriteComment>
+              }
+              {
+                comments && comments.resultList.map((comment, idx) => {
+                  return (
+                    <Comment key={idx}>
+                      <CommentHeader>
+                        <div style={{ display: 'flex' }}>
+                          <ProfileImage src={comment.filePath} alt="작성자 프로필" />
+                          <PageHeaderWriter>
+                            <div>
+                              작성자: {comment.memberNickname}
+                            </div>
+                            <div>
+                              작성알: {comment.createDate}
+                            </div>
+                          </PageHeaderWriter>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                          {(memberId === comment.memberId || memberRole === 'ADMIN') &&
-                            <MyBtn
+                        <div style={{ display: 'flex' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
+                            {memberId === String(comment.memberId) && <MyBtn
                               color={palette.skyblue}
-                              onClick={() => {
-                                setDeleteCommentId(comment.id);
-                                setIsDeleteCommentModalOpen(true);
-                              }}>
-                              삭제
+                              onClick={() => handleEditComment(comment.id, comment.content)}>
+                              수정
                             </MyBtn>}
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                            {(memberId === String(comment.memberId) || memberRole === 'ADMIN') &&
+                              <MyBtn
+                                color={palette.skyblue}
+                                onClick={() => {
+                                  setDeleteCommentId(comment.id);
+                                  setIsDeleteCommentModalOpen(true);
+                                }}>
+                                삭제
+                              </MyBtn>}
+                          </div>
                         </div>
-                      </div>
-                    </CommentHeader>
+                      </CommentHeader>
 
-                    <div style={{ fontSize: '25px' }}>
-                      {comment.content}
-                    </div>
-                    {editCommentId === comment.id && (
-                      <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <input
-                          value={editComment}
-                          onChange={handleCommentChange}
-                          style={{ width: '60%', height: '20px', fontSize: '18px', marginBottom: '20px', 'border-radius': '10px' }} />
-                        <MyBtn
-                          color={palette.skyblue}
-                          onClick={() => fetchUpdateComment(comment.id)}>수정</MyBtn>
+                      <div style={{ fontSize: '25px' }}>
+                        {comment.content}
                       </div>
-                    )}
-                  </Comment>
-                );
-              })
-            }
-            {comments && (
-              <PaginationContainer>
-                <PageButton
-                  onClick={() => {
-                    setCurrentPage(currentPage - 1);
-                  }}
-                  disabled={currentPage === 0}
-                >
-                  이전
-                </PageButton>
-                {comments.pageList.map((page) => (
+                      {editCommentId === comment.id && (
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <input
+                            value={editComment}
+                            onChange={handleCommentChange}
+                            style={{ width: '60%', height: '20px', fontSize: '18px', marginBottom: '20px', 'border-radius': '10px' }} />
+                          <MyBtn
+                            color={palette.skyblue}
+                            onClick={() => fetchUpdateComment(comment.id)}>수정</MyBtn>
+                        </div>
+                      )}
+                    </Comment>
+                  );
+                })
+              }
+              {comments && (
+                <PaginationContainer>
                   <PageButton
-                    key={page}
                     onClick={() => {
-                      setCurrentPage(page - 1);
+                      setCurrentPage(currentPage - 1);
                     }}
-                    active={currentPage === page - 1}
+                    disabled={currentPage === 0}
                   >
-                    {page}
+                    이전
                   </PageButton>
-                ))}
-                <PageButton
-                  onClick={() => {
-                    setCurrentPage(currentPage + 1);
-                  }}
-                  disabled={currentPage === comments.totalPage - 1}
-                >
-                  다음
-                </PageButton>
-              </PaginationContainer>
-            )}
-          </CommentContainer>
-        </PageContainer>
-      </Container>
-      <RemoveModal
-        isModalOpen={isDeleteCommentModalOpen}
-        setIsModalOpen={() => setIsDeleteCommentModalOpen(false)}
-        onClick={() => {
-          fetchDeleteComment();
-          setIsDeleteCommentModalOpen(false);
-        }} />
-      <RemoveModal
-        isModalOpen={isDeletePostModalOpen}
-        setIsModalOpen={() => setIsDeletePostModalOpen(false)}
-        onClick={() => {
-          fetchDeletePost();
-          setIsDeletePostModalOpen(false);
-        }} />
+                  {comments.pageList.map((page) => (
+                    <PageButton
+                      key={page}
+                      onClick={() => {
+                        setCurrentPage(page - 1);
+                      }}
+                      active={currentPage === page - 1}
+                    >
+                      {page}
+                    </PageButton>
+                  ))}
+                  <PageButton
+                    onClick={() => {
+                      setCurrentPage(currentPage + 1);
+                    }}
+                    disabled={currentPage === comments.totalPage - 1}
+                  >
+                    다음
+                  </PageButton>
+                </PaginationContainer>
+              )}
+            </CommentContainer>
+          </GlassCard>
+        </Container>
+        <RemoveModal
+          isModalOpen={isDeleteCommentModalOpen}
+          setIsModalOpen={() => setIsDeleteCommentModalOpen(false)}
+          onClick={() => {
+            fetchDeleteComment();
+            setIsDeleteCommentModalOpen(false);
+          }} />
+        <RemoveModal
+          isModalOpen={isDeletePostModalOpen}
+          setIsModalOpen={() => setIsDeletePostModalOpen(false)}
+          onClick={() => {
+            fetchDeletePost();
+            setIsDeletePostModalOpen(false);
+          }} />
+
+      </Wrapper>
     </>
   );
 }

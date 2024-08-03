@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { baseAPI } from '../../config'
 import CustomButton from '../../components/CustomButton';
+import Wrapper from "../../components/Wrapper";
+import GlassCard from "../../components/GlassCard";
 
 const Title = styled.div`
   display: flex;
@@ -116,7 +118,7 @@ const CommunityQNA = () => {
     return date.toISOString().split('T')[0]; // '2024-07-24' 형식으로 변환
   };
 
-  const handleWrite = ()=> {
+  const handleWrite = () => {
     navigate("/post/qna/write");
   }
 
@@ -138,77 +140,81 @@ const CommunityQNA = () => {
   return (
     <>
       <Header />
-      <Title>
-        <h1>면접 관련  Q & A</h1>
-        <CustomButton onClick={handleWrite} color={palette.skyblue}>글 작성</CustomButton>
-      </Title>
-      <Main>
-        <MainHeader>
-          <input
-            type='text'
-            placeholder="제목을 입력하세요"
-            value={tempSearchText}
-            onChange={(e) => setTempSearchText(e.target.value)}
-            style={{ width: '60%', height: '50px', fontSize: '18px', marginBottom: '20px', 'border-radius': '10px' }}
-          />
-          <MyBtn
-            color={palette.skyblue}
-            onClick={() => {
-              setSearchText(tempSearchText);
-              setCurrentPage(0);
-            }}>
-            검색
-          </MyBtn>
-        </MainHeader>
-        <MainBody>
-          <MainContent>
-            {data &&
-              data.resultList.map((post, idx) => (
-                <PostCard key={idx}
-                  onClick={
-                    () => navigate(`/post/${post.postId}`)}>
-                  <PostTitle>- {post.title}</PostTitle>
-                  <PostDetails>
-                    <span>작성자 : {post.writerName}</span>
-                    <span>작성일 : {formatDate(post.createTime)}</span>
-                  </PostDetails>
-                </PostCard>
-              ))
-            }
-          </MainContent>
-          {data && (
-            <PaginationContainer>
-              <PageButton
+      <Wrapper>
+        <div style={{ marginTop: '30px' }}>
+          <Title>
+            <h1>면접 관련  Q & A</h1>
+            <CustomButton onClick={handleWrite} color={palette.skyblue}>글 작성</CustomButton>
+          </Title>
+          <Main>
+            <MainHeader>
+              <input
+                type='text'
+                placeholder="제목을 입력하세요"
+                value={tempSearchText}
+                onChange={(e) => setTempSearchText(e.target.value)}
+                style={{ width: '60%', height: '50px', fontSize: '18px', marginBottom: '20px', 'border-radius': '10px' }}
+              />
+              <MyBtn
+                color={palette.skyblue}
                 onClick={() => {
-                  setCurrentPage(currentPage - 1);
-                }}
-                disabled={currentPage === 0}
-              >
-                이전
-              </PageButton>
-              {data.pageList.map((page) => (
-                <PageButton
-                  key={page}
-                  onClick={() => {
-                    setCurrentPage(page - 1);
-                  }}
-                  active={currentPage === page - 1}
-                >
-                  {page}
-                </PageButton>
-              ))}
-              <PageButton
-                onClick={() => {
-                  setCurrentPage(currentPage + 1);
-                }}
-                disabled={currentPage === data.totalPage - 1}
-              >
-                다음
-              </PageButton>
-            </PaginationContainer>
-          )}
-        </MainBody>
-      </Main>
+                  setSearchText(tempSearchText);
+                  setCurrentPage(0);
+                }}>
+                검색
+              </MyBtn>
+            </MainHeader>
+            <MainBody>
+              <MainContent>
+                {data &&
+                  data.resultList.map((post, idx) => (
+                    <GlassCard key={idx}
+                      onClick={
+                        () => navigate(`/post/${post.postId}`)}>
+                      <PostTitle>- {post.title}</PostTitle>
+                      <PostDetails>
+                        <span>작성자 : {post.writerName}</span>
+                        <span>작성일 : {formatDate(post.createTime)}</span>
+                      </PostDetails>
+                    </GlassCard>
+                  ))
+                }
+              </MainContent>
+              {data && (
+                <PaginationContainer>
+                  <PageButton
+                    onClick={() => {
+                      setCurrentPage(currentPage - 1);
+                    }}
+                    disabled={currentPage === 0}
+                  >
+                    이전
+                  </PageButton>
+                  {data.pageList.map((page) => (
+                    <PageButton
+                      key={page}
+                      onClick={() => {
+                        setCurrentPage(page - 1);
+                      }}
+                      active={currentPage === page - 1}
+                    >
+                      {page}
+                    </PageButton>
+                  ))}
+                  <PageButton
+                    onClick={() => {
+                      setCurrentPage(currentPage + 1);
+                    }}
+                    disabled={currentPage === data.totalPage - 1}
+                  >
+                    다음
+                  </PageButton>
+                </PaginationContainer>
+              )}
+            </MainBody>
+          </Main>
+        </div>
+      </Wrapper>
     </>
   );
 };

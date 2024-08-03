@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { useNavigate } from 'react-router-dom';
 import { baseAPI } from '../../config';
+import Wrapper from "../../components/Wrapper";
+import GlassCard from "../../components/GlassCard";
 import Header from '../../components/Header';
 
 const WrapperContainer = styled.div`
@@ -96,8 +98,8 @@ const Signup = () => {
   return (
     <>
       <Header />
-      <WrapperContainer>
-        <FormContainer>
+      <Wrapper>
+        <GlassCard>
           <Title>회원가입</Title>
           <form onSubmit={handleSubmit}>
             <Input
@@ -124,8 +126,8 @@ const Signup = () => {
             <Button type="submit">회원가입</Button>
             <LinkStyled onClick={() => navigate('/auth/sign-in')}>로그인</LinkStyled>
           </form>
-        </FormContainer>
-      </WrapperContainer>
+        </GlassCard>
+      </Wrapper>
     </>
   );
 };

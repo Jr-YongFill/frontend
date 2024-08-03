@@ -15,10 +15,10 @@ const GlassContainer = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.3);
 `;
 
-const GlassCard = ({ children , width, margin}) => {
+const GlassCard = ({ children, width, margin, onClick }) => {
 
-    return(
-        <GlassContainer width={width} margin={margin}>
+    return (
+        <GlassContainer width={width} margin={margin} onClick={onClick}>
             {children}
         </GlassContainer>
     )
