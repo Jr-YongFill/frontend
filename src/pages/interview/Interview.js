@@ -217,7 +217,7 @@ const Interview = () => {
     (currentQuestion >= totalQuestions - 1) && handleSubmit();
     setCurrentQuestion(answers.length);
     console.log("current" + currentQuestion);
-  }, [answers]);
+  }, [answers, currentQuestion, handleSubmit]);
 
 
 
@@ -320,13 +320,13 @@ const Interview = () => {
         recorder.stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, []);
+  }, [recorder]);
 
   useEffect(() => {
-    if (wait == true) {
+    if (wait === true) {
       getGptAnswer();
     }
-  }, [wait]);
+  }, [wait, getGptAnswer]);
 
   return (
     <div>

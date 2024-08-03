@@ -55,7 +55,7 @@ const InterviewNote = () => {
   useEffect(() => {
     const fetchStacks = async () => {
       try {
-        const response = await baseAPI.get('http://localhost:8080/api/members/1/stacks');
+        const response = await baseAPI.get(`http://localhost:8080/api/members/${memberId}/stacks`);
         setStacks(response.data.filter(stack => stack.isPurchase));
         if (response.data.length > 0) {
           setSelectedStack(response.data[0].id); // 기본적으로 첫 번째 스택 선택
@@ -86,7 +86,7 @@ const InterviewNote = () => {
     };
 
     fetchQuestions();
-  }, [selectedStack, currentPage]);
+  }, [selectedStack, currentPage, memberId]);
 
   if (loading) return <CenteredBox><CircularProgress /></CenteredBox>;
   if (error) return <CenteredBox><Alert severity="error">Error loading data!</Alert></CenteredBox>;

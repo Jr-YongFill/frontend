@@ -37,7 +37,7 @@ const Timer = (props) => {
       //0이 될 경우
       timeOut();
     }
-  }, [seconds]);
+  }, [seconds, timeOut]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);

@@ -400,7 +400,7 @@ const PracticeInterview = () => {
           </ButtonContainer>
           <ButtonContainer>
             <MyBtn color={pallete.skyblue} onClick={() => setModalSwitch(true)}>채점하기</MyBtn>
-            <MyBtn color={pallete.skyblue} onClick={() => handleNavigate('/interview/result')}>Stop</MyBtn>
+            <MyBtn color={pallete.skyblue} onClick={() => handleNavigate('/interview/note')}>Stop</MyBtn>
             <MyBtn color={pallete.skyblue} onClick={() => fetchQuestion()}>Next</MyBtn>
           </ButtonContainer>
         </LeftContainer>
