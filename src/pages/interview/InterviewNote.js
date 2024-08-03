@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   Tabs,
   Tab,
@@ -22,6 +21,7 @@ import Header from '../../components/Header';
 import CustomButton from "../../components/CustomButton";
 import { palette } from "@mui/system";
 import {baseAPI} from "../../config";
+import {localStorageGetValue} from "../../utils/CryptoUtils";
 
 const TitleContainer = styled(Box)`
     display: grid;
@@ -40,6 +40,7 @@ const CenteredBox = styled(Box)`
 `;
 
 const InterviewNote = () => {
+  const memberId = localStorageGetValue('member-id');;
   const [stacks, setStacks] = useState([]);
   const [selectedStack, setSelectedStack] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -74,7 +75,7 @@ const InterviewNote = () => {
     const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const response = await baseAPI.get(`http://localhost:8080/api/members/1/stacks/${selectedStack}/answers?page=${currentPage - 1}&size=6`);
+        const response = await baseAPI.get(`http://localhost:8080/api/members/${memberId}/stacks/${selectedStack}/answers?page=${currentPage - 1}&size=6`);
         setQuestions(response.data.content);
         setTotalPages(response.data.totalPages);
         setLoading(false);

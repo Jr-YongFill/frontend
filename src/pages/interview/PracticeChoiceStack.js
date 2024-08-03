@@ -5,6 +5,7 @@ import styled from "styled-components";
 import palette from "../../styles/pallete";
 import {baseAPI} from "../../config";
 import Modal from "react-modal";
+import {localStorageGetValue} from "../../utils/CryptoUtils";
 
 
 
@@ -71,7 +72,7 @@ const ModalTextInput = styled.input`
 
 
 const PracticeChoiceStack = () => {
-  const memberId = 1;
+  const memberId = localStorageGetValue('member-id');
   const [stacks, setStacks] = useState([]);
   const [modalSwitch, setModalSwitch] = useState(false);
   const [apiKey, setApiKey] = useState("");

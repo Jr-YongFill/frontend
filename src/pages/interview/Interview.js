@@ -6,6 +6,8 @@ import { baseAPI } from "../../config";
 import Timer from "../../components/Timer";
 import pallete from "../../styles/pallete";
 import styled from "styled-components";
+import palette from "../../styles/pallete";
+import {localStorageGetValue} from "../../utils/CryptoUtils";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -25,10 +27,20 @@ const GridContainer = styled.div`
     width: 100%;
     box-sizing: border-box;
 `;
+const TimerWaitInfo = styled.div`
+    background:${palette.gray};
+    color: white;
+    font-size: 3rem;
+    width:20vw;
+    text-align:center;
+    padding-bottom:2vw;
+    border-radius:20px;
+    min-width: 300px;
+`
 
 const Interview = () => {
-  const memberId = 1;
-  const totalQuestions = 3;
+  const memberId = localStorageGetValue('member-id');
+  const totalQuestions = 10;
   const navigate = useNavigate();
   const location = useLocation();
   const { stackids, apiKey } = location.state || {};
@@ -41,6 +53,7 @@ const Interview = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [wait, setWait] = useState(false);
+  const [isSkip, setIsSkip] = useState(false);
 
   const getUserCamera = () => {
     navigator.mediaDevices.getUserMedia({
@@ -164,11 +177,21 @@ const Interview = () => {
   };
 
   const getGptAnswer = async () => {
-    // 오디오를 텍스트로 변환
-    const memberAnswer = await transcribeAudio();
 
-    // GPT에게 답변 평가 요청
-    const gptAnswer = await askQuestion(memberAnswer);
+    let memberAnswer, gptAnswer;
+
+    if(isSkip) {
+      memberAnswer = "모르겠습니다.";
+
+      gptAnswer = await askQuestion(memberAnswer);
+    } else {
+      // 오디오를 텍스트로 변환
+      memberAnswer = await transcribeAudio();
+
+      // GPT에게 답변 평가 요청
+      gptAnswer = await askQuestion(memberAnswer);
+    }
+
 
     // 새로운 답변 저장
     const newAnswer = {
@@ -199,7 +222,8 @@ const Interview = () => {
 
 
   const handleNext = async () => {
-    // 마지막 질문인 경우 결과 페이지로 이동
+
+    setIsSkip(false);
 
     try {
       // 녹음을 멈추고 완전히 처리되기를 기다림
@@ -208,22 +232,18 @@ const Interview = () => {
       console.error('다음 질문 처리 중 오류 발생:', error);
     }
 
-
-
-
   };
 
   const handleSkip = async () => {
-    const gptAnswer = await askQuestion("모르겠습니다.");
 
-    const newAnswer = {
-      questionId: questions[currentQuestion].questionId,
-      question: questions[currentQuestion].question,
-      memberAnswer: "모르겠습니다.",
-      gptAnswer: gptAnswer
-    };
+    setIsSkip(true);
 
-    setAnswers([...answers, newAnswer]);
+    try {
+      // 녹음을 멈추고 완전히 처리되기를 기다림
+      await stopRecording();
+    } catch (error) {
+      console.error('다음 질문 처리 중 오류 발생:', error);
+    }
 
   };
 
@@ -345,7 +365,7 @@ const Interview = () => {
       <GridContainer>
       {/*<button onClick={() => navigate('/interview/result')}>면접 결과</button>*/}
 
-      {recording && <Timer handleNext= {handleNext} ></Timer>}
+        {recording ? <Timer handleNext= {handleNext} /> : <TimerWaitInfo>문제를 준비하고 있습니다.</TimerWaitInfo>}
 
         <ButtonContainer>
           <MyBtn color={pallete.skyblue} onClick={handleNext}>Next</MyBtn>
