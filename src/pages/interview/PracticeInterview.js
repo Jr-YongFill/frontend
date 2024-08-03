@@ -428,16 +428,25 @@ const PracticeInterview = () => {
           <ModalTextBox style={{ marginBottom: '5rem' }}>
             채점을 진행하면 GPT API를 사용합니다.
           </ModalTextBox>
-          <CustomButton
-            onClick={async () => {
-              await handleGrade();
-              setModalSwitch(false);
-            }}
-            isNotHover={btnBlock}
-            disabled={btnBlock}
-          >
-            채점하기
-          </CustomButton>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
+            <CustomButton
+              onClick={async () => {
+                await handleGrade();
+                setModalSwitch(false);
+              }}
+              isNotHover={btnBlock}
+              disabled={btnBlock}
+            >
+              채점하기
+            </CustomButton>
+            <CustomButton
+              onClick={async () => {
+                setModalSwitch(false);
+              }}
+            >
+              닫기
+            </CustomButton>
+          </div>
         </ModalContent>
       </GlassModalChildren>
 

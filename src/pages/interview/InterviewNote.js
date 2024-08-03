@@ -27,9 +27,8 @@ import GlassCard from '../../components/GlassCard';
 import GlassModal from '../../components/modal/GlassModal';
 
 const TitleContainer = styled(Box)`
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     max-width: 1200px;
     margin: 50px auto;
@@ -64,9 +63,10 @@ const InterviewNote = () => {
     const fetchStacks = async () => {
       try {
         const response = await baseAPI.get(`http://localhost:8080/api/members/${memberId}/stacks`);
-        setStacks(response.data.filter(stack => stack.isPurchase));
-        if (response.data.length > 0) {
-          setSelectedStack(response.data[0].id); // 기본적으로 첫 번째 스택 선택
+        const datas = response.data.filter(stack => stack.isPurchase);
+        setStacks(datas);
+        if (datas.length > 0) {
+          setSelectedStack(datas[0].id); // 기본적으로 첫 번째 스택 선택
         }
       } catch (error) {
 
@@ -127,27 +127,19 @@ const InterviewNote = () => {
       <Wrapper>
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
           <TitleContainer>
-            <Box sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'start'
-            }}>
-              <Typography variant="h2" marginBottom={10}>
-                오답노트
-              </Typography>
-              <Typography variant="h5">
-                당신의 대답은 이러한데... 과연 잘한걸까요...? <br />
-                다시 한 번 확인해보세요!
-              </Typography>
-            </Box>
-            <Box sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'end'
-            }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <Typography variant="h2" marginBottom={10}>
+                  오답노트
+                </Typography>
+                <Typography variant="h5">
+                  당신의 대답은 이러한데... 과연 잘한걸까요...? <br />
+                  다시 한 번 확인해보세요!
+                </Typography>
+              </div>
               <img src={img} width={'40%'} alt={'기본 이미지'} />
-              <CustomButton sx={{ marginTop: 2 }} onClick={() => navigate('/interview/choice-stack')}>면접 보러 가기</CustomButton>
-            </Box>
+            </div>
+            <CustomButton onClick={() => navigate('/interview/main')}>면접 보러 가기</CustomButton>
           </TitleContainer>
           <GlassCard>
             <Box sx={{ width: '100%', maxWidth: 1200, marginTop: 2 }}>
@@ -172,7 +164,7 @@ const InterviewNote = () => {
                     '&:before': {
                       display: 'none',
                     },
-                    width: '60%',
+                    width: '80%',
                     marginBottom: 2,
                     color: 'darkslategray',
                     backgroundColor: '#F0F0F0',
@@ -189,57 +181,39 @@ const InterviewNote = () => {
                   <AccordionDetails>
                     {question.memberAnswers[0].id ? (
                       question.memberAnswers.map((answer) => (
-                        <Box key={answer.id} sx={{ marginBottom: 2 }}>
-                          <Grid container spacing={2} sx={{
-                            marginTop: '10px',
-                            marginBottom: '10px',
-                            marginLeft: '20px',
-                            alignItems: 'bottom'
-                          }}
-                          >
-                            <Typography variant="h4" gutterBottom>
-                              {answer.createDate ? new Date(answer.createDate).toLocaleDateString() : 'No Date'}&nbsp;&nbsp;
-                            </Typography>
-                            <Typography variant="h6" gutterBottom sx={{
-                              display: 'flex',
-                              // fontWeight: 'bold',
-                              color: answer.interviewMode === "PRACTICE" ? 'darkblue' : 'burgundy',
-                              marginTop: '8px'
-                            }}
-                            >
-                              {answer.interviewMode === "PRACTICE" ? '연습 문제' : '실전 문제'}
-                            </Typography>
-                          </Grid>
-                          <Box sx={{
+                        <GlassCard key={answer.id} style={{ marginBottom: 2 }}>
+                          <Typography variant="h4" gutterBottom>
+                            {answer.createDate ? new Date(answer.createDate).toLocaleDateString() : 'No Date'}&nbsp;&nbsp;
+                          </Typography>
+                          <Typography variant="h6" gutterBottom sx={{
                             display: 'flex',
-                            backgroundColor: answer.interviewMode === "PRACTICE" ? '#EAFAFF' : '#FFF1F4',
-                            borderRadius: '20px',
-                            marginBottom: '50px'
+                            // fontWeight: 'bold',
+                            color: answer.interviewMode === "PRACTICE" ? 'darkblue' : 'burgundy',
+                            marginTop: '8px'
                           }}
                           >
-                            <Grid container >
-                              <Grid item xs={6}>
-                                <Box padding={4}>
-                                  <Typography variant="h5" gutterBottom>
-                                    나의 답변
-                                  </Typography>
-                                  <Typography sx={{ wordWrap: "break-word" }}>{answer.memberAnswer}</Typography>
-                                </Box>
-                              </Grid>
-                              <Grid item xs={6}>
-                                <Box padding={4}>
-                                  <Typography variant="h5" gutterBottom>
-                                    GPT의 답변
-                                  </Typography>
-                                  <Typography sx={{ wordWrap: "break-word" }}>{answer.gptAnswer}</Typography>
-                                </Box>
-                              </Grid>
-                            </Grid>
-                          </Box>
-                        </Box>
+                            {answer.interviewMode === "PRACTICE" ? '연습 문제' : '실전 문제'}
+                          </Typography>
+                          <GlassCard>
+                            <GlassCard>
+                              <Typography variant="h5" gutterBottom>
+                                나의 답변
+                              </Typography>
+                              <Typography sx={{ wordWrap: "break-word" }}>{answer.memberAnswer}</Typography>
+                            </GlassCard>
+                            <GlassCard>
+                              <Typography variant="h5" gutterBottom>
+                                GPT의 답변
+                              </Typography>
+                              <Typography sx={{ wordWrap: "break-word" }}>{answer.gptAnswer}</Typography>
+                            </GlassCard>
+                          </GlassCard>
+                        </GlassCard>
                       ))
                     ) : (
-                      <Typography variant="h5" gutterBottom>답변이 존재하지 않습니다.<br />면접을 더 진행해보세요!</Typography>
+                      <GlassCard>
+                        <Typography variant="h5" gutterBottom>답변이 존재하지 않습니다.<br />면접을 더 진행해보세요!</Typography>
+                      </GlassCard>
                     )}
                   </AccordionDetails>
                 </Accordion>

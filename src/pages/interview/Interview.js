@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
-import MyBtn from '../../components/CustomButton';
 import { baseAPI } from "../../config";
 import Timer from "../../components/Timer";
-import pallete from "../../styles/pallete";
 import styled from "styled-components";
 import palette from "../../styles/pallete";
 import { localStorageGetValue } from "../../utils/CryptoUtils";
@@ -32,14 +30,14 @@ const GridContainer = styled.div`
     box-sizing: border-box;
 `;
 const TimerWaitInfo = styled.div`
-    background:${palette.gray};
+    background:${palette.purple};
     color: white;
-    font-size: 3rem;
-    width:20vw;
+    font-size: 1rem;
+    width:12vw;
     text-align:center;
-    padding-bottom:2vw;
+    padding:2vw;
     border-radius:20px;
-    min-width: 300px;
+    min-width: 150px;
 `
 
 const Interview = () => {
@@ -58,7 +56,7 @@ const Interview = () => {
   const [answers, setAnswers] = useState([]);
   const [wait, setWait] = useState(false);
   const [isSkip, setIsSkip] = useState(false);
-
+  const [isFirstWait, setIsFirstWait] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalText, setModalText] = useState('');
@@ -242,13 +240,12 @@ const Interview = () => {
   }
 
   useEffect(() => {
-    console.log("effect");
-    (currentQuestion >= totalQuestions - 1) && handleSubmit();
+    if (questions.length != 0 && currentQuestion >= questions.length - 1) {
+      handleSubmit();
+      return;
+    }
     setCurrentQuestion(answers.length);
-    console.log("current" + currentQuestion);
   }, [answers]);
-
-
 
   const handleNext = async () => {
 
@@ -319,8 +316,10 @@ const Interview = () => {
 
 
   useEffect(() => {
-    fetchQuestions();
-  }, [fetchQuestions]);
+    if (isFirstWait) {
+      fetchQuestions();
+    }
+  }, [fetchQuestions, isFirstWait]);
 
   useEffect(() => {
     getUserCamera();
@@ -355,15 +354,18 @@ const Interview = () => {
       mediaRecorder.start();
       setRecording(true);
     }
+    if (isFirstWait) {
+      getMicrophoneAccess(); // Start recording after setting the recorder
+      return () => {
+        // Cleanup recorder
+        if (recorder) {
+          recorder.stream.getTracks().forEach(track => track.stop());
+        }
+      };
+    }
 
-    getMicrophoneAccess(); // Start recording after setting the recorder
-    return () => {
-      // Cleanup recorder
-      if (recorder) {
-        recorder.stream.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, []);
+    return;
+  }, [isFirstWait]);
 
   useEffect(() => {
     if (wait == true) {
@@ -375,30 +377,52 @@ const Interview = () => {
     <>
       <Header />
       <Wrapper>
-        <GlassCard>
+        <GlassCard width={'100%'}>
           <div>
-            {questions[currentQuestion] &&
-              <h1>Q{currentQuestion + 1}. {questions[currentQuestion].question}</h1>}
+            {questions[currentQuestion] && isFirstWait == true &&
+              <h1>Q{currentQuestion + 1}. {questions[currentQuestion].question}</h1>
+            }
+            {
+              isFirstWait == false &&
+              <h1>준비 시간 입니다.</h1>
+            }
             <GridContainer>
               <video
                 className='container'
                 ref={videoRef}
                 style={{
                   transform: 'scaleX(-1)',
-                  width: 'auto',
-                  height: '45%',
+                  width: '400px',
+                  height: '250px',
                   borderRadius: '25px',
                 }}
               />
             </GridContainer>
 
             <GridContainer>
-
-              {recording ? <Timer handleNext={handleNext} /> : <TimerWaitInfo>문제를 준비하고 있습니다.</TimerWaitInfo>}
+              {!isFirstWait &&
+                <Timer
+                  handleNext={() => setIsFirstWait(true)}
+                  time={10} />}
+              {isFirstWait &&
+                <>
+                  {recording ?
+                    <Timer
+                      handleNext={handleNext}
+                      time={120} /> : <TimerWaitInfo>문제를 준비하고 있습니다.</TimerWaitInfo>
+                  }
+                </>
+              }
 
               <ButtonContainer>
-                <CustomButton onClick={handleNext}>Next</CustomButton>
-                <CustomButton onClick={handleSkip}>Skip</CustomButton>
+                <CustomButton
+                  disabled={!recording || !isFirstWait}
+                  isNotHover={!recording || !isFirstWait}
+                  onClick={handleNext}>Next</CustomButton>
+                <CustomButton
+                  disabled={!recording || !isFirstWait}
+                  isNotHover={!recording || !isFirstWait}
+                  onClick={handleSkip}>Skip</CustomButton>
               </ButtonContainer>
             </GridContainer>
           </div>
@@ -407,7 +431,6 @@ const Interview = () => {
 
       <GlassModal
         isModalOpen={isModalOpen}
-        setIsModalOpen={() => setIsModalOpen(false)}
         message={modalText}
         onClick={modalOnClick} />
     </>
