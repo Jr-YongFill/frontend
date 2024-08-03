@@ -83,7 +83,7 @@ const Signup = () => {
     <>
       <Header />
       <Wrapper>
-        <GlassCard width={'500px'} height={'450px'}>
+        <GlassCard width={'500px'} height={'400px'}>
           <Title>회원가입</Title>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Input
@@ -110,7 +110,9 @@ const Signup = () => {
             <div style={{ paddingLeft: '80%' }}>
               <LinkStyled onClick={() => navigate('/auth/sign-in')}>로그인</LinkStyled>
             </div>
+            <div style={{height:'100%', marginTop:'2vh'}}>
             <CustomButton type="submit">회원가입</CustomButton>
+            </div>
           </form>
         </GlassCard>
       </Wrapper>

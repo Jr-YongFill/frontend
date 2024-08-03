@@ -2,7 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
 
-const MyBtn = styled.button`
+
+
+const MyBtn = styled.button.attrs(props => ({
+  type: props.type || 'button', // 기본 type을 text로 설정
+}))`
   background-color: ${(props) => props.color || palette.dark}; /* 기본 색상 설정 */
   border: none;
   width: ${(props) => props.width || '10vw'};
@@ -13,7 +17,6 @@ const MyBtn = styled.button`
   color: white;
   cursor:pointer;
   padding: 10px;
-  type:${props => props.type || 'submit'}
 
   ${(props) => props.isNotHover ?
     null
@@ -24,9 +27,9 @@ const MyBtn = styled.button`
 `;
 
 
-const CustomButton = ({ color, children, onClick, width, myRef, isNotHover, type}) => {
+const CustomButton = ({ color, children, onClick, width, myRef, isNotHover, type }) => {
   return (
-    <MyBtn ref={myRef} color={color} onClick={onClick} width={width} isNotHover={isNotHover}  type={type}>
+    <MyBtn ref={myRef} color={color} onClick={onClick} width={width} isNotHover={isNotHover} type={type} >
       {children}
     </MyBtn>
   );

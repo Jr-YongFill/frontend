@@ -381,9 +381,9 @@ const Member = () => {
                         value={nickName}
                         onChange={handleNameChange}
                       />
-                      <StyledButton onClick={UpdateImageHandle}>
+                      <CustomButton onClick={UpdateImageHandle}>
                         수정하기
-                      </StyledButton>
+                      </CustomButton>
                     </NicknameInput>
                   </NicknameContainer>
                   <PasswordContainer>

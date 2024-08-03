@@ -28,6 +28,7 @@ const GlassModalChildren = ({ isModalOpen, setIsModalOpen, onClick, children, wi
                 onRequestClose={setIsModalOpen}
                 ariaHideApp={false}
                 width={width}
+                overlayClassName="glass-overlay"
             >
                 {children}
             </MyGlassModal>
