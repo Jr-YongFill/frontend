@@ -10,27 +10,25 @@ import { localStorageGetValue } from '../../utils/CryptoUtils';
 import Wrapper from '../../components/Wrapper';
 import GlassCard from '../../components/GlassCard';
 import Block from '../../components/Block';
+import NPGlassCard from '../../components/NoPaddingGlassCard';
+import GlassTitle from '../../components/GlassTitle';
 
+const ContainerWrapper = styled.div`
+  width:60vw;
+
+`
 
 const ContainerRow = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-
-const HighLight = styled.div`
-  background: ${palette.skyblue};
-  width: 150px;
-  height: 8px;
-  margin-top: 3px;
+  gap:3vw;
 `;
 
 const SubContainer = styled.div`
-  margin-right: 30px;
   width: 100%;
-  height: 30vh;
-  margin-top: 3px;
+  padding: 5vh 0px;
   display: flex;
+  flex-direction:column;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -45,7 +43,7 @@ const CommunityMain = () => {
   const [count, setCount] = useState(0);
   const [question, setQuestion] = useState("");
 
-  const memberId =  localStorageGetValue("member-id");
+  const memberId = localStorageGetValue("member-id");
   const navigateHandler = (url) => () => {
     navigate(url);
   };
@@ -73,7 +71,7 @@ const CommunityMain = () => {
 
     const fetchCount = async () => {
       try {
-        if(memberId!=null){
+        if (memberId != null) {
           const response = await baseAPI.get(`/api/members/${memberId}/answers`);
           setCount(response.data.count);
         }
@@ -87,15 +85,15 @@ const CommunityMain = () => {
       console.log("바보야!0");
       console.log(localStorageGetValue('member-id'));
       try {
-        if(localStorageGetValue('member-id')){
+        if (localStorageGetValue('member-id')) {
           const response = await baseAPI.get('/api/votes');
           const resultList = response.data.pageResponseDTO.resultList;
 
           if (resultList && resultList.length > 0) {
             setQuestion(resultList[0]);
-          } 
+          }
         }
-      }catch (error) {
+      } catch (error) {
         // console.error('Error fetching data', error);
       }
     };
@@ -106,19 +104,19 @@ const CommunityMain = () => {
     fetchQuestion();
   }, [memberId]);
 
-  const HandleVote = ()=>{
-    if(memberId){
+  const HandleVote = () => {
+    if (memberId) {
       navigate("/vote");
-    }else{
+    } else {
       alert('로그인 후 이용 가능합니다.');
       navigate("/auth/sign-in");
     }
   }
 
-  const HandleInterview = ()=>{
-    if(memberId){
+  const HandleInterview = () => {
+    if (memberId) {
       navigate("/vote");
-    }else{
+    } else {
       alert('로그인 후 이용 가능합니다.');
       navigate("/auth/sign-in");
     }
@@ -128,90 +126,97 @@ const CommunityMain = () => {
     <div>
       <Header />
       <Wrapper>
-        <div style={{display:'flex', flexDirection:'column'}}>
-          
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <Block></Block>
-          <ContainerRow>
-            <GlassCard>
-              <div style={{ fontSize: 25, fontWeight: 'bold' }}>오늘의 면접</div>
-              <HighLight />
-              <SubContainer>
-                {count === 0 ? (
-                  <div>
-                    <div style={{ marginBottom: '-3vh' }}>오늘 면접 본 기록이 없어요!</div>
-                    <CustomButton color={palette.skyblue} onClick={HandleInterview}>
-                      면접 보러 가기
-                    </CustomButton>
-                  </div>
-                ) : (
-                  <div>
-                    <div style={{ marginBottom: '-3vh' }}>오늘 {count} 개 질문에 답했네요!</div>
-                    <CustomButton color={palette.skyblue} onClick={navigateHandler("/interview/choice-mode")}>
-                      오답노트 보기
-                    </CustomButton>
-                  </div>
-                )}
-              </SubContainer>
-            </GlassCard>
-            <GlassCard>
-              <div style={{ fontSize: 25, fontWeight: 'bold' }}>CS 투표</div>
-              <HighLight />
-              <SubContainer>
-                {question === "" ? (
-                  <div>
-                    <div style={{ marginBottom: '-3vh' }}>새로 질문을 등록하고 크레딧을 받아봐요!</div>
-                    <CustomButton color={palette.skyblue} onClick={HandleVote}>
-                      질문 등록 하기
-                    </CustomButton>
-                  </div>
-                ) : (
-                  <div>
-                    <div style={{ marginBottom: '-3vh' }}>{question.question}</div>
-                    <CustomButton color={palette.skyblue} onClick={HandleVote}>
-                      투표하러 가기
-                    </CustomButton>
-                  </div>
-                )}
-              </SubContainer>
-            </GlassCard>
-          </ContainerRow>
-          <ContainerRow>
-            <GlassCard>
-              <div
-                style={{ fontSize: 25, fontWeight: 'bold', cursor:'pointer'}}
-                onClick={navigateHandler("/community/qna")}>Q & A</div>
-              <HighLight />
-              <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>
-                {qnaData ?
-                  (qnaData.map((data, idx) => {
-                    return (
-                      <CustomLi key={idx} data={data}></CustomLi>
-                    )
-                  }))
-                  :
-                  (<div>게시글이 없네요!</div>)
-                }
-              </ul>
-            </GlassCard>
-            <GlassCard>
-              <div
-                style={{ fontSize: 25, fontWeight: 'bold' ,cursor:'pointer' }}
-                onClick={navigateHandler("/community/info")}>정보 공유</div>
-              <HighLight />
-              <ul style={{ padding: 0, marginLeft: 0, marginRight: '8vw' }}>
-                {infoData ?
-                  (infoData.map((data, idx) => {
-                    return (
-                      <CustomLi key={idx} data={data}></CustomLi>
-                    )
-                  }))
-                  :
-                  (<div>게시글이 없네요!</div>)
-                }
-              </ul>
-            </GlassCard>
-          </ContainerRow>
-          </div>
+          <ContainerWrapper>
+            <ContainerRow>
+              <NPGlassCard>
+                <GlassTitle>
+                  <div style={{ fontSize: 25, fontWeight: 'bold' }}>오늘의 면접</div>
+                </GlassTitle>
+                    {count === 0 ? (
+                      <SubContainer>
+                        <div style={{ paddingBottom: '3vh' }}>오늘 면접 본 기록이 없어요!</div>
+                        <CustomButton onClick={HandleInterview}>
+                          면접 보러 가기
+                        </CustomButton>
+                      </SubContainer>
+
+                    ) : (
+                      <SubContainer>
+                        <div style={{ paddingBottom: '3vh'}}>오늘 {count} 개 질문에 답했네요!</div>
+                        <CustomButton onClick={navigateHandler("/interview/choice-mode")}>
+                          오답노트 보기
+                        </CustomButton>
+                      </SubContainer>
+                    )}
+              </NPGlassCard>
+              <NPGlassCard>
+                <GlassTitle>
+                  <div style={{ fontSize: 25, fontWeight: 'bold' }}>CS 투표</div>
+                </GlassTitle>
+                  {question === "" ? (
+                    <>
+                  <SubContainer>  
+                      <div style={{  paddingBottom: '3vh'}}>새로 질문을 등록하고 크레딧을 받아봐요!</div>
+                      <CustomButton onClick={HandleVote}>
+                        질문 등록 하기
+                      </CustomButton>
+                    </SubContainer></>
+                  ) : (
+                    <>
+                    <SubContainer>
+                      <div style={{  paddingBottom: '3vh'}}>{question.question}</div>
+                      <CustomButton onClick={HandleVote}>
+                        투표하러 가기
+                      </CustomButton>
+                    </SubContainer>
+                    </>
+                  )}
+              </NPGlassCard>
+            </ContainerRow>
+            <ContainerRow>
+              <NPGlassCard>
+                <GlassTitle>
+                  <div
+                    style={{ fontSize: 25, fontWeight: 'bold', cursor: 'pointer' }}
+                    onClick={navigateHandler("/community/qna")}>Q & A</div>
+                    <a href='/community/qna' style={{color:palette.gray, textDecorationLine : 'none'}}>+ 더보기</a>
+                </GlassTitle>
+                <ul style={{padding: '3vh 0', margin: '0 3vw'}}>
+                  {qnaData ?
+                    (qnaData.map((data, idx) => {
+                      return (
+                        <CustomLi key={idx} data={data}></CustomLi>
+                      )
+                    }))
+                    :
+                    (<div>게시글이 없네요!</div>)
+                  }
+                </ul>
+              </NPGlassCard>
+              <NPGlassCard>
+                <GlassTitle>
+                  <div
+                    style={{ fontSize: 25, fontWeight: 'bold', cursor: 'pointer' }}
+                    onClick={navigateHandler("/community/info")}>정보 공유</div>
+                    <a href='/community/info' style={{color:palette.gray, textDecorationLine : 'none'}}>+ 더보기</a>
+                </GlassTitle>
+                <ul style={{ padding: '3vh 0', margin: '0 3vw' }}>
+                  {infoData ?
+                    (infoData.map((data, idx) => {
+                      return (
+                        <CustomLi key={idx} data={data}></CustomLi>
+                      )
+                    }))
+                    :
+                    (<div>게시글이 없네요!</div>)
+                  }
+                </ul>
+              </NPGlassCard>
+            </ContainerRow>
+          </ContainerWrapper>
+        </div>
       </Wrapper>
     </div >
   );
