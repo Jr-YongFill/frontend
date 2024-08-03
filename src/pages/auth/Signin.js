@@ -8,7 +8,7 @@ import Header from '../../components/Header';
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
 import { localStorageGetValue, localStorageSetValue } from '../../utils/CryptoUtils';
-
+import GlassModal from "../../components/modal/GlassModal";
 
 const WrapperContainer = styled.div`
     height: 50vh;
@@ -82,6 +82,9 @@ const LinkStyled = styled.a`
 
 const Signin = () => {
   const [userLogin, setUserLogin] = useState({ email: '', password: '' });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -101,11 +104,19 @@ const Signin = () => {
       localStorageSetValue('member-role', role);
       localStorageSetValue('member-nickName', nickName);
 
-      alert('로그인 성공');
-      navigate('/');
+      setModalText('로그인에 성공하셨습니다.');
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+        navigate('/');
+      })
+      setIsModalOpen(true);
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : '로그인 실패';
-      alert(errorMessage);
+      setModalText(errorMessage);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
   };
 
@@ -137,6 +148,11 @@ const Signin = () => {
           </form>
         </GlassCard>
       </Wrapper>
+      <GlassModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={() => setIsModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick} />
     </>
   );
 };
