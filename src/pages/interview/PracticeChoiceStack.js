@@ -1,15 +1,16 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import styled from "styled-components";
 import palette from "../../styles/pallete";
-import {baseAPI} from "../../config";
+import { baseAPI } from "../../config";
 import Modal from "react-modal";
-import {localStorageGetValue} from "../../utils/CryptoUtils";
+import { localStorageGetValue } from "../../utils/CryptoUtils";
 import Wrapper from '../../components/Wrapper';
 import Block from '../../components/Block';
+import GlassCard from '../../components/GlassCard';
 import CustomButton from '../../components/CustomButton';
-
+import GlassModalChildren from '../../components/modal/GlassModalChildren';
 
 
 const Title = styled.div`
@@ -31,6 +32,7 @@ const Content = styled.div`
   display: grid;
   margin: 20px 20px;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 30px;
 `;
 
 const MyBtn = styled.button`
@@ -64,7 +66,7 @@ const ModalTextInput = styled.input`
     background-color: lightgray;
     border: lightgray solid 20px;
     width: 460px;
-    height: 60px;
+    height: 30px;
     border-radius: 20px;
     font-size: 30px;
     font-weight: bold;
@@ -102,91 +104,82 @@ const PracticeChoiceStack = () => {
       <Header />
       <Wrapper>
         <Block></Block>
-        <div style={{display:'flex', flexDirection:'column'}}>
-      <Title>
-          <h1>이력서에 어떤 스택으로 지원하셨나요?</h1>
-          <h3>잠긴 스택은 상점에서 구매가 필요합니다.</h3>
-      </Title>
-      <Main>
-        <Content>
-          {stacks && stacks.map((stack, idx) => {
-            return <MyBtn
-              key={idx}
-              color={stack.isPurchase ?
-                (stack.selected ? palette.blue : palette.skyblue) : palette.gray}
-              onClick={() => {
-                if(stack.isPurchase) {
-                  setStacks(stacks.map((s) =>
-                    s.id === stack.id ? {...s, selected: !s.selected} : s
-                  ));
-                }
-              }}
-
-            >{stack.stackName}</MyBtn>
-          })}
-        </Content>
-        <CustomButton onClick={() => setModalSwitch(true)}>면접 보러가기</CustomButton>
-        <Modal
-          isOpen={modalSwitch}
-          onRequestClose={() => setModalSwitch(false)}
-          style={{
-            content: {
-              top: '200px',
-              left: '500px',
-              right: '500px',
-              bottom: '200px',
-              borderRadius: '30px',
-              border: 'none',
-              background: `${palette.pink}`,
-            }
-          }}>
-            <ModalContent>
-              {
-                stacks.filter(stack => stack.selected).length ?
-                  <>
-                  <ModalTextBox>
-                    <h2>모의 면접을 위해서는<br/>GPT API 키가 필요합니다.</h2>
-                  </ModalTextBox>
-                  <ModalTextBox
-                    color={palette.gray}
-                    onClick={() => window.open('https://openai.com/index/openai-api/')}
-                  >
-                    API 키는 어떻게 얻나요?
-                  </ModalTextBox>
-                  <ModalTextBox>
-                    한 문제 당 100~200원 비용이 소모됩니다!
-                  </ModalTextBox>
-                  <ModalTextInput
-                    placeholder={"GPT API 키를 입력해주세요"}
-                    onChange={(e) => setApiKey(e.target.value)}/>
-                  <MyBtn
-                    color={palette.skyblue}
-                    onClick={() => navigate('/interview/practice', {
-                      state: {
-                        stackids: stacks.filter(stack => stack.selected).map(s => s.id),
-                        apiKey: apiKey
+        <GlassCard>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Title>
+              <h1>이력서에 어떤 스택으로 지원하셨나요?</h1>
+              <h3>잠긴 스택은 상점에서 구매가 필요합니다.</h3>
+            </Title>
+            <Main>
+              <Content>
+                {stacks && stacks.map((stack, idx) => {
+                  return <CustomButton
+                    isNotHover={stack.isPurchase ? false : true}
+                    key={idx}
+                    color={stack.isPurchase ?
+                      (stack.selected ? palette.purple : palette.dark) : palette.gray}
+                    onClick={() => {
+                      if (stack.isPurchase) {
+                        setStacks(stacks.map((s) =>
+                          s.id === stack.id ? { ...s, selected: !s.selected } : s
+                        ));
                       }
-                    })}>
-                    면접 시작
-                  </MyBtn>
-                  </>
-                  :
-                  <>
-                    <ModalTextBox style={{ marginBottom: 400 }}>
-                      <h2>스택을 선택해주세요.</h2>
-                    </ModalTextBox>
-                    <MyBtn
-                      color={palette.skyblue}
-                      onClick={() => setModalSwitch(false)}>
-                      닫기
-                    </MyBtn>
-                  </>
-              }
+                    }}
+                  >
+                    {stack.stackName}
+                  </CustomButton>
+                })}
+              </Content>
+              <CustomButton onClick={() => setModalSwitch(true)}>면접 보러가기</CustomButton>
+              <GlassModalChildren
+                isModalOpen={modalSwitch}
+                setIsModalOpen={() => setModalSwitch(false)}>
+                <ModalContent>
+                  {
+                    stacks.filter(stack => stack.selected).length ?
+                      <>
+                        <ModalTextBox>
+                          <h2>모의 면접을 위해서는<br />GPT API 키가 필요합니다.</h2>
+                        </ModalTextBox>
+                        <ModalTextBox
+                          color={palette.gray}
+                          onClick={() => window.open('https://openai.com/index/openai-api/')}
+                        >
+                          API 키는 어떻게 얻나요?
+                        </ModalTextBox>
+                        <ModalTextBox>
+                          한 문제 당 100~200원 비용이 소모됩니다!
+                        </ModalTextBox>
+                        <ModalTextInput
+                          placeholder={"GPT API 키를 입력해주세요"}
+                          onChange={(e) => setApiKey(e.target.value)} />
+                        <CustomButton
+                          onClick={() => navigate('/interview/practice', {
+                            state: {
+                              stackids: stacks.filter(stack => stack.selected).map(s => s.id),
+                              apiKey: apiKey
+                            }
+                          })}>
+                          면접 시작
+                        </CustomButton>
+                      </>
+                      :
+                      <>
+                        <ModalTextBox>
+                          <h2>스택을 선택해주세요.</h2>
+                        </ModalTextBox>
+                        <CustomButton
+                          onClick={() => setModalSwitch(false)}>
+                          닫기
+                        </CustomButton>
+                      </>
+                  }
 
-            </ModalContent>
-        </Modal>
-      </Main>
-      </div>
+                </ModalContent>
+              </GlassModalChildren>
+            </Main>
+          </div>
+        </GlassCard>
       </Wrapper>
     </>
   );

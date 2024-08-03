@@ -1,11 +1,11 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import styled from "styled-components";
 import palette from "../../styles/pallete";
-import {baseAPI} from "../../config";
+import { baseAPI } from "../../config";
 import Modal from "react-modal";
-import {localStorageGetValue} from "../../utils/CryptoUtils";
+import { localStorageGetValue } from "../../utils/CryptoUtils";
 
 
 
@@ -111,9 +111,9 @@ const InterviewChoiceStack = () => {
               key={idx}
               color={stack.selected ? palette.blue : palette.skyblue}
               onClick={() => {
-                if(stack.isPurchase) {
+                if (stack.isPurchase) {
                   setStacks(stacks.map((s) =>
-                    s.id === stack.id ? {...s, selected: !s.selected} : s
+                    s.id === stack.id ? { ...s, selected: !s.selected } : s
                   ));
                 }
               }}
@@ -142,7 +142,7 @@ const InterviewChoiceStack = () => {
               stacks.filter(stack => stack.selected).length ?
                 <>
                   <ModalTextBox>
-                    <h2>모의 면접을 위해서는<br/>GPT API 키가 필요합니다.</h2>
+                    <h2>모의 면접을 위해서는<br />GPT API 키가 필요합니다.</h2>
                   </ModalTextBox>
                   <ModalTextBox
                     color={palette.gray}
@@ -155,7 +155,7 @@ const InterviewChoiceStack = () => {
                   </ModalTextBox>
                   <ModalTextInput
                     placeholder={"GPT API 키를 입력해주세요"}
-                    onChange={(e) => setApiKey(e.target.value)}/>
+                    onChange={(e) => setApiKey(e.target.value)} />
                   <MyBtn
                     color={palette.skyblue}
                     onClick={() => navigate('/interview', {
