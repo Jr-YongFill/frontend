@@ -11,6 +11,7 @@ import { localStorageGetValue } from '../../utils/CryptoUtils';
 import { RemoveModal } from '../../components/modal/RemoveModal';
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
+import PageButtonController from '../../components/PageButtonController';
 
 /* data객체 정보 예시
 {
@@ -307,7 +308,7 @@ function PostDetail() {
       response.data.createTime = formattedDate;
       setData(response.data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      navigate('/community/main');
     } finally {
       setLoading(false);
     }
@@ -333,12 +334,12 @@ function PostDetail() {
         response.data.createTime = formattedDate;
         setData(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        alert("삭제된 게시글");
+        window.location.href = '/community/main';
       } finally {
         setLoading(false);
       }
     };
-
 
     const fetchComment = async () => {
       const response = await baseAPI.get(`/api/posts/${id}/comments?page=${currentPage}&size=10`);
@@ -358,155 +359,130 @@ function PostDetail() {
       <Wrapper>
 
         <Container>
-          <GlassCard>
-            <Title>{data.title}</Title>
-            <PageHeader>
-              <div style={{ display: 'flex' }}>
-                <ProfileImage src={data.filePath} alt="작성자 프로필" />
-                <PageHeaderWriter>
-                  <div>
-                    작성자: {data.writerName}
+          {data &&
+            <GlassCard>
+              <Title>{data.title}</Title>
+              <PageHeader>
+                <div style={{ display: 'flex' }}>
+                  <ProfileImage src={data.filePath} alt="작성자 프로필" />
+                  <PageHeaderWriter>
+                    <div>
+                      작성자: {data.writerName}
+                    </div>
+                    <div>
+                      작성알: {data.createTime}
+                    </div>
+                  </PageHeaderWriter>
+                </div>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
+                    {memberId === String(data.memberId) && <MyBtn
+                      color={palette.skyblue}
+                      onClick={handleUpdate}>
+                      수정
+                    </MyBtn>}
+                    <div>
+                      좋아요: {data.likeCount}
+                    </div>
                   </div>
-                  <div>
-                    작성알: {data.createTime}
-                  </div>
-                </PageHeaderWriter>
-              </div>
-              <div style={{ display: 'flex' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                  {memberId === String(data.memberId) && <MyBtn
-                    color={palette.skyblue}
-                    onClick={handleUpdate}>
-                    수정
-                  </MyBtn>}
-                  <div>
-                    좋아요: {data.likeCount}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    {(memberId === String(data.memberId) || memberRole === 'ADMIN') && <MyBtn
+                      color={palette.skyblue}
+                      onClick={() => setIsDeletePostModalOpen(true)}>
+                      삭제
+                    </MyBtn>}
+                    <div>
+                      조회수: {data.viewCount}
+                    </div>
                   </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                  {(memberId === String(data.memberId) || memberRole === 'ADMIN') && <MyBtn
-                    color={palette.skyblue}
-                    onClick={() => setIsDeletePostModalOpen(true)}>
-                    삭제
-                  </MyBtn>}
-                  <div>
-                    조회수: {data.viewCount}
-                  </div>
-                </div>
-              </div>
-            </PageHeader>
-            <Wrapper>
-              <EditorViewer contents={data.content}></EditorViewer>
-            </Wrapper>
+              </PageHeader>
+              <Wrapper>
+                <EditorViewer contents={data.content}></EditorViewer>
+              </Wrapper>
 
-            {memberId && <LikeButton liked={data.liked} onClick={fetchLike}>
-              Like
-            </LikeButton>}
-            <CommentContainer>
-              <Title>댓글</Title>
-              <HighLight />
-              {memberId &&
-                <WriteComment>
-                  <form onSubmit={handleCommentSubmit}>
-                    <CommentInput
-                      type="text"
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      placeholder="댓글을 입력하세요..."
-                    />
-                    <CommentSubmitButton type="submit">댓글 작성</CommentSubmitButton>
-                  </form>
-                </WriteComment>
-              }
-              {
-                comments && comments.resultList.map((comment, idx) => {
-                  return (
-                    <Comment key={idx}>
-                      <CommentHeader>
-                        <div style={{ display: 'flex' }}>
-                          <ProfileImage src={comment.filePath} alt="작성자 프로필" />
-                          <PageHeaderWriter>
-                            <div>
-                              작성자: {comment.memberNickname}
-                            </div>
-                            <div>
-                              작성알: {comment.createDate}
-                            </div>
-                          </PageHeaderWriter>
-                        </div>
-                        <div style={{ display: 'flex' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                            {memberId === String(comment.memberId) && <MyBtn
-                              color={palette.skyblue}
-                              onClick={() => handleEditComment(comment.id, comment.content)}>
-                              수정
-                            </MyBtn>}
+              {memberId && <LikeButton liked={data.liked} onClick={fetchLike}>
+                Like
+              </LikeButton>}
+              <CommentContainer>
+                <Title>댓글</Title>
+                <HighLight />
+                {memberId &&
+                  <WriteComment>
+                    <form onSubmit={handleCommentSubmit}>
+                      <CommentInput
+                        type="text"
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder="댓글을 입력하세요..."
+                      />
+                      <CommentSubmitButton type="submit">댓글 작성</CommentSubmitButton>
+                    </form>
+                  </WriteComment>
+                }
+                {
+                  comments && comments.resultList.map((comment, idx) => {
+                    return (
+                      <Comment key={idx}>
+                        <CommentHeader>
+                          <div style={{ display: 'flex' }}>
+                            <ProfileImage src={comment.filePath} alt="작성자 프로필" />
+                            <PageHeaderWriter>
+                              <div>
+                                작성자: {comment.memberNickname}
+                              </div>
+                              <div>
+                                작성알: {comment.createDate}
+                              </div>
+                            </PageHeaderWriter>
                           </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                            {(memberId === String(comment.memberId) || memberRole === 'ADMIN') &&
-                              <MyBtn
+                          <div style={{ display: 'flex' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
+                              {memberId === String(comment.memberId) && <MyBtn
                                 color={palette.skyblue}
-                                onClick={() => {
-                                  setDeleteCommentId(comment.id);
-                                  setIsDeleteCommentModalOpen(true);
-                                }}>
-                                삭제
+                                onClick={() => handleEditComment(comment.id, comment.content)}>
+                                수정
                               </MyBtn>}
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                              {(memberId === String(comment.memberId) || memberRole === 'ADMIN') &&
+                                <MyBtn
+                                  color={palette.skyblue}
+                                  onClick={() => {
+                                    setDeleteCommentId(comment.id);
+                                    setIsDeleteCommentModalOpen(true);
+                                  }}>
+                                  삭제
+                                </MyBtn>}
+                            </div>
                           </div>
-                        </div>
-                      </CommentHeader>
+                        </CommentHeader>
 
-                      <div style={{ fontSize: '25px' }}>
-                        {comment.content}
-                      </div>
-                      {editCommentId === comment.id && (
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                          <input
-                            value={editComment}
-                            onChange={handleCommentChange}
-                            style={{ width: '60%', height: '20px', fontSize: '18px', marginBottom: '20px', 'border-radius': '10px' }} />
-                          <MyBtn
-                            color={palette.skyblue}
-                            onClick={() => fetchUpdateComment(comment.id)}>수정</MyBtn>
+                        <div style={{ fontSize: '25px' }}>
+                          {comment.content}
                         </div>
-                      )}
-                    </Comment>
-                  );
-                })
-              }
-              {comments && (
-                <PaginationContainer>
-                  <PageButton
-                    onClick={() => {
-                      setCurrentPage(currentPage - 1);
-                    }}
-                    disabled={currentPage === 0}
-                  >
-                    이전
-                  </PageButton>
-                  {comments.pageList.map((page) => (
-                    <PageButton
-                      key={page}
-                      onClick={() => {
-                        setCurrentPage(page - 1);
-                      }}
-                      active={currentPage === page - 1}
-                    >
-                      {page}
-                    </PageButton>
-                  ))}
-                  <PageButton
-                    onClick={() => {
-                      setCurrentPage(currentPage + 1);
-                    }}
-                    disabled={currentPage === comments.totalPage - 1}
-                  >
-                    다음
-                  </PageButton>
-                </PaginationContainer>
-              )}
-            </CommentContainer>
-          </GlassCard>
+                        {editCommentId === comment.id && (
+                          <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <input
+                              value={editComment}
+                              onChange={handleCommentChange}
+                              style={{ width: '60%', height: '20px', fontSize: '18px', marginBottom: '20px', 'border-radius': '10px' }} />
+                            <MyBtn
+                              color={palette.skyblue}
+                              onClick={() => fetchUpdateComment(comment.id)}>수정</MyBtn>
+                          </div>
+                        )}
+                      </Comment>
+                    );
+                  })
+                }
+                <PageButtonController
+                  data={comments}
+                  setCurrentPage={setCurrentPage}
+                  currentPage={currentPage}
+                />
+              </CommentContainer>
+            </GlassCard>}
         </Container>
         <RemoveModal
           isModalOpen={isDeleteCommentModalOpen}
@@ -523,7 +499,7 @@ function PostDetail() {
             setIsDeletePostModalOpen(false);
           }} />
 
-      </Wrapper>
+      </Wrapper >
     </>
   );
 }
