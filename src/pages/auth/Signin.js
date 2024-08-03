@@ -103,6 +103,7 @@ const Signin = () => {
       alert('로그인 성공');
       navigate('/');
     } catch (error) {
+      console.log(error);
       const errorMessage = error.response ? error.response.data.message : '로그인 실패';
       alert(errorMessage);
     }

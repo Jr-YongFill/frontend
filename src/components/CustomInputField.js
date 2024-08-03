@@ -2,7 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
 
-const MyBtn = styled.button`
+const Container = styled.div``
+
+
+const InputField = styled.input`
   background-color: ${(props) => props.color || palette.dark }; /* 기본 색상 설정 */
   border: none;
   width: ${(props) => props.width || '10vw' };
@@ -16,11 +19,11 @@ const MyBtn = styled.button`
 `;
 
 
-const CustomButton = ({ color, children, onClick, width }) => {
+const CustomInput = ({ type, children, onChange, placeholder }) => {
   return (
-    <MyBtn color={color} onClick={onClick} width={width}>
+    <InputField type={type} onChange={onChange} placeholder={placeholder}>
       {children}
-    </MyBtn>
+    </InputField>
   );
 };
-export default CustomButton;
+export default CustomInput;

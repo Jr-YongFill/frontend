@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import EditorViewer from '../../components/posts/EditorViewer';
 import CustomButton from '../../components/CustomButton';
 import { localStorageGetValue } from '../../utils/CryptoUtils';
+import { RemoveModal } from '../../components/modal/RemoveModal';
 
 /* data객체 정보 예시
 {
@@ -208,10 +209,14 @@ function PostDetail() {
   const [comments, setComments] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const memberId = localStorageGetValue('member-id');
+  const memberRole = localStorageGetValue('member-role');
   const [commentText, setCommentText] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [editCommentId, setEditCommentId] = useState(null);
   const [editComment, setEditComment] = useState('');
+  const [isDeleteCommentModalOpen, setIsDeleteCommentModalOpen] = useState(false);
+  const [deleteCommentId, setDeleteCommentId] = useState(0);
+  const [isDeletePostModalOpen, setIsDeletePostModalOpen] = useState(false);
 
   const handleCommentChange = (event) => {
     setEditComment(event.target.value);
@@ -248,12 +253,13 @@ function PostDetail() {
     }
   }
 
-  const fetchDeleteComment = async (id) => {
+  const fetchDeleteComment = async () => {
     try {
-      await baseAPI.delete(`/api/comments/${id}`);
+      await baseAPI.delete(`/api/comments/${deleteCommentId}`);
     } catch (error) {
       alert("작성자만 지울 수 있습니다.");
     }
+    setDeleteCommentId(0);
     fetchComment();
   }
 
@@ -365,21 +371,21 @@ function PostDetail() {
             </div>
             <div style={{ display: 'flex' }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                <MyBtn
+                {memberId === data.memberId && <MyBtn
                   color={palette.skyblue}
                   onClick={handleUpdate}>
                   수정
-                </MyBtn>
+                </MyBtn>}
                 <div>
                   좋아요: {data.likeCount}
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <MyBtn
+                {(memberId === data.memberId || memberRole === 'ADMIN') && <MyBtn
                   color={palette.skyblue}
-                  onClick={() => fetchDeletePost()}>
+                  onClick={() => setIsDeletePostModalOpen(true)}>
                   삭제
-                </MyBtn>
+                </MyBtn>}
                 <div>
                   조회수: {data.viewCount}
                 </div>
@@ -427,18 +433,22 @@ function PostDetail() {
                       </div>
                       <div style={{ display: 'flex' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                          <MyBtn
+                          {memberId === comment.memberId && <MyBtn
                             color={palette.skyblue}
                             onClick={() => handleEditComment(comment.id, comment.content)}>
                             수정
-                          </MyBtn>
+                          </MyBtn>}
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                          <MyBtn
-                            color={palette.skyblue}
-                            onClick={() => fetchDeleteComment(comment.id)}>
-                            삭제
-                          </MyBtn>
+                          {(memberId === comment.memberId || memberRole === 'ADMIN') &&
+                            <MyBtn
+                              color={palette.skyblue}
+                              onClick={() => {
+                                setDeleteCommentId(comment.id);
+                                setIsDeleteCommentModalOpen(true);
+                              }}>
+                              삭제
+                            </MyBtn>}
                         </div>
                       </div>
                     </CommentHeader>
@@ -495,6 +505,20 @@ function PostDetail() {
           </CommentContainer>
         </PageContainer>
       </Container>
+      <RemoveModal
+        isModalOpen={isDeleteCommentModalOpen}
+        setIsModalOpen={() => setIsDeleteCommentModalOpen(false)}
+        onClick={() => {
+          fetchDeleteComment();
+          setIsDeleteCommentModalOpen(false);
+        }} />
+      <RemoveModal
+        isModalOpen={isDeletePostModalOpen}
+        setIsModalOpen={() => setIsDeletePostModalOpen(false)}
+        onClick={() => {
+          fetchDeletePost();
+          setIsDeletePostModalOpen(false);
+        }} />
     </>
   );
 }

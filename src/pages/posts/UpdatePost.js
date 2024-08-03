@@ -1,14 +1,13 @@
-// UpdatePost.js
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
-import { baseAPI } from "../../config";
 import Header from "../../components/Header";
 import EditorBox from "../../components/posts/EditorBox";
-import EditorViewer from "../../components/posts/EditorViewer";
 import palette from "../../styles/pallete";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { baseAPI } from "../../config";
+import { localStorageGetValue } from "../../utils/CryptoUtils";
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,7 +18,7 @@ const Wrapper = styled.div`
 
 const TitleInput = styled.input`
   border: none;
-  background: transparent;
+  background:transparent;
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
@@ -33,9 +32,9 @@ const TitleInput = styled.input`
 `;
 
 const InputWrapper = styled.div`
-  background: whitesmoke;
+  background:whitesmoke;
   padding: 10px;
-  border-radius: 10px;
+  border-radius:10px;
 `;
 
 const TitleWrapper = styled.div`
@@ -59,25 +58,24 @@ const EditorArea = styled.div`
 `;
 
 const SubmitButton = styled.button`
-  background: ${palette.skyblue};
+  background:${palette.skyblue};
   width: 150px;
   height: 60px;
-  border-style: none;
+  border-style:none;
   border-radius: 20px;
   font-size: 18px;
   font-weight: bold;
   color: white;
-  margin: 30px 0px;
-  cursor: pointer;
+  margin: 30px 0px;;
+  cursor:pointer;
 `;
 
 const UpdatePost = () => {
+  const [imageDatas, setimageDatas] = useState([]);
   const location = useLocation();
   const { data } = location.state;
-  console.log(data);
-
-  const postId = data.postId;
   const [dataValue, setDataValue] = useState({
+    memberId: localStorageGetValue('member-id'),
     title: data.title,
     category: data.category,
     content: data.content,
@@ -102,38 +100,84 @@ const UpdatePost = () => {
         ...prevDataValue,
         content: data,
       }));
-
+      console.log(data);
     }
   };
 
   const onUploadImage = async (blob, callback) => {
     let formData = new FormData();
     formData.append("file", blob);
+    try {
+        // 
+        const fileName = await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
+        const url = process.env.REACT_APP_BUCKET_URL
+        +"temp/"
+        + fileName;
 
-    const url = await baseAPI.post('/api/upload/temp', formData)
-      .then((res) => res.data);
+        // 업로드된 블롭을 상태에 추가
+        setimageDatas((prevImageData) => 
+          [...prevImageData,
+           {"file":blob,
+            "fileName":fileName
+           }]);
 
-    callback(url, 'alt text');
+        // 콜백 함수 호출하여 URL을 에디터에 전달
+        callback(url, 'alt text');
+    } catch (error) {
+        console.error("Image upload failed:", error);
+        // 에러 처리 추가
+    }
+
     return false;
-  };
+};
 
-  const handleSubmit = async () => {
-    let error = validate(dataValue);
 
-    if (Object.keys(error).length === 0) {
-      setDataValue((prevDataValue) => ({
-        ...prevDataValue,
-        saveEvent: 'Y',
+const handleSubmit = async () => {
+  let error = validate(dataValue);
+  const replacedContent = replaceTempContent(dataValue.content);
+
+  if (Object.keys(error).length === 0) {
+    const updatedDataValue = {
+      ...dataValue,
+      content: replacedContent,
+      saveEvent: 'Y',
+    };
+
+    try {
+      console.log("이미지 링크 바뀌었니?!");
+      console.log(updatedDataValue.content);
+
+      const postId = await baseAPI.patch(`/api/posts/${data.postId}`, updatedDataValue).then(res => res.data.postId);
+
+      // 실제 저장 용
+      await Promise.all(imageDatas.map(imageData => {
+        let formData = new FormData();
+        formData.append("postId", postId);
+        formData.append("file", imageData.file);
+        formData.append("fileName", imageData.fileName);
+
+        console.log(imageData.fileName);
+        return baseAPI.post("/api/upload/post", formData);
       }));
 
-      const response = await baseAPI.patch(`/api/posts/${postId}`, dataValue);
-      navigate(`/post/${response.data.postId}`);
+      navigate(`/post/${postId}`);
+    } catch (error) {
+      console.error("Post submission failed:", error);
+      // 에러 처리 추가
     }
-  };
+  }
+};
 
   const stripHtmlTags = (str) => {
     return str.replace(/<\/?[^>]+(>|$)/g, "");
   };
+  
+  const replaceTempContent = (str) => {
+    const tempUrlPattern = /\/temp\//g;
+    const postUrlPattern = '/post/';
+    return str.replace(tempUrlPattern, postUrlPattern);
+
+  }
 
   const validate = (dataValue) => {
     let error = {};
@@ -164,10 +208,10 @@ const UpdatePost = () => {
             <InputWrapper>
               <TitleInput
                 type="text"
-                defaultValue={dataValue.title}
                 placeholder="제목을 작성해주세요"
                 onChange={TitleReceive}
                 ref={titleRef}
+                defaultValue={dataValue.title}
               />
             </InputWrapper>
           </TitleWrapper>
