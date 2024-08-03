@@ -3,20 +3,21 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import styled from 'styled-components';
-import palette from '../../styles/pallete';
 import { baseAPI } from '../../config'
 import CustomButton from '../../components/CustomButton';
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
 import PageButtonController from '../../components/PageButtonController';
 import GlassModal from "../../components/modal/GlassModal";
+import GlassInput from '../../components/GlassInput';
 
 const Title = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-between;
-  // background-color: gold;
+  align-items: center;
   margin: 30px 50px;
+  width:100%;
 `;
 
 
@@ -30,6 +31,7 @@ const MainHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  width:40vw;
 `;
 
 const MainBody = styled.div`
@@ -117,28 +119,33 @@ const CommunityQNA = () => {
     <>
       <Header />
       <Wrapper>
-        <div style={{ marginTop: '30px' }}>
+        <div style={{
+          marginTop: '30px',
+          display: 'flex',
+          flexDirection: 'column',
+          width: '60vw',
+          alignItems:'center'
+        }}>
           <Title>
             <h1>면접 관련  Q & A</h1>
-            <CustomButton onClick={handleWrite} color={palette.skyblue}>글 작성</CustomButton>
+            <CustomButton onClick={handleWrite}>글 작성</CustomButton>
           </Title>
           <Main>
             <MainHeader>
-              <input
+              <GlassInput
                 type='text'
                 placeholder="제목을 입력하세요"
                 value={tempSearchText}
                 onChange={(e) => setTempSearchText(e.target.value)}
-                style={{ width: '60%', height: '50px', fontSize: '18px', marginBottom: '20px', 'border-radius': '10px' }}
               />
-              <MyBtn
-                color={palette.skyblue}
+              <div style={{width:'10px'}}/>
+              <CustomButton
                 onClick={() => {
                   setSearchText(tempSearchText);
                   setCurrentPage(0);
                 }}>
                 검색
-              </MyBtn>
+              </CustomButton>
             </MainHeader>
             <MainBody>
               <MainContent>

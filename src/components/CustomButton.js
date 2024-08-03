@@ -9,14 +9,15 @@ const MyBtn = styled.button.attrs(props => ({
 }))`
   background-color: ${(props) => props.color || palette.dark}; /* 기본 색상 설정 */
   border: none;
-  width: ${(props) => props.width || '10vw'};
+  width: ${(props) => props.width || 'auto'};
+  padding:0 20px;
   height: 5vh;
   border-radius: 40px;
   font-size: 1em;
   font-weight: bold;
   color: white;
   cursor:pointer;
-  padding: 10px;
+  margin:auto 0;
 
   ${(props) => props.isNotHover ?
     null
@@ -27,7 +28,7 @@ const MyBtn = styled.button.attrs(props => ({
 `;
 
 
-const CustomButton = ({ color, children, onClick, width, myRef, isNotHover, type, disabled }) => {
+const CustomButton = ({ color, children, onClick, width, myRef, isNotHover, type , disabled}) => {
   return (
     <MyBtn ref={myRef} color={color} onClick={onClick} width={width} disabled={disabled} isNotHover={isNotHover} type={type} >
       {children}

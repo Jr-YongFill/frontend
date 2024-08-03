@@ -30,7 +30,6 @@ const GlassModal = ({ isModalOpen, setIsModalOpen, onClick, message }) => {
         isOpen={isModalOpen}
         onRequestClose={setIsModalOpen}
         ariaHideApp={false}
-        overlayClassName="glass-overlay"
       >
         <p>{message}</p>
         <CustomButton onClick={onClick}>확인</CustomButton>

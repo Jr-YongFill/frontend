@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/toastui-editor.css';
+import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 
@@ -22,7 +22,7 @@ const EditorBox = forwardRef((props, ref) => {
 
 
   return (
-    <div className="edit_wrap">
+    <>
       <Editor
         initialValue={props.initialValue ?? ''}
         placeholder="내용을 적어주세요!"
@@ -38,7 +38,7 @@ const EditorBox = forwardRef((props, ref) => {
           addImageBlobHook: onUploadImage
         }}
       />
-    </div>
+    </>
   );
 });
 

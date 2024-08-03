@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import defaultImage from "../assets/default.png";
@@ -7,13 +7,13 @@ import communityRandingImage from "../assets/rending2.png";
 import Header from "../components/Header";
 import palette from "../styles/pallete";
 import {
-  localStorageGetValue
+  localStorageGetValue,
+  localStorageSetValue,
 } from "../utils/CryptoUtils";
 import GlassCard from "../components/GlassCard";
 import Wrapper from "../components/Wrapper";
 import Block from "../components/Block";
 import CustomButton from "../components/CustomButton";
-import GlassModal from "../components/modal/GlassModal";
 
 const ContainerWrapper = styled.div`
   display: flex;
@@ -90,26 +90,18 @@ const DeveloperCard = styled.div`
 const Home = () => {
   const navigate = useNavigate();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalText, setModalText] = useState('');
-  const [modalOnClick, setModalOnClick] = useState(null);
-
   const ButtonClick = (path) => {
     const role = localStorageGetValue("member-role");
     if (!role) {
-      setModalText('로그인이 필요한 페이지 입니다.');
-      setModalOnClick(() => () => {
-        setIsModalOpen(false);
-        navigate('/auth/sign-in');
-      })
-      setIsModalOpen(true);
+      alert("로그인이 필요한 페이지입니다.");
+      navigate("/auth/sign-in");
     } else {
       navigate(path);
     }
   };
 
   return (
-    <>
+    <div>
       <Header />
       <Wrapper>
         {/* Wrapper 아래 태그는 display:flex, flex-direction:column으로 감싸진 곳이어야함 */}
@@ -209,13 +201,7 @@ const Home = () => {
           </GlassCard>
         </ContainerWrapper>
       </Wrapper>
-
-      <GlassModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={() => setIsModalOpen(false)}
-        message={modalText}
-        onClick={modalOnClick} />
-    </>
+    </div>
   );
 };
 

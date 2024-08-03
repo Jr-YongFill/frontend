@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 
 const GlassContainer = styled.div`
-  width: ${props => props.width ? props.width : '100%'};
-  height: ${props => props.height ? props.height : '100%'};
+  width: ${props => props.width ? props.width : 'auto'};
+  height: ${props => props.height ? props.height : 'auto'};
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.1);

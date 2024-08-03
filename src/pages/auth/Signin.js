@@ -116,10 +116,10 @@ const Signin = () => {
               required
             />
             <div style={{ paddingLeft: '80%' }}>
-              <LinkStyled onClick={() => navigate('/auth/sign-un')}>회원가입</LinkStyled>
+              <LinkStyled onClick={() => navigate('/auth/sign-up')}>회원가입</LinkStyled>
             </div>
             <div style={{height:'100%', marginTop:'2vh'}}>
-            <CustomButton type="submit">로그인</CustomButton>
+            <CustomButton type={"submit"}>로그인</CustomButton>
             </div>
           </form>
         </GlassCard>

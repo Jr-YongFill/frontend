@@ -10,6 +10,8 @@ import { baseAPI } from "../../config";
 import { localStorageGetValue } from "../../utils/CryptoUtils";
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
+import Block from "../../components/Block";
+import CustomButton from "../../components/CustomButton";
 
 
 const TitleInput = styled.input`
@@ -40,31 +42,9 @@ const TitleWrapper = styled.div`
 `;
 
 const EditorArea = styled.div`
-  padding: 0px 10px 40px;
-  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
-    min-height: 600px;
-    margin-bottom: 30px;
-  }
-  .ck.ck-toolbar.ck-toolbar_grouping {
-    width: 100%;
-  }
-  .ck-editor__editable_inline {
-    width: 100%;
-  }
+  padding: 0px 10px 20px;
 `;
 
-const SubmitButton = styled.button`
-  background:${palette.skyblue};
-  width: 150px;
-  height: 60px;
-  border-style:none;
-  border-radius: 20px;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  margin: 30px 0px;;
-  cursor:pointer;
-`;
 
 const PostQNA = () => {
   const [imageDatas, setimageDatas] = useState([]);
@@ -196,32 +176,35 @@ const PostQNA = () => {
     <>
       <Header />
       <Wrapper>
-        <GlassCard>
-          <TitleWrapper>
-            <h1>질문게시판</h1>
-            <h3>제목</h3>
-            <InputWrapper>
-              <TitleInput
-                type="text"
-                placeholder="제목을 작성해주세요"
-                onChange={TitleReceive}
-                ref={titleRef}
-              />
-            </InputWrapper>
-          </TitleWrapper>
-          <TitleWrapper>
-            <h3>내용</h3>
-          </TitleWrapper>
-          <EditorArea>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Block></Block>
+          <GlassCard>
+            <TitleWrapper>
+              <h1>질문게시판</h1>
+              <h3>제목</h3>
+              <InputWrapper>
+                <TitleInput
+                  type="text"
+                  placeholder="제목을 작성해주세요"
+                  onChange={TitleReceive}
+                  ref={titleRef}
+                />
+              </InputWrapper>
+            </TitleWrapper>
+            <TitleWrapper>
+              <h3>내용</h3>
+            </TitleWrapper>
+            <EditorArea>
 
-            <EditorBox ref={editorRef} onChange={onChange} onUploadImage={onUploadImage} />
-            <div style={{ display: "flex", justifyContent: "end" }}>
-              <SubmitButton onClick={handleSubmit}>
-                저장
-              </SubmitButton>
-            </div>
-          </EditorArea>
-        </GlassCard>
+              <EditorBox ref={editorRef} onChange={onChange} onUploadImage={onUploadImage} />
+              <div style={{ display: "flex", justifyContent: "end", margin: '30px 0px 0px 0px' }}>
+                <CustomButton type={"submit"} onClick={handleSubmit}>
+                  저장
+                </CustomButton>
+              </div>
+            </EditorArea>
+          </GlassCard>
+        </div>
       </Wrapper >
     </>
   );
