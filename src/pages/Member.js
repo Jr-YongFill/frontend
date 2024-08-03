@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import palette from "../styles/pallete";
 import { baseAPI } from "../config";
@@ -14,16 +14,7 @@ import GlassCard from "../components/GlassCard";
 import CustomLi from "../components/CustomLi";
 import NPGlassCard from "../components/NoPaddingGlassCard";
 import CustomButton from "../components/CustomButton";
-
-const WrapperContainer = styled.div`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #f0f4ff;
-  padding: 20px;
-  box-sizing: border-box;
-`;
+import GlassModal from "../components/modal/GlassModal";
 
 const Title = styled.h2`
   font-weight: bold;
@@ -40,13 +31,6 @@ const TopContainer = styled.div`
   z-index: 999;
   height: 100%;
   padding: 20px;
-`;
-
-const Line = styled.hr`
-  width: 100%;
-  border: 5px solid ${palette.dark};
-  border-radius: 30px;
-  margin: 20px 0;
 `;
 
 const MiddelContainer = styled.div`
@@ -149,16 +133,6 @@ const PasswordButtonContainer = styled.div`
 
 const BottomContainer = styled(MiddelContainer)``;
 
-const PostContainer = styled.div`
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  color: ${palette.dark};
-`;
 
 const Member = () => {
   const [nickName, setNickname] = useState("");
@@ -173,6 +147,10 @@ const Member = () => {
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
+
   useEffect(() => {
     setMemberId(localStorageGetValue("member-id"));
     setNickname(localStorageGetValue("member-nickName"));
@@ -185,7 +163,11 @@ const Member = () => {
           setOriginalProfileImage(response.data.filePath);
           setOriginalNickname(response.data.nickName);
         } catch (error) {
-          console.error(error);
+          setModalText(error.response.data.message);
+          setModalOnClick(() => () => {
+            setIsModalOpen(false);
+          })
+          setIsModalOpen(true);
         }
       }
     };
@@ -199,7 +181,11 @@ const Member = () => {
           );
           setPostData(response.data.resultList);
         } catch (error) {
-          console.error(error);
+          setModalText(error.response.data.message);
+          setModalOnClick(() => () => {
+            setIsModalOpen(false);
+          })
+          setIsModalOpen(true);
         }
       }
     };
@@ -213,7 +199,11 @@ const Member = () => {
           );
           setCommentData(response.data.resultList);
         } catch (error) {
-          console.error(error);
+          setModalText(error.response.data.message);
+          setModalOnClick(() => () => {
+            setIsModalOpen(false);
+          })
+          setIsModalOpen(true);
         }
       }
     };
@@ -225,10 +215,19 @@ const Member = () => {
     try {
       await baseAPI.delete(`/api/members/${memberId}`);
       localStorage.clear();
-      alert("회원 탈퇴 성공");
-      navigate("/");
+
+      setModalText("회원 탈퇴 성공");
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+        navigate("/");
+      })
+      setIsModalOpen(true);
     } catch (error) {
-      alert(error.response.data.message);
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
   };
 
@@ -259,7 +258,11 @@ const Member = () => {
   const UpdatePasswordHandle = async (event) => {
     event.preventDefault();
     if (password === "" || checkPassword === "" || password !== checkPassword) {
-      alert("비밀번호가 일치하지 않거나 비밀번호가 입력되지 않았습니다.");
+      setModalText("비밀번호가 일치하지 않거나 비밀번호가 입력되지 않았습니다.");
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
       return;
     }
 
@@ -271,10 +274,18 @@ const Member = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("비밀번호 변경이 완료되었습니다.");
-      navigate("/member");
+      setModalText("비밀번호 변경이 완료되었습니다.");
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+        navigate("/member");
+      })
+      setIsModalOpen(true);
     } catch (error) {
-      alert(error.response.data.message);
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
   };
 
@@ -284,12 +295,20 @@ const Member = () => {
     const changeNickName = originalNickName !== nickName || file !== null;
 
     if (!changeNickName) {
-      alert("변경된 사항이 없습니다.");
+      setModalText("변경된 사항이 없습니다.");
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
       return;
     }
 
     if (nickName.trim() === "") {
-      alert("닉네임을 입력하세요.");
+      setModalText("닉네임을 입력하세요.");
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
       return;
     }
 
@@ -310,10 +329,18 @@ const Member = () => {
         localStorageSetValue("member-nickName", nickName);
       }
 
-      alert("프로필 수정 성공");
-      window.location.reload();
+      setModalText("프로필 수정 성공");
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+        window.location.reload();
+      })
+      setIsModalOpen(true);
     } catch (error) {
-      alert(error.response.data.message);
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
   };
 
@@ -408,6 +435,12 @@ const Member = () => {
           </NPGlassCard>
         </div>
       </Wrapper>
+
+      <GlassModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={() => setIsModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick} />
     </>
   );
 };

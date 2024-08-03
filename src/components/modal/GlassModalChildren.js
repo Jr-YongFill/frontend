@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
-import CustomButton from '../CustomButton';
-
 
 const MyGlassModal = styled(Modal)`
   position: absolute;
@@ -11,7 +9,7 @@ const MyGlassModal = styled(Modal)`
   right: auto;
   bottom: auto;
   transform: translate(-50%, -50%);
-  width: 400px;
+  width: 500px;
   padding: 20px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.2);
@@ -21,20 +19,19 @@ const MyGlassModal = styled(Modal)`
   color: #000;
 `;
 
-const GlassModal = ({ isModalOpen, setIsModalOpen, onClick, message }) => {
+const GlassModalChildren = ({ isModalOpen, setIsModalOpen, onClick, children }) => {
 
-  return (
-    <>
-      <MyGlassModal
-        isOpen={isModalOpen}
-        onRequestClose={setIsModalOpen}
-        ariaHideApp={false}
-      >
-        <p>{message}</p>
-        <CustomButton onClick={onClick}>확인</CustomButton>
-      </MyGlassModal>
-    </>
-  );
+    return (
+        <>
+            <MyGlassModal
+                isOpen={isModalOpen}
+                onRequestClose={setIsModalOpen}
+                ariaHideApp={false}
+            >
+                {children}
+            </MyGlassModal>
+        </>
+    );
 };
 
-export default GlassModal;
+export default GlassModalChildren;

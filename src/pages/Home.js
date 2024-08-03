@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import defaultImage from "../assets/default.png";
@@ -7,24 +7,13 @@ import communityRandingImage from "../assets/rending2.png";
 import Header from "../components/Header";
 import palette from "../styles/pallete";
 import {
-  localStorageGetValue,
-  localStorageSetValue,
+  localStorageGetValue
 } from "../utils/CryptoUtils";
 import GlassCard from "../components/GlassCard";
 import Wrapper from "../components/Wrapper";
 import Block from "../components/Block";
 import CustomButton from "../components/CustomButton";
-
-const WrapperContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #5a8db1;
-  background-image: linear-gradient(0deg, #5a8db1 0%, #16193c 100%);
-  padding: 20px;
-  box-sizing: border-box;
-  min-height: 100vh;
-`;
+import GlassModal from "../components/modal/GlassModal";
 
 const ContainerWrapper = styled.div`
   display: flex;
@@ -101,20 +90,28 @@ const DeveloperCard = styled.div`
 const Home = () => {
   const navigate = useNavigate();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
+
   const ButtonClick = (path) => {
     const role = localStorageGetValue("member-role");
     if (!role) {
-      alert("로그인이 필요한 페이지입니다.");
-      navigate("/auth/sign-in");
+      setModalText('로그인이 필요한 페이지 입니다.');
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+        navigate('/auth/sign-in');
+      })
+      setIsModalOpen(true);
     } else {
       navigate(path);
     }
   };
 
   return (
-    <div>
+    <>
       <Header />
-      <Wrapper> 
+      <Wrapper>
         {/* Wrapper 아래 태그는 display:flex, flex-direction:column으로 감싸진 곳이어야함 */}
         <ContainerWrapper>
           {/* 헤더가 보여질 공간을 띄워주긴 위한 Block컴포넌트(MUI아님!!!!)을 배치해야함 */}
@@ -212,7 +209,13 @@ const Home = () => {
           </GlassCard>
         </ContainerWrapper>
       </Wrapper>
-    </div>
+
+      <GlassModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={() => setIsModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick} />
+    </>
   );
 };
 

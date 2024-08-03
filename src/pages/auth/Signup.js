@@ -7,23 +7,7 @@ import { baseAPI } from '../../config';
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
 import Header from '../../components/Header';
-
-const WrapperContainer = styled.div`
-    height: 70vh; 
-    display: flex;
-    justify-content: center;
-    align-items: top; 
-    margin-top: 50px;
-`;
-
-const FormContainer = styled.div`
-    width: 400px;
-    padding: 40px;
-    border: 1px solid ${palette.skyblue};
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    background-color: white;
-`;
+import GlassModal from "../../components/modal/GlassModal";
 
 const Title = styled.h1`
     font-weight: bold;
@@ -79,6 +63,9 @@ const LinkStyled = styled.a`
 const Signup = () => {
   const [userLogin, setUserLogin] = useState({ email: "", password: "", nickname: "" });
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
 
   const handleInputChange = (event) => {
     setUserLogin((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -88,10 +75,19 @@ const Signup = () => {
     event.preventDefault();
     try {
       await baseAPI.post('/api/auth/sign-up', userLogin);
-      alert('회원가입 성공');
-      navigate('/auth/sign-in');
+
+      setModalText('회원가입 성공');
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+        navigate('/auth/sign-in');
+      })
+      setIsModalOpen(true);
     } catch (error) {
-      alert(error.response.data.error)
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
   };
 
@@ -128,6 +124,11 @@ const Signup = () => {
           </form>
         </GlassCard>
       </Wrapper>
+      <GlassModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={() => setIsModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick} />
     </>
   );
 };

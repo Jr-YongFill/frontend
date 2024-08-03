@@ -9,6 +9,7 @@ import CustomButton from '../../components/CustomButton';
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
 import PageButtonController from '../../components/PageButtonController';
+import GlassModal from "../../components/modal/GlassModal";
 
 const Title = styled.div`
   display: flex;
@@ -42,19 +43,6 @@ const MainContent = styled.div`
   margin-top: 20px;
 `;
 
-const PostCard = styled.div`
-  background: white;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
 const PostTitle = styled.div`
   font-size: 24px;
   font-weight: bold;
@@ -67,32 +55,6 @@ const PostDetails = styled.div`
   margin-top: 10px;
   font-size: 18px;
   color: #666;
-`;
-
-const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-`;
-
-const PageButton = styled.button`
-  background-color: ${(props) => (props.active ? palette.skyblue : '#ccc')};
-  border: none;
-  margin: 0 10px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  color: ${(props) => (props.active ? 'white' : '#333')};
-  font-size: 18px;
-  
-  &:hover {
-    background-color: ${(props) => (props.active ? '#0080ff' : '#bbb')};
-  }
-
-  &:disabled {
-    background-color: #eee;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
 `;
 
 const MyBtn = styled.button`
@@ -114,6 +76,10 @@ const CommunityQNA = () => {
   const [data, setData] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0]; // '2024-07-24' 형식으로 변환
@@ -126,13 +92,22 @@ const CommunityQNA = () => {
   useEffect(() => {
 
     const fetchData = async () => {
-      const url = searchText ?
-        `/api/categories/QNA/posts?title=${searchText}&page=${currentPage}&size=10`
-        :
-        `/api/categories/QNA/posts?page=${currentPage}&size=10`;
+      try {
+        const url = searchText ?
+          `/api/categories/QNA/posts?title=${searchText}&page=${currentPage}&size=10`
+          :
+          `/api/categories/QNA/posts?page=${currentPage}&size=10`;
 
-      const response = await baseAPI.get(url);
-      setData(response.data);
+        const response = await baseAPI.get(url);
+        setData(response.data);
+      } catch (error) {
+        setModalText(error.response.data.message);
+        setModalOnClick(() => () => {
+          setIsModalOpen(false);
+        })
+        setIsModalOpen(true);
+      }
+
     };
 
     fetchData();
@@ -190,6 +165,11 @@ const CommunityQNA = () => {
           </Main>
         </div>
       </Wrapper>
+      <GlassModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={() => setIsModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick} />
     </>
   );
 };

@@ -7,25 +7,8 @@ import { baseAPI } from '../../config';
 import Header from '../../components/Header';
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
-import { localStorageGetValue, localStorageSetValue } from '../../utils/CryptoUtils';
+import { localStorageSetValue } from '../../utils/CryptoUtils';
 import GlassModal from "../../components/modal/GlassModal";
-
-const WrapperContainer = styled.div`
-    height: 50vh;
-    display: flex;
-    justify-content: center;
-    align-items: top;
-    margin-top: 50px;
-`;
-
-const FormContainer = styled.div`
-    width: 400px;
-    padding: 40px;
-    border: 1px solid ${palette.skyblue};
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    background-color: white;
-`;
 
 const Title = styled.h1`
     font-weight: bold;
