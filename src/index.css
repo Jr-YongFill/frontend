@@ -11,7 +11,13 @@ p{
   font-size: 1.5em;
 }
 
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.toastui-editor-contents p{
+  color:white !important;
+  font-size: 1em;
 }

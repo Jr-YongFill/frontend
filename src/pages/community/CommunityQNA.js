@@ -48,7 +48,12 @@ const MainContent = styled.div`
 const PostTitle = styled.div`
   font-size: 24px;
   font-weight: bold;
-  color: #333;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 표시할 줄 수 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
 `;
 
 const PostDetails = styled.div`

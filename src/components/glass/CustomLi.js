@@ -12,6 +12,15 @@ const Container = styled.li`
   cursor: pointer;
 `;
 
+const MultiLineEllipsisText = styled.div`
+  width:; 80%
+  font-size: 1em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  
+`;
+
 const CustomLi = ({ data }) => {
   const navigate = useNavigate();
 
@@ -26,11 +35,11 @@ const CustomLi = ({ data }) => {
 
     }
   };
-  
+
   return (
     <Container onClick={handleClick}>
-      <div style={{ fontSize: 16 }}>{data.title}</div>
-      <div style={{ fontSize: 10 }}>{data.writerName}</div>
+      <MultiLineEllipsisText>{data.title}</MultiLineEllipsisText>
+      <div style={{ fontSize: 10, width:"20%",textAlign:"right"}}>{data.writerName}</div>
     </Container>
   );
 };

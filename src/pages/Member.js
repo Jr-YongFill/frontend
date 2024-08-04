@@ -106,6 +106,15 @@ const MemberUpdateContainer = styled.div`
   gap: 20px;
 `;
 
+const MyLi = styled.li`
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  list-style: none;
+  padding: 3px 0px;
+  cursor: pointer;
+`
+
 const NicknameContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -411,7 +420,7 @@ const Member = () => {
               </MiddelContainer>
 
               <BottomContainer>
-                <GlassCard width={"100%"}>
+                <GlassCard width={"25vw"}>
                   <Title>내가 쓴 글</Title>
                   <ul style={{marginLeft: '-40px'}}>
                     {postData.map((post, index) => (
@@ -421,13 +430,13 @@ const Member = () => {
                     ))}
                   </ul>
                 </GlassCard>
-                <GlassCard width={"100%"}>
+                <GlassCard width={"25vw"}>
                   <Title>내가 쓴 댓글</Title>
                   <ul style={{marginLeft: '-40px'}}>
                     {commentData.map((comment, index) => (
-                      <CustomLi key={index} data={comment}>
-                        {comment.title}
-                      </CustomLi>
+                      <MyLi key={index}>
+                        {comment.content}
+                      </MyLi>
                     ))}
                   </ul>
                 </GlassCard>

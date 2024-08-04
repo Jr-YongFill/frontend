@@ -21,7 +21,6 @@ const ContainerWrapper = styled.div`
 const ContainerRow = styled.div`
   display: flex;
   justify-content: space-between;
-  gap:3vw;
 `;
 
 const SubContainer = styled.div`
@@ -143,6 +142,7 @@ const CommunityMain = () => {
           <Block></Block>
           <ContainerWrapper>
             <ContainerRow>
+              <div  style={{width:'29.5vw'}}>
               <NPGlassCard>
                 <GlassTitle>
                   <div style={{ fontSize: 25, fontWeight: 'bold' }}>오늘의 면접</div>
@@ -163,8 +163,12 @@ const CommunityMain = () => {
                     </CustomButton>
                   </SubContainer>
                 )}
+                
               </NPGlassCard>
+              </div>
+              <div  style={{width:'29.5vw'}}>
               <NPGlassCard>
+             
                 <GlassTitle>
                   <div style={{ fontSize: 25, fontWeight: 'bold' }}>CS 투표</div>
                 </GlassTitle>
@@ -187,8 +191,10 @@ const CommunityMain = () => {
                   </>
                 )}
               </NPGlassCard>
+              </div>
             </ContainerRow>
             <ContainerRow>
+              <div style={{width:'29.5vw'}}>
               <NPGlassCard>
                 <GlassTitle>
                   <div
@@ -208,6 +214,8 @@ const CommunityMain = () => {
                   }
                 </ul>
               </NPGlassCard>
+              </div>
+              <div style={{width:'29.5vw'}} >
               <NPGlassCard>
                 <GlassTitle>
                   <div
@@ -227,6 +235,7 @@ const CommunityMain = () => {
                   }
                 </ul>
               </NPGlassCard>
+              </div>
             </ContainerRow>
           </ContainerWrapper>
         </div>
