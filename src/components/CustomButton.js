@@ -12,7 +12,7 @@ const MyBtn = styled.button.attrs(props => ({
   width: ${(props) => props.width || 'auto'};
   padding:0 20px;
   height: 5vh;
-  border-radius: 40px;
+  border-radius: 10px;
   font-size: 1em;
   font-weight: bold;
   color: white;

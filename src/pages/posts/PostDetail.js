@@ -13,6 +13,10 @@ import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
 import PageButtonController from '../../components/PageButtonController';
 import Block from '../../components/Block';
+import GlassInput from '../../components/GlassInput';
+import '../../App.css'; // 커스텀 스타일
+import { differenceInDays, formatDistanceToNow, parseISO } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 /* data객체 정보 예시
 {
@@ -43,6 +47,7 @@ const PageHeader = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+  padding: 20px 0px;
 `;
 
 const PageHeaderWriter = styled.div`
@@ -53,7 +58,10 @@ const PageHeaderWriter = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 24px;
+  font-size: 2em;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
 `;
 
 const Meta = styled.div`
@@ -82,15 +90,18 @@ const ProfileImage = styled.img`
 `;
 
 const MyBtn = styled.button`
-  background-color: ${(props) => props.color};
+  background-color: ${palette.dark};
   border: none;
   width: 60px;
   height: 25px;
   border-radius: 20px;
-  font-size: 15px;
-  font-weight: bold;
+  font-size: 13px;
   color: white;
   margin-left: 10px;
+  cursor:pointer;
+
+  &:hover{
+  background-color:${palette.purple}}
 `;
 
 const LikeButton = styled.button`
@@ -118,6 +129,7 @@ const HighLight = styled.div`
   width: 100%;
   height: 1px;
   margin-top: 3px;
+  margin-bottom:10px;
 `;
 
 
@@ -255,19 +267,31 @@ function PostDetail() {
     fetchData();
   }
 
+  const formatRelativeTime = (dateString) => {
+    const date = parseISO(dateString);
+    const now = new Date();
+    const daysDifference = differenceInDays(now, date);
+
+    if (daysDifference < 1) {
+      return formatDistanceToNow(date, { addSuffix: true, locale: ko });
+    }
+
+    return new Date(dateString).toLocaleString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+  }
+
+
   const fetchData = async () => {
     try {
       const response = await baseAPI.get(`/api/posts/${id}`);
-      const formattedDate = new Date(response.data.createTime).toLocaleString('ko-KR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
-      response.data.createTime = formattedDate;
-      setData(response.data);
+      response.data.createTime = formatRelativeTime(response.data.createTime); setData(response.data);
     } catch (error) {
       navigate('/community/main');
     } finally {
@@ -281,31 +305,6 @@ function PostDetail() {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await baseAPI.get(`/api/posts/${id}`);
-        const formattedDate = new Date(response.data.createTime).toLocaleString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        });
-        response.data.createTime = formattedDate;
-        setData(response.data);
-      } catch (error) {
-        alert("삭제된 게시글");
-        window.location.href = '/community/main';
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchComment = async () => {
-      const response = await baseAPI.get(`/api/posts/${id}/comments?page=${currentPage}&size=10`);
-      setComments(response.data);
-    }
     fetchData();
     fetchComment();
   }, [id, currentPage]);
@@ -327,9 +326,9 @@ function PostDetail() {
           <Block />
           <Container>
             {data &&
-              <GlassCard>
-                <div style={{ padding: '0px 30px 20px' }}>
-                  <Title>{data.title}</Title>
+              <GlassCard width={"60vw"}>
+                <div style={{ padding: '0px 30px 20px', margin: '0 3vw' }}>
+
                   <PageHeader>
                     <div style={{ display: 'flex' }}>
                       <ProfileImage src={data.filePath} alt="작성자 프로필" />
@@ -337,35 +336,41 @@ function PostDetail() {
                         <div>
                           작성자: {data.writerName}
                         </div>
-                        <div>
-                          작성알: {data.createTime}
+                        <div style={{ fontSize: '15px', fontWeight: 'lighter', display: 'flex', justifyContent: 'space-between' }}>
+                          <>
+                            {data.createTime}
+                          </>
+                          <div style={{ padding: "0 10px" }}>
+                            조회수: {data.viewCount}
+                          </div>
                         </div>
+
                       </PageHeaderWriter>
+
                     </div>
                     <div style={{ display: 'flex' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                        {memberId === String(data.memberId) && <CustomButton
+                        {memberId === String(data.memberId) && <MyBtn
 
                           onClick={handleUpdate}>
                           수정
-                        </CustomButton>}
-                        <div style={{ visibility: 'hidden' }}>
-                          ㅇㅇㅇ
-                        </div>
+                        </MyBtn>}
 
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                        {(memberId === String(data.memberId) || memberRole === 'ADMIN') && <CustomButton
+                        {(memberId === String(data.memberId) || memberRole === 'ADMIN') && <MyBtn
 
                           onClick={() => setIsDeletePostModalOpen(true)}>
                           삭제
-                        </CustomButton>}
-                        <div>
-                          조회수: {data.viewCount}
-                        </div>
+                        </MyBtn>}
+
                       </div>
                     </div>
                   </PageHeader>
+                  <HighLight />
+                  <Title>
+                    <>{data.title}</>
+                  </Title>
                   <EditorViewer contents={data.content}></EditorViewer>
                   <div style={{
                     margin: 'auto 0', display: 'flex',
@@ -385,13 +390,18 @@ function PostDetail() {
                     {memberId &&
                       <WriteComment>
                         <form onSubmit={handleCommentSubmit}>
-                          <CommentInput
-                            type="text"
-                            value={commentText}
-                            onChange={(e) => setCommentText(e.target.value)}
-                            placeholder="댓글을 입력하세요..."
-                          />
-                          <CommentSubmitButton type="submit">댓글 작성</CommentSubmitButton>
+                          <div style={{ display: 'flex',flexDirection:'column', alignItems: 'flex-end' }}>
+                            <GlassInput
+                              width={"50vw"}
+                              type="text"
+                              value={commentText}
+                              onChange={(e) => setCommentText(e.target.value)}
+                              placeholder="댓글을 입력하세요..."
+                            />
+                            <div>
+                              <CustomButton type="submit">댓글 작성</CustomButton>
+                            </div>
+                          </div>
                         </form>
                       </WriteComment>
                     }
@@ -407,31 +417,31 @@ function PostDetail() {
                                     작성자: {comment.memberNickname}
                                   </div>
                                   <div>
-                                    작성알: {comment.createDate}
+                                    작성일: {formatRelativeTime(comment.createDate)}
                                   </div>
                                 </PageHeaderWriter>
                               </div>
                               <div style={{ display: 'flex' }}>
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                                  {memberId === String(comment.memberId) && <CustomButton
+                                  {memberId === String(comment.memberId) && <MyBtn
                                     onClick={() => handleEditComment(comment.id, comment.content)}>
                                     수정
-                                  </CustomButton>}
+                                  </MyBtn>}
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                   {(memberId === String(comment.memberId) || memberRole === 'ADMIN') &&
-                                    <CustomButton
+                                    <MyBtn
                                       onClick={() => {
                                         setDeleteCommentId(comment.id);
                                         setIsDeleteCommentModalOpen(true);
                                       }}>
                                       삭제
-                                    </CustomButton>}
+                                    </MyBtn>}
                                 </div>
                               </div>
                             </CommentHeader>
 
-                            <div style={{ fontSize: '25px' }}>
+                            <div style={{ fontSize: '16px', padding:'20px 0px' }}>
                               {comment.content}
                             </div>
                             {editCommentId === comment.id && (

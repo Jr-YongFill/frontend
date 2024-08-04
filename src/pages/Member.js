@@ -11,10 +11,11 @@ import {
 import Wrapper from "../components/Wrapper";
 import Block from "../components/Block";
 import GlassCard from "../components/GlassCard";
-import CustomLi from "../components/CustomLi";
+import CustomLi from "../components/glass/CustomLi";
 import NPGlassCard from "../components/NoPaddingGlassCard";
 import CustomButton from "../components/CustomButton";
 import GlassModal from "../components/modal/GlassModal";
+import GlassInput from "../components/GlassInput";
 
 const Title = styled.h2`
   font-weight: bold;
@@ -62,6 +63,7 @@ const Button = styled.button`
   border-radius: 20px;
   padding: 10px 30px;
   cursor: pointer;
+  height:40px;
 `;
 
 const ButtonContainer = styled.div`
@@ -112,6 +114,7 @@ const NicknameContainer = styled.div`
 const NicknameInput = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 
 const PasswordContainer = styled(NicknameContainer)`
@@ -125,7 +128,10 @@ const PasswordButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-const BottomContainer = styled(MiddelContainer)``;
+const BottomContainer = styled(MiddelContainer)`
+  display:flex;
+  justify-content: space-between;
+`;
 
 
 const Member = () => {
@@ -359,9 +365,9 @@ const Member = () => {
                       accept="image/*"
                       onChange={handleImageChange}
                     />
-                    <CustomButton onClick={UpdateImageHandle} width={"100px"}>
+                    <Button onClick={UpdateImageHandle} width={"100px"}>
                       수정하기
-                    </CustomButton>
+                    </Button>
                   </ButtonContainer>
                 </ImageContainer>
 
@@ -369,15 +375,16 @@ const Member = () => {
                   <NicknameContainer>
                     <Title>닉네임 변경</Title>
                     <NicknameInput>
-                      <Input
+                      <GlassInput
+                        width={"60%"}
                         type="text"
                         placeholder="닉네임"
                         value={nickName}
                         onChange={handleNameChange}
                       />
-                      <CustomButton onClick={UpdateImageHandle}>
+                      <Button onClick={UpdateImageHandle}>
                         수정하기
-                      </CustomButton>
+                      </Button>
                     </NicknameInput>
                   </NicknameContainer>
                   <PasswordContainer>
@@ -395,18 +402,18 @@ const Member = () => {
                       onChange={handleCheckPasswordChange}
                     />
                     <PasswordButtonContainer>
-                      <CustomButton onClick={UpdatePasswordHandle}>
+                      <Button onClick={UpdatePasswordHandle}>
                         변경하기
-                      </CustomButton>
+                      </Button>
                     </PasswordButtonContainer>
                   </PasswordContainer>
                 </MemberUpdateContainer>
               </MiddelContainer>
 
               <BottomContainer>
-                <GlassCard>
+                <GlassCard width={"100%"}>
                   <Title>내가 쓴 글</Title>
-                  <ul>
+                  <ul style={{marginLeft: '-40px'}}>
                     {postData.map((post, index) => (
                       <CustomLi key={index} data={post}>
                         {post.title}
@@ -414,9 +421,9 @@ const Member = () => {
                     ))}
                   </ul>
                 </GlassCard>
-                <GlassCard>
+                <GlassCard width={"100%"}>
                   <Title>내가 쓴 댓글</Title>
-                  <ul>
+                  <ul style={{marginLeft: '-40px'}}>
                     {commentData.map((comment, index) => (
                       <CustomLi key={index} data={comment}>
                         {comment.title}

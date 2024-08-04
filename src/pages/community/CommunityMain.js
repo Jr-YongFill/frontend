@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import styled from 'styled-components';
 import palette from '../../styles/pallete';
-import CustomLi from '../../components/CustomLi';
+import CustomLi from '../../components/glass/CustomLi';
 import CustomButton from '../../components/CustomButton';
 import { baseAPI } from '../../config';
 import { localStorageGetValue } from '../../utils/CryptoUtils';

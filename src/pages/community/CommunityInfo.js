@@ -131,13 +131,15 @@ const CommunityQNA = () => {
           </Title>
           <Main>
             <MainHeader>
-            <GlassInput
+              <GlassInput
+
+                width={"100%"}
                 type='text'
                 placeholder="제목을 입력하세요"
                 value={tempSearchText}
                 onChange={(e) => setTempSearchText(e.target.value)}
               />
-              <div style={{width:'10px'}}/>
+              <div style={{ width: '10px' }} />
               <CustomButton
                 onClick={() => {
                   setSearchText(tempSearchText);

@@ -174,7 +174,7 @@ const PostQNA = () => {
     <>
       <Header />
       <Wrapper>
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <Block></Block>
           <GlassCard>
             <TitleWrapper>

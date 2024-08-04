@@ -10,7 +10,7 @@ const Input = styled.input.attrs(props => ({
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   color: white;
-  width: 100%;
+  width: ${props => props.width ? props.width : 'auto'};
   box-sizing: border-box;
 
   &::placeholder {
@@ -22,14 +22,15 @@ const Input = styled.input.attrs(props => ({
   }
 `;
 
-const GlassInput = ({ type, children, placeholder, value, onChange, required }) => {
+const GlassInput = ({ type, width, children, placeholder, value, onChange, required }) => {
   return (
     <Input
       type={type} // 추가: type을 전달
       onChange={onChange}
       placeholder={placeholder}
       value={value}
-      required={required}>
+      required={required}
+      width={width}>
       {children}
     </Input>
   );

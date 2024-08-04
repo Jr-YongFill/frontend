@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
 
-const Container = styled.div``
 
 
 const InputField = styled.input`

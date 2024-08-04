@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { baseAPI } from "../config";
+import { baseAPI } from "../../config";
 
 const Container = styled.li`
   display: flex;

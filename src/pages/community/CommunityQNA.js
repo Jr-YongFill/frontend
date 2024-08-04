@@ -124,7 +124,7 @@ const CommunityQNA = () => {
           display: 'flex',
           flexDirection: 'column',
           width: '60vw',
-          alignItems:'center'
+          alignItems: 'center'
         }}>
           <Title>
             <h1>면접 관련  Q & A</h1>
@@ -133,13 +133,15 @@ const CommunityQNA = () => {
           <Main>
             <MainHeader>
               <GlassInput
+                width={"100%"}
                 type='text'
                 placeholder="제목을 입력하세요"
                 value={tempSearchText}
                 onChange={(e) => setTempSearchText(e.target.value)}
               />
-              <div style={{width:'10px'}}/>
+              <div style={{ width: '10px' }} />
               <CustomButton
+                width={"100px"}
                 onClick={() => {
                   setSearchText(tempSearchText);
                   setCurrentPage(0);
