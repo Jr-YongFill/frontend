@@ -4,62 +4,36 @@ import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { useNavigate } from 'react-router-dom';
 import { baseAPI } from '../../config';
+import Wrapper from "../../components/Wrapper";
+import GlassCard from "../../components/GlassCard";
 import Header from '../../components/Header';
-
-const WrapperContainer = styled.div`
-    height: 70vh; 
-    display: flex;
-    justify-content: center;
-    align-items: top; 
-    margin-top: 50px;
-`;
-
-const FormContainer = styled.div`
-    width: 400px;
-    padding: 40px;
-    border: 1px solid ${palette.skyblue};
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    background-color: white;
-`;
+import GlassModal from "../../components/modal/GlassModal";
+import CustomButton from '../../components/CustomButton';
 
 const Title = styled.h1`
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
-    color: ${palette.skyblue};
 `;
 
 const Input = styled.input`
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
+  margin: 10px 0;
+  padding: 15px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  width: 100%;
+  box-sizing: border-box;
 
-    &:focus {
-        border-color: ${palette.skyblue};
-        outline: none;
-    }
-`;
+  &::placeholder {
+    color: #ccc;
+  }
 
-const Button = styled.button`
-    width: 100%;
-    padding: 15px;
-    margin: 30px 0 10px 0;
-    background-color: ${palette.skyblue};
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-
-    &:hover {
-        background-color: ${palette.gray};
-    }
+  &:focus {
+    outline: none;
+  }
 `;
 
 const LinkStyled = styled.a`
@@ -77,6 +51,9 @@ const LinkStyled = styled.a`
 const Signup = () => {
   const [userLogin, setUserLogin] = useState({ email: "", password: "", nickname: "" });
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
 
   const handleInputChange = (event) => {
     setUserLogin((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -86,20 +63,29 @@ const Signup = () => {
     event.preventDefault();
     try {
       await baseAPI.post('/api/auth/sign-up', userLogin);
-      alert('회원가입 성공');
-      navigate('/auth/sign-in');
+
+      setModalText('회원가입 성공');
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+        navigate('/auth/sign-in');
+      })
+      setIsModalOpen(true);
     } catch (error) {
-      alert(error.response.data.error)
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
   };
 
   return (
     <>
       <Header />
-      <WrapperContainer>
-        <FormContainer>
+      <Wrapper>
+        <GlassCard width={'500px'} height={'400px'}>
           <Title>회원가입</Title>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Input
               type="email"
               name="email"
@@ -121,11 +107,20 @@ const Signup = () => {
               onChange={handleInputChange}
               required
             />
-            <Button type="submit">회원가입</Button>
-            <LinkStyled onClick={() => navigate('/auth/sign-in')}>로그인</LinkStyled>
+            <div style={{ paddingLeft: '80%' }}>
+              <LinkStyled onClick={() => navigate('/auth/sign-in')}>로그인</LinkStyled>
+            </div>
+            <div style={{height:'100%', marginTop:'2vh'}}>
+            <CustomButton type="submit">회원가입</CustomButton>
+            </div>
           </form>
-        </FormContainer>
-      </WrapperContainer>
+        </GlassCard>
+      </Wrapper>
+      <GlassModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={() => setIsModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick} />
     </>
   );
 };

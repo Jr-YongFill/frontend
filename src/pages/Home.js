@@ -8,23 +8,11 @@ import Header from "../components/Header";
 import palette from "../styles/pallete";
 import {
   localStorageGetValue,
-  localStorageSetValue,
 } from "../utils/CryptoUtils";
 import GlassCard from "../components/GlassCard";
 import Wrapper from "../components/Wrapper";
 import Block from "../components/Block";
 import CustomButton from "../components/CustomButton";
-
-const WrapperContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #5a8db1;
-  background-image: linear-gradient(0deg, #5a8db1 0%, #16193c 100%);
-  padding: 20px;
-  box-sizing: border-box;
-  min-height: 100vh;
-`;
 
 const ContainerWrapper = styled.div`
   display: flex;
@@ -114,7 +102,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <Wrapper> 
+      <Wrapper>
         {/* Wrapper 아래 태그는 display:flex, flex-direction:column으로 감싸진 곳이어야함 */}
         <ContainerWrapper>
           {/* 헤더가 보여질 공간을 띄워주긴 위한 Block컴포넌트(MUI아님!!!!)을 배치해야함 */}
@@ -139,7 +127,7 @@ const Home = () => {
                 </Description>
                 <CustomButton
                   width={"15vw"}
-                  onClick={() => ButtonClick("/interview/choice-mode")}
+                  onClick={() => ButtonClick("/interview/main")}
                 >
                   면접 보기
                 </CustomButton>

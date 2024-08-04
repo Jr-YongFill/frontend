@@ -8,13 +8,10 @@ import palette from "../../styles/pallete";
 import { useNavigate } from "react-router-dom";
 import { baseAPI } from "../../config";
 import { localStorageGetValue } from "../../utils/CryptoUtils";
-
-const Wrapper = styled.div`
-  display: flex;
-  margin: 10px;
-  justify-content: center;
-  align-content: center;  
-`;
+import Wrapper from "../../components/Wrapper";
+import GlassCard from "../../components/GlassCard";
+import CustomButton from "../../components/CustomButton";
+import Block from "../../components/Block";
 
 const TitleInput = styled.input`
   border: none;
@@ -44,30 +41,7 @@ const TitleWrapper = styled.div`
 `;
 
 const EditorArea = styled.div`
-  padding: 0px 10px 40px;
-  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
-    min-height: 600px;
-    margin-bottom: 30px;
-  }
-  .ck.ck-toolbar.ck-toolbar_grouping {
-    width: 100%;
-  }
-  .ck-editor__editable_inline {
-    width: 100%;
-  }
-`;
-
-const SubmitButton = styled.button`
-  background:${palette.skyblue};
-  width: 150px;
-  height: 60px;
-  border-style:none;
-  border-radius: 20px;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  margin: 30px 0px;;
-  cursor:pointer;
+  padding: 0px 10px 20px;
 `;
 
 const PostQNA = () => {
@@ -106,70 +80,71 @@ const PostQNA = () => {
     let formData = new FormData();
     formData.append("file", blob);
     try {
-        // 
-        const fileName = await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
-        const url = process.env.REACT_APP_BUCKET_URL
-        +"temp/"
+      // 
+      const fileName = await baseAPI.post('/api/upload/temp', formData).then((res) => res.data);
+      const url = process.env.REACT_APP_BUCKET_URL
+        + "temp/"
         + fileName;
 
-        // 업로드된 블롭을 상태에 추가
-        setimageDatas((prevImageData) => 
-          [...prevImageData,
-           {"file":blob,
-            "fileName":fileName
-           }]);
+      // 업로드된 블롭을 상태에 추가
+      setimageDatas((prevImageData) =>
+        [...prevImageData,
+        {
+          "file": blob,
+          "fileName": fileName
+        }]);
 
-        // 콜백 함수 호출하여 URL을 에디터에 전달
-        callback(url, 'alt text');
+      // 콜백 함수 호출하여 URL을 에디터에 전달
+      callback(url, 'alt text');
     } catch (error) {
-        console.error("Image upload failed:", error);
-        // 에러 처리 추가
+      console.error("Image upload failed:", error);
+      // 에러 처리 추가
     }
 
     return false;
-};
+  };
 
 
-const handleSubmit = async () => {
-  let error = validate(dataValue);
-  const replacedContent = replaceTempContent(dataValue.content);
+  const handleSubmit = async () => {
+    let error = validate(dataValue);
+    const replacedContent = replaceTempContent(dataValue.content);
 
-  if (Object.keys(error).length === 0) {
-    const updatedDataValue = {
-      ...dataValue,
-      content: replacedContent,
-      saveEvent: 'Y',
-    };
+    if (Object.keys(error).length === 0) {
+      const updatedDataValue = {
+        ...dataValue,
+        content: replacedContent,
+        saveEvent: 'Y',
+      };
 
-    try {
-      console.log("이미지 링크 바뀌었니?!");
-      console.log(updatedDataValue.content);
+      try {
+        console.log("이미지 링크 바뀌었니?!");
+        console.log(updatedDataValue.content);
 
-      const postId = await baseAPI.post("/api/posts", updatedDataValue).then(res => res.data.postId);
+        const postId = await baseAPI.post("/api/posts", updatedDataValue).then(res => res.data.postId);
 
-      // 실제 저장 용
-      await Promise.all(imageDatas.map(imageData => {
-        let formData = new FormData();
-        formData.append("postId", postId);
-        formData.append("file", imageData.file);
-        formData.append("fileName", imageData.fileName);
+        // 실제 저장 용
+        await Promise.all(imageDatas.map(imageData => {
+          let formData = new FormData();
+          formData.append("postId", postId);
+          formData.append("file", imageData.file);
+          formData.append("fileName", imageData.fileName);
 
-        console.log(imageData.fileName);
-        return baseAPI.post("/api/upload/post", formData);
-      }));
+          console.log(imageData.fileName);
+          return baseAPI.post("/api/upload/post", formData);
+        }));
 
-      navigate(`/post/${postId}`);
-    } catch (error) {
-      console.error("Post submission failed:", error);
-      // 에러 처리 추가
+        navigate(`/post/${postId}`);
+      } catch (error) {
+        console.error("Post submission failed:", error);
+        // 에러 처리 추가
+      }
     }
-  }
-};
+  };
 
   const stripHtmlTags = (str) => {
     return str.replace(/<\/?[^>]+(>|$)/g, "");
   };
-  
+
   const replaceTempContent = (str) => {
     const tempUrlPattern = /\/temp\//g;
     const postUrlPattern = '/post/';
@@ -196,36 +171,39 @@ const handleSubmit = async () => {
   };
 
   return (
-    <div>
+    <>
       <Header />
       <Wrapper>
-        <div>
-          <TitleWrapper>
-            <h1>정보게시판</h1>
-            <h3>제목</h3>
-            <InputWrapper>
-              <TitleInput
-                type="text"
-                placeholder="제목을 작성해주세요"
-                onChange={TitleReceive}
-                ref={titleRef}
-              />
-            </InputWrapper>
-          </TitleWrapper>
-          <TitleWrapper>
-            <h3>내용</h3>
-          </TitleWrapper>
-          <EditorArea>
-            <EditorBox ref={editorRef} onChange={onChange} onUploadImage={onUploadImage} />
-            <div style={{ display: "flex", justifyContent: "end" }}>
-              <SubmitButton onClick={handleSubmit}>
-                저장
-              </SubmitButton>
-            </div>
-          </EditorArea>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Block></Block>
+          <GlassCard>
+            <TitleWrapper>
+              <h1>정보게시판</h1>
+              <h3>제목</h3>
+              <InputWrapper>
+                <TitleInput
+                  type="text"
+                  placeholder="제목을 작성해주세요"
+                  onChange={TitleReceive}
+                  ref={titleRef}
+                />
+              </InputWrapper>
+            </TitleWrapper>
+            <TitleWrapper>
+              <h3>내용</h3>
+            </TitleWrapper>
+            <EditorArea>
+              <EditorBox ref={editorRef} onChange={onChange} onUploadImage={onUploadImage} />
+              <div style={{ display: "flex", justifyContent: "end", margin: '30px 0px 0px 0px' }}>
+                <CustomButton type={"submit"} onClick={handleSubmit}>
+                  저장
+                </CustomButton>
+              </div>
+            </EditorArea>
+          </GlassCard>
         </div>
       </Wrapper>
-    </div>
+    </>
   );
 };
 

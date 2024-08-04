@@ -1,46 +1,38 @@
 import Modal from 'react-modal';
-import palette from '../../styles/pallete';
 import styled from 'styled-components';
+import CustomButton from '../CustomButton';
 
 
-
-const MyBtn = styled.button`
-  background-color: ${(props) => props.color};
-  border: none;
-  width: 300px;
-  height: 100px;
-  border-radius: 20px;
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  margin-top: 30px;
+const MyGlassModal = styled(Modal)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #000;
 `;
 
 export const RemoveModal = ({ isModalOpen, setIsModalOpen, onClick }) => {
     return (
-        <Modal
+        <MyGlassModal
             isOpen={isModalOpen}
             onRequestClose={setIsModalOpen}
-            style={{
-                content: {
-                    top: '250px',
-                    left: '600px',
-                    right: '600px',
-                    bottom: '250px',
-                    borderRadius: '30px',
-                    border: 'none',
-                    background: `${palette.pink}`,
-                }
-            }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ fontSize: '30px', color: 'red' }}>
-                    정말로 지우겠습니까?
-                </div>
-                <MyBtn color={palette.skyblue}
-                    onClick={onClick}>
-                    삭제
-                </MyBtn>
-            </div>
-        </Modal>
+            ariaHideApp={false}>
+            <p>
+                정말로 지우겠습니까?
+            </p>
+            <CustomButton
+                onClick={onClick}>
+                삭제
+            </CustomButton>
+        </MyGlassModal>
     );
 }

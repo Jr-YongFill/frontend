@@ -6,13 +6,19 @@ import styled from 'styled-components';
 import palette from '../../styles/pallete';
 import { baseAPI } from '../../config'
 import CustomButton from '../../components/CustomButton';
+import Wrapper from "../../components/Wrapper";
+import GlassCard from "../../components/GlassCard";
+import PageButtonController from '../../components/PageButtonController';
+import GlassModal from "../../components/modal/GlassModal";
+import GlassInput from '../../components/GlassInput';
 
 const Title = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-between;
-  // background-color: gold;
+  align-items: center;
   margin: 30px 50px;
+  width:100%;
 `;
 
 
@@ -26,6 +32,8 @@ const MainHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  width:40vw;
+  align-items:center;
 `;
 
 const MainBody = styled.div`
@@ -39,25 +47,12 @@ const MainContent = styled.div`
   margin-top: 20px;
 `;
 
-const PostCard = styled.div`
-  background: white;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
 const PostTitle = styled.div`
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
+  font-size: 1.5em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
-
 const PostDetails = styled.div`
   display: flex;
   justify-content: space-between;
@@ -65,45 +60,6 @@ const PostDetails = styled.div`
   font-size: 18px;
   color: #666;
 `;
-
-const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-`;
-
-const PageButton = styled.button`
-  background-color: ${(props) => (props.active ? palette.skyblue : '#ccc')};
-  border: none;
-  margin: 0 10px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  color: ${(props) => (props.active ? 'white' : '#333')};
-  font-size: 18px;
-  
-  &:hover {
-    background-color: ${(props) => (props.active ? '#0080ff' : '#bbb')};
-  }
-
-  &:disabled {
-    background-color: #eee;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-`;
-
-const MyBtn = styled.button`
-  background-color: ${(props) => props.color};
-  border: none;
-  width: 100px;
-  height: 55px;
-  border-radius: 20px;
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  margin-left: 10px;
-`;
-
 const CommunityQNA = () => {
   const navigate = useNavigate();
   const [tempSearchText, setTempSearchText] = useState("");
@@ -111,25 +67,37 @@ const CommunityQNA = () => {
   const [data, setData] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // '2024-07-24' 형식으로 변환
+    return date.toISOString().split('T')[0];
   };
 
-  const handleWrite = ()=> {
+  const handleWrite = () => {
     navigate("/post/info/write");
   }
 
   useEffect(() => {
-
     const fetchData = async () => {
-      const url = searchText ?
-        `/api/categories/INFO/posts?title=${searchText}&page=${currentPage}&size=10`
-        :
-        `/api/categories/INFO/posts?page=${currentPage}&size=10`;
+      try {
+        const url = searchText ?
+          `/api/categories/INFO/posts?title=${searchText}&page=${currentPage}&size=10`
+          :
+          `/api/categories/INFO/posts?page=${currentPage}&size=10`;
 
-      const response = await baseAPI.get(url);
-      setData(response.data);
+        const response = await baseAPI.get(url);
+        setData(response.data);
+      } catch (error) {
+        setModalText(error.response.data.message);
+        setModalOnClick(() => () => {
+          setIsModalOpen(false);
+        })
+        setIsModalOpen(true);
+      }
+
     };
     fetchData();
   }, [currentPage, searchText]);
@@ -137,77 +105,70 @@ const CommunityQNA = () => {
   return (
     <>
       <Header />
-      <Title>
-        <h1>정보 공유 게시판</h1>
-        <CustomButton onClick={handleWrite} color={palette.skyblue}>글 작성</CustomButton>
-      </Title>
-      <Main>
-        <MainHeader>
-          <input
-            type='text'
-            placeholder="제목을 입력하세요"
-            value={tempSearchText}
-            onChange={(e) => setTempSearchText(e.target.value)}
-            style={{ width: '60%', height: '50px', fontSize: '18px', marginBottom: '20px', 'border-radius': '10px' }}
-          />
-          <MyBtn
-            color={palette.skyblue}
-            onClick={() => {
-              setSearchText(tempSearchText);
-              setCurrentPage(0);
-            }}>
-            검색
-          </MyBtn>
-        </MainHeader>
-        <MainBody>
-          <MainContent>
-            {data &&
-              data.resultList.map((post, idx) => (
-                <PostCard key={idx}
-                  onClick={
-                    () => navigate(`/post/${post.postId}`)}>
-                  <PostTitle>- {post.title}</PostTitle>
-                  <PostDetails>
-                    <span>작성자 : {post.writerName}</span>
-                    <span>작성일 : {formatDate(post.createTime)}</span>
-                  </PostDetails>
-                </PostCard>
-              ))
-            }
-          </MainContent>
-          {data && (
-            <PaginationContainer>
-              <PageButton
+      <Wrapper>
+        <div style={{
+          marginTop: '30px',
+          display: 'flex',
+          flexDirection: 'column',
+          width: '60vw',
+          alignItems: 'center'
+        }}>
+          <Title>
+            <h1>정보 공유 게시판</h1>
+            <CustomButton onClick={handleWrite} >글 작성</CustomButton>
+          </Title>
+          <Main>
+            <MainHeader>
+              <GlassInput
+
+                width={"100%"}
+                type='text'
+                placeholder="제목을 입력하세요"
+                value={tempSearchText}
+                onChange={(e) => setTempSearchText(e.target.value)}
+              />
+              <div style={{ width: '10px' }} />
+              <CustomButton
+                width={"100px"}
                 onClick={() => {
-                  setCurrentPage(currentPage - 1);
-                }}
-                disabled={currentPage === 0}
-              >
-                이전
-              </PageButton>
-              {data.pageList.map((page) => (
-                <PageButton
-                  key={page}
-                  onClick={() => {
-                    setCurrentPage(page - 1);
-                  }}
-                  active={currentPage === page - 1}
-                >
-                  {page}
-                </PageButton>
-              ))}
-              <PageButton
-                onClick={() => {
-                  setCurrentPage(currentPage + 1);
-                }}
-                disabled={currentPage === data.totalPage - 1}
-              >
-                다음
-              </PageButton>
-            </PaginationContainer>
-          )}
-        </MainBody>
-      </Main>
+                  setSearchText(tempSearchText);
+                  setCurrentPage(0);
+                }}>
+                검색
+              </CustomButton>
+            </MainHeader>
+            <MainBody>
+              <MainContent>
+                {data &&
+                  data.resultList.map((post, idx) => (
+                    <GlassCard 
+                      width={"60vw"}
+                      key={idx}
+                      onClick={
+                        () => navigate(`/post/${post.postId}`)}>
+                      <PostTitle>{post.title}</PostTitle>
+                      <PostDetails>
+                        <span>작성자 : {post.writerName}</span>
+                        <span>작성일 : {formatDate(post.createTime)}</span>
+                      </PostDetails>
+                    </GlassCard>
+                  ))
+                }
+              </MainContent>
+              <PageButtonController
+                data={data}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+              />
+            </MainBody>
+          </Main>
+        </div>
+      </Wrapper>
+      <GlassModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={() => setIsModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick} />
     </>
   );
 };

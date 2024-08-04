@@ -3,11 +3,12 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../styles/pallete';
 import { localStorageGetValue } from '../utils/CryptoUtils';
+import GlassModal from "./modal/GlassModal";
 
 const Logo = styled.div`
   font-size: 1.5rem;
   color: white;
-`
+`;
 
 const HeaderContainer = styled.header`
   position: absolute;
@@ -17,13 +18,14 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 0 30px;
-  width:90vw;
+  width: 90vw;
   z-index: 999;
   background: transparent;
 `;
+
 const StyledLink = styled(Link)`
   text-decoration: none;
-  color: ${props => props.active ? 'white' : palette.gray};
+  color: ${props => props.active === 'true' ? 'white' : palette.gray};
   font-size: 1rem;
   cursor: pointer;
   margin-left: 15px;
@@ -47,11 +49,11 @@ const GnbMenu = styled.div`
   display: flex;
   gap: 3vw;
   align-items: center;
-  margin-left:5vw;
+  margin-left: 5vw;
 `;
 
 const HeaderSign = styled.div`
- display: flex;
+  display: flex;
   gap: 3vw;
   align-items: center;
 `;
@@ -72,6 +74,10 @@ const Header = ({ color }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalText, setModalText] = useState('');
+  const [modalOnClick, setModalOnClick] = useState(null);
+
   useEffect(() => {
     const nickName = localStorageGetValue('member-nickName');
     setNickName(nickName);
@@ -87,8 +93,12 @@ const Header = ({ color }) => {
   const LinkClick = (event, path) => {
     if (!role) {
       event.preventDefault();
-      alert('로그인이 필요한 페이지 입니다.');
-      navigate('/auth/sign-in');
+      setModalText('로그인이 필요한 페이지 입니다.');
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+        navigate('/auth/sign-in');
+      });
+      setIsModalOpen(true);
     } else {
       navigate(path);
     }
@@ -100,51 +110,55 @@ const Header = ({ color }) => {
         <MainLink to="/">
           <Logo>모시모시</Logo>
         </MainLink>
-        
       </HeaderGnb>
-          <GnbMenu>
+      <GnbMenu>
+        <StyledLink
+          to="/interview/main"
+          onClick={(event) => LinkClick(event, '/interview/main')}
+          active={(location.pathname === '/interview/main').toString()}
+        >
+          <span>면접보러가기</span>
+        </StyledLink>
+        <StyledLink
+          to="/store"
+          onClick={(event) => LinkClick(event, '/store')}
+          active={(location.pathname === '/store').toString()}
+        >
+          <span>상점</span>
+        </StyledLink>
+        <StyledLink
+          to="/community/main"
+          active={(location.pathname === '/community/main' || location.pathname === '/post').toString()}
+        >
+          <span>커뮤니티</span>
+        </StyledLink>
+      </GnbMenu>
+      <HeaderSign>
+        {nickName ? (
+          <div>
+            <span>{nickName}</span>
             <StyledLink
-              to="/interview/main"
-              onClick={(event) => LinkClick(event, '/interview/main')}
-              active={location.pathname === '/interview/main'}
+              to="/member"
+              onClick={(event) => LinkClick(event, '/member')}
+              active={(location.pathname === '/member').toString()}
             >
-              <span>면접보러가기</span>
+              마이페이지
             </StyledLink>
-            <StyledLink
-              to="/store"
-              onClick={(event) => LinkClick(event, '/store')}
-              active={location.pathname === '/store'}
-            >
-              <span>상점</span>
-            </StyledLink>
-            <StyledLink
-              to="/community/main"
-              active={location.pathname === '/community/main' || location.pathname === '/post'}
-            >
-              <span>커뮤니티</span>
-            </StyledLink>
-          </GnbMenu>
-          <HeaderSign>
-          {nickName ? (
-            <div>
-              <span>{nickName}</span>
-              <StyledLink
-                to="/member"
-                onClick={(event) => LinkClick(event, '/member')}
-                active={location.pathname === '/member'}
-              >
-                마이페이지
-              </StyledLink>
-              <LogoutButton onClick={logoutHandle}>로그아웃</LogoutButton>
-            </div>
-          ) : (
-            <div>
-              <StyledLink to="/auth/sign-in">로그인</StyledLink>
-              <StyledLink to="/auth/sign-up">회원가입</StyledLink>
-            </div>
-          )}
-          </HeaderSign>
-      
+            <LogoutButton onClick={logoutHandle}>로그아웃</LogoutButton>
+          </div>
+        ) : (
+          <div>
+            <StyledLink to="/auth/sign-in">로그인</StyledLink>
+            <StyledLink to="/auth/sign-up">회원가입</StyledLink>
+          </div>
+        )}
+      </HeaderSign>
+      <GlassModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={() => setIsModalOpen(false)}
+        message={modalText}
+        onClick={modalOnClick}
+      />
     </HeaderContainer>
   );
 };

@@ -3,18 +3,18 @@ import styled from 'styled-components';
 import palette from '../styles/pallete';
 
 const TimerComponent = styled.div`
-    background:${palette.skyblue};
+    background:${palette.dark};
     color: white;
-    font-size:10rem;
-    width:20vw;
+    font-size:5rem;
+    width:12vw;
     text-align:center;
     padding-bottom:2vw;
     border-radius:20px;
-    min-width: 300px;
+    min-width: 150px;
 `;
 
 const Timer = (props) => {
-  const [seconds, setSeconds] = useState(10);
+  const [seconds, setSeconds] = useState(props.time);
 
   // 메모이제이션된 timeOut 함수
   const timeOut = useCallback(() => {

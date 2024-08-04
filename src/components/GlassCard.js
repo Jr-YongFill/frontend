@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 
 const GlassContainer = styled.div`
-  width: ${props => props.width ? props.width : '100%'};
+  width: ${props => props.width ? props.width : 'auto'};
+  height: ${props => props.height ? props.height : 'auto'};
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.1);
@@ -15,10 +16,10 @@ const GlassContainer = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.3);
 `;
 
-const GlassCard = ({ children , width, margin}) => {
+const GlassCard = ({ children, width, height, margin, onClick }) => {
 
-    return(
-        <GlassContainer width={width} margin={margin}>
+    return (
+        <GlassContainer width={width} height={height} margin={margin} onClick={onClick}>
             {children}
         </GlassContainer>
     )
