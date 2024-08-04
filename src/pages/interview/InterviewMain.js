@@ -9,13 +9,8 @@ import GlassCard from "../../components/GlassCard";
 import Block from "../../components/Block";
 import CustomButton from "../../components/CustomButton";
 
-const Title = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
 
-const TitleTextGroup = styled.div``;
+
 
 const BtnGroup = styled.div`
   display: flex;
@@ -31,27 +26,10 @@ const BtnBox = styled.div`
   justify-content:center;
 `;
 
-const MyBtn = styled.button`
-  background-color: ${(props) => props.color};
-  border: none;
-  width: 300px;
-  height: 100px;
-  border-radius: 20px;
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  backdrop-filter: blur(10px);
-`;
-
 const InfoText = styled.div`
   margin-top: 10px;
   font-size: 0.3em;
   color: ${palette.white};
-`;
-
-const TitleText = styled.div`
-  font-size: 3rem;
-  font-weight: bold;
 `;
 
 const SubTitleText = styled.div`
@@ -63,7 +41,7 @@ const SubTitleText = styled.div`
 const DescriptionText = styled.div`
   margin-top: 10px;
   font-size: 0.4em;
-  color: ${palette.white};
+  color: ${palette.gray};
 `;
 
 const InterviewMain = () => {
@@ -78,14 +56,15 @@ const InterviewMain = () => {
             <GlassCard width={"60vw"}>
             <div
               style={{
-                margin: "40px",
+                height:"35vh",
+                margin: "40px 8vw",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
               }}
             >
 
-                  <TitleTextGroup>
+                  <div>
                     <h1>면접 시뮬레이션</h1>
                     <SubTitleText>
                       <h1>CS 면접, 잘 준비 되셨나요?</h1>
@@ -93,17 +72,16 @@ const InterviewMain = () => {
                     </SubTitleText>
                     <DescriptionText>
                       기능 사용을 위해서는 Open AI API키가 필요합니다.
-                      
                     </DescriptionText>
-                  </TitleTextGroup>
-                  <img src={img} width={"25%"} alt={"기본 이미지"} style={{marginRight:'50px'}}></img>
+                  </div>
+                  <img src={img} width={"18%"} alt={"기본 이미지"} style={{marginRight:'30px'}}></img>
               </div>
               <BtnGroup>
                 <BtnBox>
                   <CustomButton
                     onClick={() => navigate("/interview/practice-choice-stack")}
                   >
-                    연습 선택 스택
+                    연습 면접 모드
                   </CustomButton>
                   <InfoText># 무한모드 #1문제씩_정답_확인가능</InfoText>
                 </BtnBox>
@@ -111,7 +89,7 @@ const InterviewMain = () => {
                   <CustomButton
                     onClick={() => navigate("/interview/choice-stack")}
                   >
-                    면접 선택 스택
+                    실전 면접 모드
                   </CustomButton>
                   <InfoText># 10개씩 #한번에_정답_확인가능</InfoText>
                 </BtnBox>

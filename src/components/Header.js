@@ -8,7 +8,7 @@ import GlassModal from "./modal/GlassModal";
 const Logo = styled.div`
   font-size: 1.5rem;
   color: white;
-`
+`;
 
 const HeaderContainer = styled.header`
   position: absolute;
@@ -18,13 +18,14 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 0 30px;
-  width:90vw;
+  width: 90vw;
   z-index: 999;
   background: transparent;
 `;
+
 const StyledLink = styled(Link)`
   text-decoration: none;
-  color: ${props => props.active ? 'white' : palette.gray};
+  color: ${props => props.active === 'true' ? 'white' : palette.gray};
   font-size: 1rem;
   cursor: pointer;
   margin-left: 15px;
@@ -48,11 +49,11 @@ const GnbMenu = styled.div`
   display: flex;
   gap: 3vw;
   align-items: center;
-  margin-left:5vw;
+  margin-left: 5vw;
 `;
 
 const HeaderSign = styled.div`
- display: flex;
+  display: flex;
   gap: 3vw;
   align-items: center;
 `;
@@ -96,7 +97,7 @@ const Header = ({ color }) => {
       setModalOnClick(() => () => {
         setIsModalOpen(false);
         navigate('/auth/sign-in');
-      })
+      });
       setIsModalOpen(true);
     } else {
       navigate(path);
@@ -109,26 +110,25 @@ const Header = ({ color }) => {
         <MainLink to="/">
           <Logo>모시모시</Logo>
         </MainLink>
-
       </HeaderGnb>
       <GnbMenu>
         <StyledLink
           to="/interview/main"
           onClick={(event) => LinkClick(event, '/interview/main')}
-          active={location.pathname === '/interview/main'}
+          active={(location.pathname === '/interview/main').toString()}
         >
           <span>면접보러가기</span>
         </StyledLink>
         <StyledLink
           to="/store"
           onClick={(event) => LinkClick(event, '/store')}
-          active={location.pathname === '/store'}
+          active={(location.pathname === '/store').toString()}
         >
           <span>상점</span>
         </StyledLink>
         <StyledLink
           to="/community/main"
-          active={location.pathname === '/community/main' || location.pathname === '/post'}
+          active={(location.pathname === '/community/main' || location.pathname === '/post').toString()}
         >
           <span>커뮤니티</span>
         </StyledLink>
@@ -140,7 +140,7 @@ const Header = ({ color }) => {
             <StyledLink
               to="/member"
               onClick={(event) => LinkClick(event, '/member')}
-              active={location.pathname === '/member'}
+              active={(location.pathname === '/member').toString()}
             >
               마이페이지
             </StyledLink>
@@ -157,7 +157,8 @@ const Header = ({ color }) => {
         isModalOpen={isModalOpen}
         setIsModalOpen={() => setIsModalOpen(false)}
         message={modalText}
-        onClick={modalOnClick} />
+        onClick={modalOnClick}
+      />
     </HeaderContainer>
   );
 };

@@ -64,18 +64,6 @@ const Title = styled.h1`
   justify-content: space-between;
 `;
 
-const Meta = styled.div`
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 20px;
-`;
-
-const Content = styled.p`
-  font-size: 16px;
-  line-height: 1.6;
-  color: #444;
-`;
-
 const LoadingMessage = styled.div`
   text-align: center;
   color: #aaa;
@@ -139,29 +127,6 @@ const WriteComment = styled.div`
   width: 100%;
   align-items: center;
   justify-content: center;
-`;
-
-const CommentInput = styled.input`
-  flex-grow: 1;
-  padding: 8px 15px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 10px;
-`;
-
-const CommentSubmitButton = styled.button`
-  padding: 10px 20px;
-  background-color: ${palette.skyblue};
-  border: none;
-  color: white;
-  font-size: 14px;
-  border-radius: 4px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${palette.darkblue};
-  }
 `;
 
 const Comment = styled.div`
@@ -417,7 +382,7 @@ function PostDetail() {
                                     작성자: {comment.memberNickname}
                                   </div>
                                   <div>
-                                    작성일: {formatRelativeTime(comment.createDate)}
+                                    작성일: {formatRelativeTime(comment.createTime)}
                                   </div>
                                 </PageHeaderWriter>
                               </div>

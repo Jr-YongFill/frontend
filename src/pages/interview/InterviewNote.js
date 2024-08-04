@@ -14,7 +14,7 @@ import {
   Divider
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import img from "../../assets/default.png";
+import img from "../../assets/note.png";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
@@ -25,21 +25,53 @@ import { localStorageGetValue } from "../../utils/CryptoUtils";
 import Wrapper from '../../components/Wrapper';
 import GlassCard from '../../components/GlassCard';
 import GlassModal from '../../components/modal/GlassModal';
+import Block from '../../components/Block';
 
-const TitleContainer = styled(Box)`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 1200px;
-    margin: 50px auto;
-    padding: 0 20px;
-`;
 
 const CenteredBox = styled(Box)`
     display: flex;
     justify-content: center;
     align-items: center;
 `;
+
+
+const SubTitleText = styled.div`
+  margin-top: 40px;
+  font-size: 0.8em;
+  font-weight: bold;
+`;
+
+const StyledTabs = styled((props) => (
+  <Tabs
+    {...props}
+    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+  />
+))({
+  '& .MuiTabs-indicator': {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  '& .MuiTabs-indicatorSpan': {
+    maxWidth: 40,
+    width: '100%',
+    backgroundColor: '#635ee7',
+  },
+});
+
+const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
+  ({ theme }) => ({
+    textTransform: 'none',
+    color: 'rgba(255, 255, 255, 0.7)',
+    '&.Mui-selected': {
+      color: '#6854fc !important',
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: 'rgba(100, 95, 228, 0.32)',
+    },
+  }),
+);
+
 
 const InterviewNote = () => {
   const memberId = localStorageGetValue('member-id');;
@@ -53,7 +85,6 @@ const InterviewNote = () => {
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalText, setModalText] = useState('');
   const [modalOnClick, setModalOnClick] = useState(null);
@@ -62,11 +93,13 @@ const InterviewNote = () => {
   useEffect(() => {
     const fetchStacks = async () => {
       try {
-        const response = await baseAPI.get(`http://localhost:8080/api/members/${memberId}/stacks`);
-        const datas = response.data.filter(stack => stack.isPurchase);
+        const response = await baseAPI.get(`/api/members/${memberId}/stacks`);
+        const datas = response.data;
         setStacks(datas);
+        const purchasedFirstStackId = datas.filter(stack=>stack.isPurchase)[0].id
+
         if (datas.length > 0) {
-          setSelectedStack(datas[0].id); // 기본적으로 첫 번째 스택 선택
+          setSelectedStack(purchasedFirstStackId); // 구매한 스택 기준 첫 번째 스택 선택
         }
       } catch (error) {
 
@@ -88,10 +121,11 @@ const InterviewNote = () => {
     const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const response = await baseAPI.get(`http://localhost:8080/api/members/${memberId}/stacks/${selectedStack}/answers?page=${currentPage - 1}&size=6`);
+        const response = await baseAPI.get(`/api/members/${memberId}/stacks/${selectedStack}/answers?page=${currentPage - 1}&size=6`);
         setQuestions(response.data.content);
         setTotalPages(response.data.totalPages);
         setLoading(false);
+
       } catch (error) {
         setModalText(error.response.data.message);
         setModalOnClick(() => () => {
@@ -126,38 +160,54 @@ const InterviewNote = () => {
       <Header sx={{ margin: 0 }} /> {/* Remove extra margin from Header */}
       <Wrapper>
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-          <TitleContainer>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant="h2" marginBottom={10}>
-                  오답노트
-                </Typography>
-                <Typography variant="h5">
-                  당신의 대답은 이러한데... 과연 잘한걸까요...? <br />
-                  다시 한 번 확인해보세요!
-                </Typography>
+          <Block></Block>
+          <GlassCard width={"60vw"}>
+            <div
+              style={{
+                height: "35vh",
+                margin: "40px 8vw",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+
+              <div >
+                <h1>오답노트</h1>
+                <SubTitleText>
+                  <p>내가 뭐라 답했더라?</p>
+                  <p>다시 한 번 복습해봐요!</p>
+                </SubTitleText>
               </div>
-              <img src={img} width={'40%'} alt={'기본 이미지'} />
+              <img src={img} width={"18%"} alt={"기본 이미지"} style={{ marginRight: '30px' }}></img>
             </div>
-            <CustomButton onClick={() => navigate('/interview/main')}>면접 보러 가기</CustomButton>
-          </TitleContainer>
+
+          </GlassCard>
+
           <GlassCard>
-            <Box sx={{ width: '100%', maxWidth: 1200, marginTop: 2 }}>
+            <Box sx={{ width: '60vw', maxWidth: 1200, marginTop: 2 }}>
               <CenteredBox>
-                <Tabs
+                <StyledTabs
                   value={selectedStack}
                   onChange={handleChangeTab}
                   aria-label="stack tabs"
-                  sx={{ marginBottom: 2 }}
+                  sx={{
+                    marginBottom: 2
+                  }}
                 >
                   {stacks.map((stack) => (
-                    <Tab key={stack.id} label={stack.stackName} value={stack.id} />
+                    stack.isPurchase ? (
+                      <StyledTab key={stack.id} label={stack.stackName} value={stack.id} />
+
+                    ) : (
+                      <Tab key={stack.id} label={stack.stackName} value={stack.id} disabled />
+                    )
                   ))}
-                </Tabs>
+                </StyledTabs>
               </CenteredBox>
             </Box>
 
-            <CenteredBox sx={{ flexDirection: 'column', width: '100%' }}>
+            <CenteredBox sx={{ flexDirection: 'column', width: '60vw' }}>
               {questions.map((question) => (
                 <Accordion
                   sx={{
@@ -166,8 +216,8 @@ const InterviewNote = () => {
                     },
                     width: '80%',
                     marginBottom: 2,
-                    color: 'darkslategray',
-                    backgroundColor: '#F0F0F0',
+                    color: 'white',
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
                     borderRadius: '0.6rem',
                     boxShadow: 'none'
                   }}
@@ -175,10 +225,18 @@ const InterviewNote = () => {
                   expanded={expanded === question.id}
                   onChange={handleAccordionChange(question.id)}
                 >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    sx={{
+                      bgcolor: 'rgba(255, 255, 255, 0.1)'
+                    }}
+                  >
                     <Typography variant="h6">{question.question}</Typography>
                   </AccordionSummary>
-                  <AccordionDetails>
+                  <AccordionDetails
+                    sx={{
+                      bgcolor: 'rgba(255, 255, 255, 0.1)'
+                    }}>
                     {question.memberAnswers[0].id ? (
                       question.memberAnswers.map((answer) => (
                         <GlassCard key={answer.id} style={{ marginBottom: 2 }}>
@@ -211,9 +269,9 @@ const InterviewNote = () => {
                         </GlassCard>
                       ))
                     ) : (
-                      <GlassCard>
-                        <Typography variant="h5" gutterBottom>답변이 존재하지 않습니다.<br />면접을 더 진행해보세요!</Typography>
-                      </GlassCard>
+                      <div style={{ fontSize: '0.9em' }}>
+                        답변이 존재하지 않습니다.<br />면접을 더 진행해보세요!
+                      </div>
                     )}
                   </AccordionDetails>
                 </Accordion>
@@ -223,7 +281,6 @@ const InterviewNote = () => {
                   count={totalPages}
                   page={currentPage}
                   onChange={handleChangePage}
-                  color={palette.skyblue}
                 />
               </CenteredBox>
             </CenteredBox>

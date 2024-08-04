@@ -10,6 +10,7 @@ import GlassCard from '../../components/GlassCard';
 import CustomButton from '../../components/CustomButton';
 import GlassModalChildren from '../../components/modal/GlassModalChildren';
 import GlassModal from '../../components/modal/GlassModal';
+import Block from '../../components/Block';
 
 const QuestionContainer = styled.div`
     grid-column: 1;
@@ -83,7 +84,6 @@ const PracticeInterview = () => {
   const handlePagePrev = () => {
     (currentPage > 0) && setCurrentPage(currentPage - 1)
   }
-
   const getUserCamera = () => {
     navigator.mediaDevices.getUserMedia({
       video: true,
@@ -96,10 +96,11 @@ const PracticeInterview = () => {
         }
       })
       .catch((error) => {
-        setModalText(error.response.data.message);
+        console.error(error);
+        setModalText(error.message); // HTTP 요청이 아닌 경우, error.response가 없을 수 있음
         setModalOnClick(() => () => {
           setIsModalOpen(false);
-        })
+        });
         setIsModalOpen(true);
       });
   };
@@ -132,7 +133,6 @@ const PracticeInterview = () => {
       const params = new URLSearchParams();
       stackids.forEach((id) => params.append('stack_id', id));
       params.append('size', '1');
-
       const response = await baseAPI.get(`/api/questions?${params.toString()}`);
       setQuestion(response.data[0].question);
       setQuestionId(response.data[0].questionId);
@@ -337,85 +337,93 @@ const PracticeInterview = () => {
     <>
       <Header />
       <Wrapper>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-          <GlassCard>
-            <QuestionContainer>
-              <h1 style={{ color: pallete.blue }}>Q. {question}</h1>
-            </QuestionContainer>
-            <VideoContainer>
-              <video
-                className='container'
-                ref={videoRef}
-                style={{
-                  transform: 'scaleX(-1)',
-                  width: '65%',
-                  height: 'auto',
-                  borderRadius: '25px',
-                }}
-              />
-            </VideoContainer>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
-                <CustomButton
-                  isNotHover={recording}
-                  onClick={startRecording}
-                  disabled={recording}>Start Recording</CustomButton>
-                <CustomButton
-                  isNotHover={!recording}
-                  onClick={stopRecording}
-                  disabled={!recording}>Stop Recording</CustomButton>
-                {audioBlob &&
-                  <CustomButton onClick={downloadRecording}>Download</CustomButton>
+        <div style={{ display: 'block ', flexDirection: 'column' }}><Block />
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+
+            <GlassCard>
+              <QuestionContainer>
+                <h2 style={{ wordBreak: 'keep-all' }}>Q. {question}</h2>
+              </QuestionContainer>
+              <VideoContainer>
+                <video
+                  className='container'
+                  ref={videoRef}
+                  style={{
+                    transform: 'scaleX(-1)',
+                    width: '65%',
+                    height: 'auto',
+                    borderRadius: '25px',
+                  }}
+                />
+              </VideoContainer>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
+                  <CustomButton
+                    isNotHover={recording}
+                    onClick={startRecording}
+                    disabled={recording}>답변 시작</CustomButton>
+                  <CustomButton
+                    isNotHover={!recording}
+                    onClick={stopRecording}
+                    disabled={!recording}>답변 종료</CustomButton>
+                  {audioBlob &&
+                    <CustomButton onClick={downloadRecording}>Download</CustomButton>
+                  }
+                </div>
+                {audioURL &&
+                  <audio
+                    style={{ width: '80%', marginTop: '30px', }}
+                    src={audioURL} controls />
                 }
-              </div>
-              {audioURL &&
-                <audio
-                  style={{ width: '80%', marginTop: '30px', }}
-                  src={audioURL} controls />
-              }
-              <div style={{ marginTop: '30px', width: '100%', display: 'flex', justifyContent: 'space-around' }}>
-                <CustomButton
-                  isNotHover={!audioURL}
-                  disabled={!audioURL}
-                  onClick={() => setModalSwitch(true)}>채점하기</CustomButton>
-                <CustomButton onClick={() => handleNavigate('/interview/note')}>Stop</CustomButton>
-                <CustomButton onClick={() => {
-                  fetchQuestion();
-                  setAudioBlob(null);
-                  setAudioURL(null);
-                }}>Next</CustomButton>
-              </div>
-            </div>
-          </GlassCard>
-          <GlassCard>
-            {questionAnswers[currentPage] ?
-              <div>
-                <h1>답변 내역</h1>
-                <>
-                  <h2 style={{ color: pallete.blue }}>Q. {questionAnswers[currentPage].question}</h2>
-                  <h3>나의 답변</h3>
-                  <AnswerContainer><div>{questionAnswers[currentPage].memberAnswer}</div></AnswerContainer>
-
-                  <h3>GPT의 답변</h3>
-                  <AnswerContainer><div>{questionAnswers[currentPage].gptAnswer}</div></AnswerContainer>
-                </>
-
                 <div style={{ marginTop: '30px', width: '100%', display: 'flex', justifyContent: 'space-around' }}>
-                  <CustomButton onClick={handlePagePrev}>Prev</CustomButton>
-                  {currentPage + 1}/{localStorage.getItem("answersCount")}
-                  <CustomButton onClick={handlePageNext}>Next</CustomButton>
+                  <CustomButton
+                    isNotHover={!audioURL}
+                    disabled={!audioURL}
+                    onClick={() => setModalSwitch(true)}>답변 제출</CustomButton>
+                  <CustomButton onClick={() => {
+                    fetchQuestion();
+                    setAudioBlob(null);
+                    setAudioURL(null);
+                  }}>다음 질문</CustomButton>
                 </div>
               </div>
-              :
-              <h2 style={{ height: '100%', justifyContent: 'center' }}>채점을 진행하면 답변 내역이 표시됩니다.</h2>
-            }
+            </GlassCard>
+            <GlassCard>
+              {questionAnswers[currentPage] ?
+                <div>
+                  <h1>답변 내역</h1>
+                  <>
+                    <h2>Q. {questionAnswers[currentPage].question}</h2>
+                    <h3>나의 답변</h3>
+                    <AnswerContainer><div>{questionAnswers[currentPage].memberAnswer}</div></AnswerContainer>
+
+                    <h3>GPT의 답변</h3>
+                    <AnswerContainer><div>{questionAnswers[currentPage].gptAnswer}</div></AnswerContainer>
+                  </>
+
+                  <div style={{ marginTop: '30px', width: '100%', display: 'flex', justifyContent: 'space-around' }}>
+                    <CustomButton onClick={handlePagePrev}>Prev</CustomButton>
+                    {currentPage + 1}/{localStorage.getItem("answersCount")}
+                    <CustomButton onClick={handlePageNext}>Next</CustomButton>
+                  </div>
+                </div>
+                :
+                <h2 style={{ height: '100%', justifyContent: 'center' }}>채점을 진행하면 답변 내역이 표시됩니다.</h2>
+              }
 
 
-            <div style={{ gridColumn: '1 / span 2', textAlign: 'center' }}>
+              <div style={{ gridColumn: '1 / span 2', textAlign: 'center' }}>
 
-            </div>
-          </GlassCard>
-        </div >
+              </div>
+            </GlassCard>
+          </div >
+          <div style={{
+            display: 'flex',
+            justifyContent: 'flex-end'
+          }}>
+            <CustomButton onClick={() => handleNavigate('/interview/note')}>면접 종료</CustomButton>
+          </div>
+        </div>
       </Wrapper >
 
       <GlassModalChildren

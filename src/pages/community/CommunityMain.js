@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import styled from 'styled-components';
 import palette from '../../styles/pallete';
-import CustomLi from '../../components/glass/CustomLi';
+import CustomLi from '../../components/CustomLi';
 import CustomButton from '../../components/CustomButton';
 import { baseAPI } from '../../config';
 import { localStorageGetValue } from '../../utils/CryptoUtils';
@@ -158,7 +158,7 @@ const CommunityMain = () => {
                 ) : (
                   <SubContainer>
                     <div style={{ paddingBottom: '3vh' }}>오늘 {count} 개 질문에 답했네요!</div>
-                    <CustomButton onClick={() => HandlePage("/interview/choice-mode")}>
+                    <CustomButton onClick={() => HandlePage("/interview/note")}>
                       오답노트 보기
                     </CustomButton>
                   </SubContainer>

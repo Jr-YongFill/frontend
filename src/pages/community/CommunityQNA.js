@@ -32,6 +32,7 @@ const MainHeader = styled.div`
   flex-direction: row;
   justify-content: center;
   width:40vw;
+  align-items: center;
 `;
 
 const MainBody = styled.div`
@@ -46,13 +47,10 @@ const MainContent = styled.div`
 `;
 
 const PostTitle = styled.div`
-  font-size: 24px;
-  font-weight: bold;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* 표시할 줄 수 */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: 1.5em;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 
 `;
 
@@ -62,18 +60,6 @@ const PostDetails = styled.div`
   margin-top: 10px;
   font-size: 18px;
   color: #666;
-`;
-
-const MyBtn = styled.button`
-  background-color: ${(props) => props.color};
-  border: none;
-  width: 100px;
-  height: 55px;
-  border-radius: 20px;
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  margin-left: 10px;
 `;
 
 const CommunityQNA = () => {
@@ -158,13 +144,15 @@ const CommunityQNA = () => {
               <MainContent>
                 {data &&
                   data.resultList.map((post, idx) => (
-                    <GlassCard key={idx}
+                    <GlassCard 
+                      width={"60vw"}
+                      key={idx}
                       onClick={
                         () => navigate(`/post/${post.postId}`)}>
-                      <PostTitle>- {post.title}</PostTitle>
+                      <PostTitle>{post.title}</PostTitle>
                       <PostDetails>
                         <span>작성자 : {post.writerName}</span>
-                        <span style={{color:'white'}}>작성일 : {formatDate(post.createTime)}</span>
+                        <span>작성일 : {formatDate(post.createTime)}</span>
                       </PostDetails>
                     </GlassCard>
                   ))

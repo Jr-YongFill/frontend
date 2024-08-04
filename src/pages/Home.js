@@ -89,6 +89,16 @@ const DeveloperCard = styled.div`
 const Home = () => {
   const navigate = useNavigate();
 
+  const ButtonClick = (path) => {
+    const role = localStorageGetValue("member-role");
+    if (!role) {
+      alert("로그인이 필요한 페이지입니다.");
+      navigate("/auth/sign-in");
+    } else {
+      navigate(path);
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -117,7 +127,7 @@ const Home = () => {
                 </Description>
                 <CustomButton
                   width={"15vw"}
-                  onClick={() => navigate("/interview/choice-mode")}
+                  onClick={() => ButtonClick("/interview/main")}
                 >
                   면접 보기
                 </CustomButton>
@@ -148,7 +158,7 @@ const Home = () => {
                 </Description>
                 <CustomButton
                   width={"15vw"}
-                  onClick={() => navigate("/community/main")}
+                  onClick={() => ButtonClick("/community/main")}
                 >
                   커뮤니티 보기
                 </CustomButton>

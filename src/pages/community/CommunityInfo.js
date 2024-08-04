@@ -33,6 +33,7 @@ const MainHeader = styled.div`
   flex-direction: row;
   justify-content: center;
   width:40vw;
+  align-items:center;
 `;
 
 const MainBody = styled.div`
@@ -47,11 +48,11 @@ const MainContent = styled.div`
 `;
 
 const PostTitle = styled.div`
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
+  font-size: 1.5em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
-
 const PostDetails = styled.div`
   display: flex;
   justify-content: space-between;
@@ -128,6 +129,7 @@ const CommunityQNA = () => {
               />
               <div style={{ width: '10px' }} />
               <CustomButton
+                width={"100px"}
                 onClick={() => {
                   setSearchText(tempSearchText);
                   setCurrentPage(0);
@@ -139,10 +141,12 @@ const CommunityQNA = () => {
               <MainContent>
                 {data &&
                   data.resultList.map((post, idx) => (
-                    <GlassCard key={idx}
+                    <GlassCard 
+                      width={"60vw"}
+                      key={idx}
                       onClick={
                         () => navigate(`/post/${post.postId}`)}>
-                      <PostTitle>- {post.title}</PostTitle>
+                      <PostTitle>{post.title}</PostTitle>
                       <PostDetails>
                         <span>작성자 : {post.writerName}</span>
                         <span>작성일 : {formatDate(post.createTime)}</span>

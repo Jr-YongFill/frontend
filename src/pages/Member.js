@@ -11,15 +11,15 @@ import {
 import Wrapper from "../components/Wrapper";
 import Block from "../components/Block";
 import GlassCard from "../components/GlassCard";
-import CustomLi from "../components/glass/CustomLi";
+import CustomLi from "../components/CustomLi";
 import NPGlassCard from "../components/NoPaddingGlassCard";
-import CustomButton from "../components/CustomButton";
 import GlassModal from "../components/modal/GlassModal";
 import GlassInput from "../components/GlassInput";
 
 const Title = styled.h2`
   font-weight: bold;
   margin: 0;
+  o
 `;
 
 const TopContainer = styled.div`
@@ -131,6 +131,7 @@ const PasswordButtonContainer = styled.div`
 const BottomContainer = styled(MiddelContainer)`
   display:flex;
   justify-content: space-between;
+  gap:1vw
 `;
 
 
@@ -348,7 +349,7 @@ const Member = () => {
     <>
       <Header />
       <Wrapper>
-        <div>
+        <div style={{width:'60vw'}}>
           <Block></Block>
           <NPGlassCard>
             <TopContainer>
@@ -411,23 +412,19 @@ const Member = () => {
               </MiddelContainer>
 
               <BottomContainer>
-                <GlassCard width={"100%"}>
+                <GlassCard width={"25vw"}>
                   <Title>내가 쓴 글</Title>
                   <ul style={{marginLeft: '-40px'}}>
                     {postData.map((post, index) => (
-                      <CustomLi key={index} data={post}>
-                        {post.title}
-                      </CustomLi>
+                      <CustomLi key={index} data={post} isMine={true}/>
                     ))}
                   </ul>
                 </GlassCard>
-                <GlassCard width={"100%"}>
+                <GlassCard width={"25vw"}>
                   <Title>내가 쓴 댓글</Title>
                   <ul style={{marginLeft: '-40px'}}>
                     {commentData.map((comment, index) => (
-                      <CustomLi key={index} data={comment}>
-                        {comment.content}
-                      </CustomLi>
+                      <CustomLi key={index} data={comment} isMine={true}/>
                     ))}
                   </ul>
                 </GlassCard>

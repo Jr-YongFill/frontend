@@ -16,7 +16,8 @@ const MyBtn = styled.button.attrs(props => ({
   font-size: 1em;
   color: white;
   cursor:pointer;
-  margin:auto 0;
+  text-align:center;
+  margin:10px 0;
 
   ${(props) => props.isNotHover ?
     null
