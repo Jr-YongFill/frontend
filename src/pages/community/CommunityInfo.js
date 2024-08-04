@@ -59,19 +59,6 @@ const PostDetails = styled.div`
   font-size: 18px;
   color: #666;
 `;
-
-const MyBtn = styled.button`
-  background-color: ${(props) => props.color};
-  border: none;
-  width: 100px;
-  height: 55px;
-  border-radius: 20px;
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  margin-left: 10px;
-`;
-
 const CommunityQNA = () => {
   const navigate = useNavigate();
   const [tempSearchText, setTempSearchText] = useState("");

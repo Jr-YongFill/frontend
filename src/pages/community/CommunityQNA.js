@@ -164,7 +164,7 @@ const CommunityQNA = () => {
                       <PostTitle>- {post.title}</PostTitle>
                       <PostDetails>
                         <span>작성자 : {post.writerName}</span>
-                        <span>작성일 : {formatDate(post.createTime)}</span>
+                        <span style={{color:'white'}}>작성일 : {formatDate(post.createTime)}</span>
                       </PostDetails>
                     </GlassCard>
                   ))
