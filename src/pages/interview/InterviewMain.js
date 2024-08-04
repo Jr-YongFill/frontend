@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import palette from "../../styles/pallete";
 import styled from "styled-components";
-import img from "../../assets/default.png";
+import img from "../../assets/mic.png";
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
 import Block from "../../components/Block";
@@ -20,7 +20,7 @@ const TitleTextGroup = styled.div``;
 const BtnGroup = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   margin: 4vh 8vw;
 `;
@@ -28,8 +28,7 @@ const BtnGroup = styled.div`
 const BtnBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 50px;
-  margin-right: 50px;
+  justify-content:center;
 `;
 
 const MyBtn = styled.button`
@@ -46,8 +45,8 @@ const MyBtn = styled.button`
 
 const InfoText = styled.div`
   margin-top: 10px;
-  font-size: 20px;
-  color: #a4a4a4;
+  font-size: 0.3em;
+  color: ${palette.white};
 `;
 
 const TitleText = styled.div`
@@ -57,14 +56,14 @@ const TitleText = styled.div`
 
 const SubTitleText = styled.div`
   margin-top: 40px;
-  font-size: 1rem;
+  font-size: 0.8em;
   font-weight: bold;
 `;
 
 const DescriptionText = styled.div`
   margin-top: 10px;
-  font-size: 20px;
-  color: #a4a4a4;
+  font-size: 0.4em;
+  color: ${palette.white};
 `;
 
 const InterviewMain = () => {
@@ -76,28 +75,28 @@ const InterviewMain = () => {
         <div style={{ margin: "auto 0" }}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Block></Block>
-            <GlassCard>
-              <div style={{ margin: "10px 30px" }}>
-                <Title>
+            <GlassCard width={"60vw"}>
+            <div
+              style={{
+                margin: "40px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+
                   <TitleTextGroup>
-                    <TitleText>면접 시뮬레이션</TitleText>
+                    <h1>면접 시뮬레이션</h1>
                     <SubTitleText>
-                      CS 면접, 잘 준비 되셨나요?
-                      <br />
-                      아는 만큼 대답해주세요!
-                      <br />
-                      <br />
-                      GPT가 면접 답변을 평가해줘요!
+                      <h1>CS 면접, 잘 준비 되셨나요?</h1>
+                      <h1>GPT와 함께 면접 연습을 해보세요!</h1>
                     </SubTitleText>
                     <DescriptionText>
                       기능 사용을 위해서는 Open AI API키가 필요합니다.
-                      <br />
-                      <br />
-                      API키 생성 방법
+                      
                     </DescriptionText>
                   </TitleTextGroup>
-                  <img src={img} width={"20%"} alt={"기본 이미지"}></img>
-                </Title>
+                  <img src={img} width={"25%"} alt={"기본 이미지"} style={{marginRight:'50px'}}></img>
               </div>
               <BtnGroup>
                 <BtnBox>

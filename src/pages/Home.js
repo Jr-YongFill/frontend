@@ -8,7 +8,6 @@ import Header from "../components/Header";
 import palette from "../styles/pallete";
 import {
   localStorageGetValue,
-  localStorageSetValue,
 } from "../utils/CryptoUtils";
 import GlassCard from "../components/GlassCard";
 import Wrapper from "../components/Wrapper";

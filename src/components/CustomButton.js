@@ -10,11 +10,10 @@ const MyBtn = styled.button.attrs(props => ({
   background-color: ${(props) => props.color || palette.dark}; /* 기본 색상 설정 */
   border: none;
   width: ${(props) => props.width || 'auto'};
-  padding:0 20px;
+  padding:0 10px;
   height: 5vh;
   border-radius: 10px;
   font-size: 1em;
-  font-weight: bold;
   color: white;
   cursor:pointer;
   margin:auto 0;

@@ -44,19 +44,20 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin:0 30px;
+  word-break: keep-all;
 `;
 
 const ModalTextBox = styled.div`
   margin-top: 30px;
   font-size: 25px;
-  font-weight: bold;
 `;
 
 const StackNameInput = styled.input`
   flex-grow: 1;
   padding: 8px 15px;
   width: 80%;
-  font-size: 16px;
+  font-size: 1em;
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-top: 10px;
@@ -67,7 +68,7 @@ const StackDescriptInput = styled.textarea`
   padding: 8px 15px;
   width: 80%;
   height: 70px;
-  font-size: 16px;
+  font-size: 0.8em;
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-top: 10px;
@@ -316,7 +317,10 @@ const Store = () => {
                           해당 질문 카테고리를 구매하시겠습니까?
                         </ModalTextBox>
                         <ModalTextBox>
-                          {modalStack.stackName} : {modalStack.description}
+                          {modalStack.stackName}
+                          <br/>
+                          <div style={{fontSize:'0.6em'}}>
+                          {modalStack.description}</div>
                         </ModalTextBox>
                         <ModalTextBox>포인트 : {modalStack.price}</ModalTextBox>
                         <div style={{ marginTop: '20px', display: "flex", width: '100%', justifyContent: 'space-around' }}>
