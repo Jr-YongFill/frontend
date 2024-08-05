@@ -21,6 +21,11 @@ jobs:
     - run: |
         touch ./.env
         echo "${{ secrets.REACT_ENV }}" > ./.env
+        mkdir ./conf/ssl
+        touch ./conf/ssl/fullchain.pem
+        echo "${{ secrets.SSL_FUULCHAIN }}" > ./conf/ssl/fullchain.pem
+        touch ./conf/ssl/privkey.pem
+        echo "${{ secrets.SSL_PRIVATE }}" > ./conf/ssl/privkey.pem
       
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
