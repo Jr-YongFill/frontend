@@ -26,14 +26,26 @@ import Wrapper from '../../components/Wrapper';
 import GlassCard from '../../components/GlassCard';
 import GlassModal from '../../components/modal/GlassModal';
 import Block from '../../components/Block';
+import NPGlassCard from "../../components/NoPaddingGlassCard";
+import GlassTitle from "../../components/GlassTitle";
 
 
 const CenteredBox = styled(Box)`
     display: flex;
     justify-content: center;
-    align-items: center;
+    //align-items: center;
 `;
 
+const SubContainer = styled.div` 
+  //width: 90%;
+  //padding: 3vh 3vh;
+  margin: 3vh 3vh;
+  display: flex;
+  flex-direction:column;
+  //justify-content: center;
+  //align-items: center;
+  //text-align: center;
+`;
 
 const SubTitleText = styled.div`
   margin-top: 40px;
@@ -159,7 +171,8 @@ const InterviewNote = () => {
     <>
       <Header sx={{ margin: 0 }} /> {/* Remove extra margin from Header */}
       <Wrapper>
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <div style={{height: '3rem'}}/>
           <Block></Block>
           <GlassCard width={"60vw"}>
             <div
@@ -172,119 +185,122 @@ const InterviewNote = () => {
               }}
             >
 
-              <div >
+              <div>
                 <h1>오답노트</h1>
                 <SubTitleText>
                   <p>내가 뭐라 답했더라?</p>
                   <p>다시 한 번 복습해봐요!</p>
                 </SubTitleText>
               </div>
-              <img src={img} width={"18%"} alt={"기본 이미지"} style={{ marginRight: '30px' }}></img>
+              <img src={img} width={"18%"} alt={"기본 이미지"} style={{marginRight: '30px'}}></img>
             </div>
 
           </GlassCard>
 
-          <GlassCard>
-            <Box sx={{ width: '60vw', maxWidth: 1200, marginTop: 2 }}>
-              <CenteredBox>
-                <StyledTabs
-                  value={selectedStack}
-                  onChange={handleChangeTab}
-                  aria-label="stack tabs"
-                  sx={{
-                    marginBottom: 2
-                  }}
-                >
-                  {stacks.map((stack) => (
-                    stack.isPurchase ? (
-                      <StyledTab key={stack.id} label={stack.stackName} value={stack.id} />
+          <Box sx={{marginTop: 2}}>
+            <StyledTabs
+              value={selectedStack}
+              onChange={handleChangeTab}
+              aria-label="stack tabs"
+              sx={{
+                marginBottom: 2
+              }}
+            >
+              {stacks.map((stack) => (
+                stack.isPurchase ? (
+                  <StyledTab key={stack.id} label={stack.stackName} value={stack.id}/>
 
-                    ) : (
-                      <Tab key={stack.id} label={stack.stackName} value={stack.id} disabled />
-                    )
-                  ))}
-                </StyledTabs>
-              </CenteredBox>
-            </Box>
-
-            <CenteredBox sx={{ flexDirection: 'column', width: '60vw' }}>
-              {questions.map((question) => (
-                <Accordion
-                  sx={{
-                    '&:before': {
-                      display: 'none',
-                    },
-                    width: '80%',
-                    marginBottom: 2,
-                    color: 'white',
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                    borderRadius: '0.6rem',
-                    boxShadow: 'none'
-                  }}
-                  key={question.id}
-                  expanded={expanded === question.id}
-                  onChange={handleAccordionChange(question.id)}
-                >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    sx={{
-                      bgcolor: 'rgba(255, 255, 255, 0.1)'
-                    }}
-                  >
-                    <Typography variant="h6">{question.question}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails
-                    sx={{
-                      bgcolor: 'rgba(255, 255, 255, 0.1)'
-                    }}>
-                    {question.memberAnswers[0].id ? (
-                      question.memberAnswers.map((answer) => (
-                        <GlassCard key={answer.id} style={{ marginBottom: 2 }}>
-                          <Typography variant="h4" gutterBottom>
-                            {answer.createDate ? new Date(answer.createDate).toLocaleDateString() : 'No Date'}&nbsp;&nbsp;
-                          </Typography>
-                          <Typography variant="h6" gutterBottom sx={{
-                            display: 'flex',
-                            // fontWeight: 'bold',
-                            color: answer.interviewMode === "PRACTICE" ? 'darkblue' : 'burgundy',
-                            marginTop: '8px'
-                          }}
-                          >
-                            {answer.interviewMode === "PRACTICE" ? '연습 문제' : '실전 문제'}
-                          </Typography>
-                          <GlassCard>
-                            <GlassCard>
-                              <Typography variant="h5" gutterBottom>
-                                나의 답변
-                              </Typography>
-                              <Typography sx={{ wordWrap: "break-word" }}>{answer.memberAnswer}</Typography>
-                            </GlassCard>
-                            <GlassCard>
-                              <Typography variant="h5" gutterBottom>
-                                GPT의 답변
-                              </Typography>
-                              <Typography sx={{ wordWrap: "break-word" }}>{answer.gptAnswer}</Typography>
-                            </GlassCard>
-                          </GlassCard>
-                        </GlassCard>
-                      ))
-                    ) : (
-                      <div style={{ fontSize: '0.9em' }}>
-                        답변이 존재하지 않습니다.<br />면접을 더 진행해보세요!
-                      </div>
-                    )}
-                  </AccordionDetails>
-                </Accordion>
+                ) : (
+                  <Tab key={stack.id} label={stack.stackName} value={stack.id} disabled/>
+                )
               ))}
-              <CenteredBox sx={{ marginTop: 2 }}>
-                <Pagination
-                  count={totalPages}
-                  page={currentPage}
-                  onChange={handleChangePage}
-                />
-              </CenteredBox>
+            </StyledTabs>
+          </Box>
+
+          <div style={{width: '62vw'}}>
+            {questions.map((question) => (
+              <Accordion
+                sx={{
+                  '&:before': {display: 'none'},
+                  '& .MuiAccordionSummary-expandIconWrapper .MuiSvgIcon-root': { color: 'white' },
+                  color: 'white',
+                  backdropFilter: 'blur(10px)',
+                  marginBottom: '1rem',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '10px',
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+                key={question.id}
+                expanded={expanded === question.id}
+                onChange={handleAccordionChange(question.id)}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon/>}
+                  sx={{
+                    bgcolor: 'rgba(255, 255, 255, 0.1)'
+                  }}
+                >
+                  <Typography variant="h6">{question.question}</Typography>
+                </AccordionSummary>
+                <AccordionDetails
+                  sx={{
+                    bgcolor: 'rgba(255, 255, 255, 0.1)'
+                  }}>
+                  {question.memberAnswers[0].id ? (
+                    question.memberAnswers.map((answer) => (
+                      <div key={answer.id} style={{margin: '3rem'}}>
+                        <Typography variant="h4" gutterBottom>
+                          {answer.createDate ? new Date(answer.createDate).toLocaleDateString() : 'No Date'}&nbsp;&nbsp;
+                        </Typography>
+                        <Typography variant="h6" gutterBottom sx={{
+                          display: 'flex',
+                          // fontWeight: 'bold',
+                          color: answer.interviewMode === "PRACTICE" ? 'lightblue' : 'pink',
+                          marginTop: '8px'
+                        }}
+                        >
+                          {answer.interviewMode === "PRACTICE" ? '연습 문제' : '실전 문제'}
+                        </Typography>
+                        <div>
+
+                          <NPGlassCard>
+                            <GlassTitle>
+                              <div style={{fontSize: 25, fontWeight: 'bold'}}>나의 답변</div>
+                            </GlassTitle>
+                            <SubContainer>
+                              <div style={{paddingBottom: '3vh'}}>{answer.memberAnswer}</div>
+                            </SubContainer>
+                          </NPGlassCard>
+
+                          <NPGlassCard>
+                            <GlassTitle>
+                              <div style={{fontSize: 25, fontWeight: 'bold'}}>GPT의 답변</div>
+                            </GlassTitle>
+                            <SubContainer>
+                              <div style={{paddingBottom: '3vh', wordWrap: "break-word"}}>{answer.gptAnswer}</div>
+                            </SubContainer>
+                          </NPGlassCard>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{fontSize: '0.9em'}}>
+                      답변이 존재하지 않습니다.<br/>면접을 더 진행해보세요!
+                    </div>
+                  )}
+                </AccordionDetails>
+              </Accordion>
+            ))}
+            <CenteredBox sx={{marginTop: 2}}>
+              <Pagination sx={{color: 'white'}}
+                          count={totalPages}
+                          page={currentPage}
+                          onChange={handleChangePage}
+                          variant="outlined" shape="rounded"
+              />
             </CenteredBox>
-          </GlassCard>
+          </div>
         </div>
       </Wrapper>
 

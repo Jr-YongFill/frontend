@@ -61,6 +61,7 @@ const Interview = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalText, setModalText] = useState('');
   const [modalOnClick, setModalOnClick] = useState(null);
+  const [credit, setCredit] = useState(30);
 
   const getUserCamera = () => {
     navigator.mediaDevices.getUserMedia({
@@ -267,6 +268,7 @@ const Interview = () => {
 
   const handleSkip = async () => {
     setIsSkip(true);
+    setCredit(credit - 5);
     try {
       // 녹음을 멈추고 완전히 처리되기를 기다림
       await stopRecording();
@@ -280,7 +282,26 @@ const Interview = () => {
 
   };
 
+  const addCredit = async (credit) => {
+    const url = `/api/members/${memberId}/credit`;
+    const data = {
+      credit: credit
+    };
+
+    try {
+      const response = await baseAPI.patch(url, data);
+    } catch (error) {
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
+    }
+  };
+
   const handleSubmit = async () => {
+
+    credit && await addCredit(credit);
 
     const url = `/api/members/${memberId}/answers`;
     const data = answers.map(item => ({
