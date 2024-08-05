@@ -77,7 +77,7 @@ const PracticeInterview = () => {
   const [modalText, setModalText] = useState('');
   const [modalOnClick, setModalOnClick] = useState(null);
 
-  const [loadingNext, setLoadingNext] = useState(false);
+  const [submitted, setSubmitted] = useState(true);
 
   const handlePageNext = () => {
     (currentPage < localStorage.getItem("answersCount") - 1) && setCurrentPage(currentPage + 1)
@@ -362,7 +362,9 @@ const PracticeInterview = () => {
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
                   <CustomButton
                     isNotHover={recording}
-                    onClick={startRecording}
+                    onClick={() => {
+                      setSubmitted(false);
+                      startRecording();}}
                     disabled={recording}>답변 시작</CustomButton>
                   <CustomButton
                     isNotHover={!recording}
@@ -379,8 +381,8 @@ const PracticeInterview = () => {
                 }
                 <div style={{ marginTop: '30px', width: '100%', display: 'flex', justifyContent: 'space-around' }}>
                   <CustomButton
-                    isNotHover={!audioURL}
-                    disabled={!audioURL}
+                    isNotHover={submitted}
+                    disabled={submitted}
                     onClick={() => setModalSwitch(true)}>답변 제출</CustomButton>
                   <CustomButton onClick={() => {
                     fetchQuestion();
@@ -441,10 +443,9 @@ const PracticeInterview = () => {
           <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
             <CustomButton
               onClick={async () => {
-                setLoadingNext(true);
+                setSubmitted(true);
                 await handleGrade();
                 setModalSwitch(false);
-                setLoadingNext(false);
               }}
               isNotHover={btnBlock}
               disabled={btnBlock}
@@ -455,8 +456,8 @@ const PracticeInterview = () => {
               onClick={async () => {
                 setModalSwitch(false);
               }}
-              isNotHover={loadingNext}
-              disabled={loadingNext}
+              isNotHover={submitted}
+              disabled={submitted}
             >
               닫기
             </CustomButton>
