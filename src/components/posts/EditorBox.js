@@ -32,6 +32,7 @@ const EditorBox = forwardRef((props, ref) => {
         placeholder="내용을 적어주세요!"
         previewStyle="vertical"
         height="600px"
+        initialEditType="wysiwyg"
         useCommandShortcut={true}
         language="ko-KR"
         ref={ref}

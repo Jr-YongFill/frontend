@@ -84,6 +84,8 @@ const InterviewChoiceStack = () => {
     fetchMemberStack();
   }, [fetchMemberStack]);
 
+
+  
   const handleButtonClick = (stack) => {
     if (stack.isPurchase) {
       setStacks(stacks.map((s) =>
@@ -116,6 +118,8 @@ const InterviewChoiceStack = () => {
                     width={"150px"}
                     key={idx}
                     onClick={() => handleButtonClick(stack)}
+                    color={stack.selected
+                      ? (palette.purple): ( palette.dark)}
                   >
                     {stack.stackName}
                   </CustomButton>
