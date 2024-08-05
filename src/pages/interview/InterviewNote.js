@@ -26,14 +26,26 @@ import Wrapper from '../../components/Wrapper';
 import GlassCard from '../../components/GlassCard';
 import GlassModal from '../../components/modal/GlassModal';
 import Block from '../../components/Block';
+import NPGlassCard from "../../components/NoPaddingGlassCard";
+import GlassTitle from "../../components/GlassTitle";
 
 
 const CenteredBox = styled(Box)`
     display: flex;
     justify-content: center;
-    align-items: center;
+    //align-items: center;
 `;
 
+const SubContainer = styled.div` 
+  //width: 90%;
+  //padding: 3vh 3vh;
+  margin: 3vh 3vh;
+  display: flex;
+  flex-direction:column;
+  //justify-content: center;
+  //align-items: center;
+  //text-align: center;
+`;
 
 const SubTitleText = styled.div`
   margin-top: 40px;
@@ -159,7 +171,7 @@ const InterviewNote = () => {
     <>
       <Header sx={{ margin: 0 }} /> {/* Remove extra margin from Header */}
       <Wrapper>
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Block></Block>
           <GlassCard width={"60vw"}>
             <div
@@ -184,42 +196,37 @@ const InterviewNote = () => {
 
           </GlassCard>
 
-          <GlassCard>
-            <Box sx={{ width: '60vw', maxWidth: 1200, marginTop: 2 }}>
-              <CenteredBox>
-                <StyledTabs
-                  value={selectedStack}
-                  onChange={handleChangeTab}
-                  aria-label="stack tabs"
-                  sx={{
-                    marginBottom: 2
-                  }}
-                >
-                  {stacks.map((stack) => (
-                    stack.isPurchase ? (
-                      <StyledTab key={stack.id} label={stack.stackName} value={stack.id} />
+          <Box sx={{ marginTop: 2 }}>
+              <StyledTabs
+                value={selectedStack}
+                onChange={handleChangeTab}
+                aria-label="stack tabs"
+                sx={{
+                  marginBottom: 2
+                }}
+              >
+                {stacks.map((stack) => (
+                  stack.isPurchase ? (
+                    <StyledTab key={stack.id} label={stack.stackName} value={stack.id} />
 
-                    ) : (
-                      <Tab key={stack.id} label={stack.stackName} value={stack.id} disabled />
-                    )
-                  ))}
-                </StyledTabs>
-              </CenteredBox>
-            </Box>
+                  ) : (
+                    <Tab key={stack.id} label={stack.stackName} value={stack.id} disabled />
+                  )
+                ))}
+              </StyledTabs>
+          </Box>
 
-            <CenteredBox sx={{ flexDirection: 'column', width: '60vw' }}>
+            <div style={{width: '62vw'}}>
               {questions.map((question) => (
                 <Accordion
                   sx={{
-                    '&:before': {
-                      display: 'none',
-                    },
-                    width: '80%',
+                    '&:before': { display: 'none' },
                     marginBottom: 2,
                     color: 'white',
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                    borderRadius: '0.6rem',
-                    boxShadow: 'none'
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    borderRadius: '10px'
                   }}
                   key={question.id}
                   expanded={expanded === question.id}
@@ -239,34 +246,40 @@ const InterviewNote = () => {
                     }}>
                     {question.memberAnswers[0].id ? (
                       question.memberAnswers.map((answer) => (
-                        <GlassCard key={answer.id} style={{ marginBottom: 2 }}>
+                        <div key={answer.id} style={{ margin: '3rem' }}>
                           <Typography variant="h4" gutterBottom>
                             {answer.createDate ? new Date(answer.createDate).toLocaleDateString() : 'No Date'}&nbsp;&nbsp;
                           </Typography>
                           <Typography variant="h6" gutterBottom sx={{
                             display: 'flex',
                             // fontWeight: 'bold',
-                            color: answer.interviewMode === "PRACTICE" ? 'darkblue' : 'burgundy',
+                            color: answer.interviewMode === "PRACTICE" ? 'lightblue' : 'pink',
                             marginTop: '8px'
                           }}
                           >
                             {answer.interviewMode === "PRACTICE" ? '연습 문제' : '실전 문제'}
                           </Typography>
-                          <GlassCard>
-                            <GlassCard>
-                              <Typography variant="h5" gutterBottom>
-                                나의 답변
-                              </Typography>
-                              <Typography sx={{ wordWrap: "break-word" }}>{answer.memberAnswer}</Typography>
-                            </GlassCard>
-                            <GlassCard>
-                              <Typography variant="h5" gutterBottom>
-                                GPT의 답변
-                              </Typography>
-                              <Typography sx={{ wordWrap: "break-word" }}>{answer.gptAnswer}</Typography>
-                            </GlassCard>
-                          </GlassCard>
-                        </GlassCard>
+                          <div>
+
+                            <NPGlassCard>
+                              <GlassTitle>
+                                <div style={{ fontSize: 25, fontWeight: 'bold' }}>나의 답변</div>
+                              </GlassTitle>
+                              <SubContainer>
+                                <div style={{ paddingBottom: '3vh' }}>{answer.memberAnswer}</div>
+                              </SubContainer>
+                            </NPGlassCard>
+
+                            <NPGlassCard>
+                              <GlassTitle>
+                                <div style={{ fontSize: 25, fontWeight: 'bold' }}>GPT의 답변</div>
+                              </GlassTitle>
+                              <SubContainer>
+                                <div style={{ paddingBottom: '3vh',  wordWrap: "break-word" }}>{answer.gptAnswer}</div>
+                              </SubContainer>
+                            </NPGlassCard>
+                          </div>
+                        </div>
                       ))
                     ) : (
                       <div style={{ fontSize: '0.9em' }}>
@@ -277,14 +290,14 @@ const InterviewNote = () => {
                 </Accordion>
               ))}
               <CenteredBox sx={{ marginTop: 2 }}>
-                <Pagination
+                <Pagination sx={{ color: 'white'}}
                   count={totalPages}
                   page={currentPage}
                   onChange={handleChangePage}
+                  variant="outlined" shape="rounded"
                 />
               </CenteredBox>
-            </CenteredBox>
-          </GlassCard>
+            </div>
         </div>
       </Wrapper>
 
