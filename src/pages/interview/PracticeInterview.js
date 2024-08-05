@@ -256,7 +256,8 @@ const PracticeInterview = () => {
             content: `당신은 개발자 면접관이며, 다음 질문에 대해 면접자가 제대로 답변했는지 체크해야합니다.\n
             입력형식은 다음과 같습니다.\n
             면접 질문:  {질문 텍스트}\n
-            면접 답변:  {답변 텍스트}\n해당 면접 질문에 대해 면접 답변이 정답인지, 틀렸다면 어느 부분이 틀렸는지 답변해주세요. 코드는 출력하지 않습니다.\n
+            면접 답변:  {답변 텍스트}\n
+            해당 면접 질문에 대해 면접 답변이 정답인지, 틀렸다면 어느 부분이 틀렸는지 답변해주세요. 코드는 출력하지 않습니다.\n
             그리고 어느 부분이 틀린지 지적해주세요.\n
              면접질문: ${question} 면접답변: ${memberAnswer}`
           }],
@@ -356,6 +357,23 @@ const PracticeInterview = () => {
     if (recorder && recorder.state === 'recording') {
       recorder.stop();
       setRecording(false);
+    }
+  };
+
+  const addCredit = async (credit) => {
+    const url = `/api/members/${memberId}/credit`;
+    const data = {
+      credit: credit
+    };
+
+    try {
+      const response = await baseAPI.patch(url, data);
+    } catch (error) {
+      setModalText(error.response.data.message);
+      setModalOnClick(() => () => {
+        setIsModalOpen(false);
+      })
+      setIsModalOpen(true);
     }
   };
 
@@ -497,6 +515,7 @@ const PracticeInterview = () => {
                 setSubmitted(true);
                 await handleGrade();
                 setModalSwitch(false);
+                await addCredit(2);
               }}
               isNotHover={btnBlock}
               disabled={btnBlock}
