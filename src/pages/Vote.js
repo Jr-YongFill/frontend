@@ -15,13 +15,9 @@ import PageButtonController from '../components/PageButtonController';
 import GlassModalChildren from "../components/modal/GlassModalChildren";
 import CustomButton from '../components/CustomButton';
 import Block from '../components/Block';
+import { endOfDay } from 'date-fns';
 
-const Title = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 30px 50px;
-`;
+
 const SubTitleText = styled.div`
   margin-top: 40px;
   font-size: 0.8em;
@@ -200,15 +196,19 @@ const Vote = () => {
                 <div>
                   <h1>CS 투표</h1>
                   <SubTitleText>
-                    <h1>추가했으면 좋을 것 같은 질문이 있나요??</h1>
-                    <h1>질문을 등록하고, 다른 사람의 질문의 카테고리를 투표해주세요!</h1>
+                    <h1>내가 등록한 질문이 DB에 등록되면</h1>
+                    <h1>포인트를 얻을 수 있어요</h1>
                   </SubTitleText>
                   <DescriptionText>
                     질문을 등록하거나 투표를 하면 크레딧을 받아요
                   </DescriptionText>
                 </div>
-                <img src={img} width={'20%'} alt={'기본 이미지'}></img>
-                <CustomButton onClick={() => setIsModalOpen(true)}>질문 생성</CustomButton>
+                <img src={img} width={'25%'} alt={'기본 이미지'}></img>
+              </div>
+              <div style={{display:'flex', flexDirection:'flex-end'}}>
+              <CustomButton 
+              width={"100px"}
+              onClick={() => setIsModalOpen(true)}>질문 생성</CustomButton>
               </div>
             </GlassCard>
             <Main>
@@ -225,7 +225,7 @@ const Vote = () => {
               </MainHeader>
               <MainBody>
                 {voteInfos && voteInfos.resultList.map((vote, idx) => (
-                  <GlassCard key={idx}>
+                  <GlassCard key={idx} width={"60vw"}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                       <div
                         style={{
