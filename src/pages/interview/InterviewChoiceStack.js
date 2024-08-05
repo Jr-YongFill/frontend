@@ -31,8 +31,9 @@ const Main = styled.div`
 const Content = styled.div`
   display: flex;
   justify-content:space-evenly;
-  flex-wrap: wrap
-  margin: 20px 20px;=
+  flex-wrap: wrap;
+  margin: 20px 10vw;
+  gap: 5px;
 `;
 
 const ModalContent = styled.div`
@@ -112,6 +113,7 @@ const InterviewChoiceStack = () => {
               <Content>
                 {stacks && stacks.map((stack, idx) => (
                   <CustomButton
+                    width={"150px"}
                     key={idx}
                     onClick={() => handleButtonClick(stack)}
                   >

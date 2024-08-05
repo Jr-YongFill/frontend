@@ -13,6 +13,7 @@ import GlassCard from "../components/GlassCard";
 import GlassModal from "../components/modal/GlassModal";
 import GlassModalChildren from "../components/modal/GlassModalChildren";
 import CustomButton from '../components/CustomButton';
+import DisposableButton from "../components/DisposableButton";
 
 const Title = styled.div`
   display: flex;
@@ -211,11 +212,11 @@ const Store = () => {
                   면접 보러가기
                 </CustomButton>
                 {memberRole === "ADMIN" && (
-                  <CustomButton
+                  <DisposableButton
                     onClick={() => setModalAdminSwitch(true)}
                   >
                     스택 생성
-                  </CustomButton>
+                  </DisposableButton>
                 )}
               </div>
               <GlassModalChildren
@@ -239,11 +240,11 @@ const Store = () => {
                     placeholder="스택 설명"
                     style={{ marginBottom: '20px' }}
                   />
-                  <CustomButton
+                  <DisposableButton
                     onClick={() => fetchInitStack()}
                   >
                     생성
-                  </CustomButton>
+                  </DisposableButton>
                 </ModalContent>
               </GlassModalChildren>
               <GlassModalChildren
@@ -321,14 +322,14 @@ const Store = () => {
                         </ModalTextBox>
                         <ModalTextBox>포인트 : {modalStack.price}</ModalTextBox>
                         <div style={{ marginTop: '20px', display: "flex", width: '100%', justifyContent: 'space-around' }}>
-                          <CustomButton
+                          <DisposableButton
                             myRef={myModalBtnRef}
                             onClick={() => {
                               fetchPurchasStack(modalStack.id);
                             }}
                           >
                             구매
-                          </CustomButton>
+                          </DisposableButton>
                           {memberRole === "ADMIN" && (
                             <CustomButton
                               onClick={() => {

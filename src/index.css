@@ -18,7 +18,29 @@ code {
 }
 
 .toastui-editor-contents p{
-  color:white !important;
   font-size: 1em;
 }
+/* ProseMirror와 toastui-editor-contents가 함께 있는 경우  (에디터 내부)*/
+.ProseMirror.toastui-editor-contents * {
+  color: #000 !important;
+}
 
+
+/* toastui-editor-md-preview.toastui-editor-contents의 경우 */
+.toastui-editor-md-preview.toastui-editor-contents * {
+  color: #222 !important;
+}
+
+/* ProseMirror와 toastui-editor-contents가 함께 있는 경우 */
+.ProseMirror.toastui-editor-contents * {
+  color: #000 !important; /* 글자를 까맣게 */
+}
+
+/* toastui-editor-contents만 있는 경우 (뷰어) */
+.toastui-editor-contents:not(.ProseMirror):not(.toastui-editor-md-preview) * {
+  color: #fff !important; 
+}
+
+.toastui-editor-md-vertical-style *{
+  background-color: rgba(255, 255, 255, 1) !important;
+}
