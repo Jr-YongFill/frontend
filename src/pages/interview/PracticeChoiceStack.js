@@ -12,6 +12,7 @@ import CustomButton from '../../components/CustomButton';
 import GlassModalChildren from '../../components/modal/GlassModalChildren';
 import GlassModal from "../../components/modal/GlassModal";
 import GlassInput from '../../components/GlassInput';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Title = styled.div`
   display: flex;
@@ -32,7 +33,7 @@ const Content = styled.div`
   display: flex;
   justify-content:space-evenly;
   flex-wrap: wrap;
-  margin: 20px 10vw;
+  margin: 20px 15vw;
   gap: 5px;
 `;
 
@@ -125,6 +126,7 @@ const PracticeChoiceStack = () => {
               <Content>
                 {stacks && stacks.map((stack, idx) => (
                   <CustomButton
+                  width={"150px"}
                     isNotHover={stack.isPurchase ? false : true}
                     key={idx}
                     color={stack.isPurchase
@@ -162,7 +164,9 @@ const PracticeChoiceStack = () => {
                 color={palette.gray}
                 onClick={() => window.open('https://openai.com/index/openai-api/')}
               >
+                <>
                 API 키는 어떻게 얻나요?
+                </>
               </ModalTip>
               <CustomButton
                 onClick={() => navigate('/interview/practice', {
