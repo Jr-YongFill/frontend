@@ -89,7 +89,6 @@ const InterviewNote = () => {
 
               </BtnGroup>
             </GlassCard>
-
             {answers.length > 0 ? answers.map((answer, index) => (
               <Accordion
                 sx={{
