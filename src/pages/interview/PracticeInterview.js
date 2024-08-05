@@ -220,7 +220,7 @@ const PracticeInterview = () => {
     const url = window.URL.createObjectURL(audioBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = '녹음 파일';
+    a.download = `${question}_${new Date()}`;
     a.click();
 
     window.URL.revokeObjectURL(url);
