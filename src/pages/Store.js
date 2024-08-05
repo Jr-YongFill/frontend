@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { baseAPI } from "../config";
 import palette from "../styles/pallete";
-import Modal from "react-modal";
 import Header from "../components/Header";
 import {
   localStorageGetValue,
@@ -14,20 +13,16 @@ import GlassCard from "../components/GlassCard";
 import GlassModal from "../components/modal/GlassModal";
 import GlassModalChildren from "../components/modal/GlassModalChildren";
 import CustomButton from '../components/CustomButton';
-//TODO: 이미지 적용하기 
-
 
 const Title = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  // background-color: gold;
   margin: 30px 50px;
 `;
 
 const Main = styled.div`
   display: flex;
-  // background-color: gold;
   margin: 0px 50px;
   flex-direction: column;
   align-items: center;
@@ -46,11 +41,13 @@ const ModalContent = styled.div`
   align-items: center;
   margin:0 30px;
   word-break: keep-all;
+  color: white;
 `;
 
 const ModalTextBox = styled.div`
   margin-top: 30px;
   font-size: 25px;
+  color: white;
 `;
 
 const StackNameInput = styled.input`
@@ -87,7 +84,7 @@ const Store = () => {
   const [modalStack, setModalStack] = useState(null);
   const myModalTextBoxRef = useRef(null);
   const myModalBtnRef = useRef(null);
-  const navigate = useNavigate(); // useNavigate를 호출
+  const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalText, setModalText] = useState('');
@@ -288,7 +285,7 @@ const Store = () => {
                   <ModalContent>
                     {modalStack.isPurchase ? (
                       <>
-                        <ModalTextBox style={{ "margin-bottom": "125px" }}>
+                        <ModalTextBox>
                           이미 구매한 질문입니다.
                         </ModalTextBox>
                         <div style={{ marginTop: '20px', display: "flex", width: '100%', justifyContent: 'space-around' }}>
