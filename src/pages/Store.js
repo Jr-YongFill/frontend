@@ -51,6 +51,7 @@ const ModalContent = styled.div`
 const ModalTextBox = styled.div`
   margin-top: 30px;
   font-size: 25px;
+  color: white;
 `;
 
 const StackNameInput = styled.input`
@@ -92,6 +93,8 @@ const Store = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalText, setModalText] = useState('');
   const [modalOnClick, setModalOnClick] = useState(null);
+
+  const [creditInfoModal, setCreditInfoModal] = useState(false);
 
   const fetchUpdateStack = async (stackId) => {
     try {
@@ -185,7 +188,9 @@ const Store = () => {
           <GlassCard>
             <Title>
               <h1>Stack 상점</h1>
-              <h1>내 크레딧: {credit}</h1>
+              <h1
+                onClick={() => setCreditInfoModal(true)}
+              >내 크레딧: {credit}</h1>
             </Title>
             <Main>
               <Content>
@@ -221,139 +226,161 @@ const Store = () => {
                   </CustomButton>
                 )}
               </div>
-              <GlassModalChildren
-                isModalOpen={modalAdminSwitch}
-                setIsModalOpen={() => setModalAdminSwitch(false)}>
-                <ModalContent>
-                  <ModalTextBox style={{ marginBottom: "20px" }}>
-                    Stack의 정보를 입력해주십시요.
-                  </ModalTextBox>
-                  <div style={{ fontSize: "20px" }}>Stack Name</div>
-                  <StackNameInput
-                    type="text"
-                    value={stackName}
-                    onChange={(e) => setStackName(e.target.value)}
-                    placeholder="스택 이름"
-                  />
-                  <div style={{ fontSize: "20px" }}>Stack 설명</div>
-                  <StackDescriptInput
-                    value={stackDescription}
-                    onChange={(e) => setStackDescript(e.target.value)}
-                    placeholder="스택 설명"
-                    style={{ marginBottom: '20px' }}
-                  />
-                  <CustomButton
-                    onClick={() => fetchInitStack()}
-                  >
-                    생성
-                  </CustomButton>
-                </ModalContent>
-              </GlassModalChildren>
-              <GlassModalChildren
-                isModalOpen={modalAdminUpdateSwitch}
-                setIsModalOpen={() => {
-                  setModalAdminUpdateSwitch(false);
-                  setStackDescript('');
-                  setStackName('');
-                }}>
-                <ModalContent>
-                  <ModalTextBox style={{ marginBottom: "20px" }}>
-                    Stack의 정보 수정
-                  </ModalTextBox>
-                  <div style={{ fontSize: "20px" }}>Stack Name</div>
-                  <StackNameInput
-                    type="text"
-                    value={stackName}
-                    onChange={(e) => setStackName(e.target.value)}
-                    placeholder="스택 이름"
-                  />
-                  <div style={{ fontSize: "20px" }}>Stack 설명</div>
-                  <StackDescriptInput
-                    value={stackDescription}
-                    onChange={(e) => setStackDescript(e.target.value)}
-                    placeholder="스택 설명"
-                    style={{ marginBottom: "20px" }}
-                  />
-                  <CustomButton
-                    onClick={() => fetchUpdateStack(modalStack.id)}
-                  >
-                    수정
-                  </CustomButton>
-                </ModalContent>
-              </GlassModalChildren>
-              <GlassModalChildren
-                isModalOpen={modalSwitch}
-                setIsModalOpen={() => setModalSwitch(false)}>
-                {modalStack && (
-                  <ModalContent>
-                    {modalStack.isPurchase ? (
-                      <>
-                        <ModalTextBox style={{ "margin-bottom": "125px" }}>
-                          이미 구매한 질문입니다.
-                        </ModalTextBox>
-                        <div style={{ marginTop: '20px', display: "flex", width: '100%', justifyContent: 'space-around' }}>
-                          <CustomButton
-                            onClick={() => setModalSwitch(false)}
-                          >
-                            닫기
-                          </CustomButton>
-                          {memberRole === "ADMIN" && (
-                            <CustomButton
-                              onClick={() => {
-                                setStackName(modalStack.stackName);
-                                setStackDescript(modalStack.description);
-                                setModalSwitch(false);
-                                setModalAdminUpdateSwitch(true);
-                              }}
-                            >
-                              스택 수정
-                            </CustomButton>
-                          )}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <ModalTextBox ref={myModalTextBoxRef}>
-                          해당 질문 카테고리를 구매하시겠습니까?
-                        </ModalTextBox>
-                        <ModalTextBox>
-                          {modalStack.stackName}
-                          <br />
-                          <div style={{ fontSize: '0.6em' }}>
-                            {modalStack.description}</div>
-                        </ModalTextBox>
-                        <ModalTextBox>포인트 : {modalStack.price}</ModalTextBox>
-                        <div style={{ marginTop: '20px', display: "flex", width: '100%', justifyContent: 'space-around' }}>
-                          <CustomButton
-                            myRef={myModalBtnRef}
-                            onClick={() => {
-                              fetchPurchasStack(modalStack.id);
-                            }}
-                          >
-                            구매
-                          </CustomButton>
-                          {memberRole === "ADMIN" && (
-                            <CustomButton
-                              onClick={() => {
-                                setStackName(modalStack.stackName);
-                                setStackDescript(modalStack.description);
-                                setModalSwitch(false);
-                                setModalAdminUpdateSwitch(true);
-                              }}
-                            >
-                              스택 수정
-                            </CustomButton>
-                          )}
-                        </div>
-                      </>
-                    )}
-                  </ModalContent>
-                )}
-              </GlassModalChildren>
             </Main>
           </GlassCard>
         </div>
       </Wrapper >
+
+
+      <GlassModalChildren
+        isModalOpen={modalAdminSwitch}
+        setIsModalOpen={() => setModalAdminSwitch(false)}>
+        <ModalContent>
+          <ModalTextBox style={{ marginBottom: "20px" }}>
+            Stack의 정보를 입력해주십시요.
+          </ModalTextBox>
+          <div style={{ fontSize: "20px", color: 'white' }}>Stack Name</div>
+          <StackNameInput
+            type="text"
+            value={stackName}
+            onChange={(e) => setStackName(e.target.value)}
+            placeholder="스택 이름"
+          />
+          <div style={{ fontSize: "20px", color: 'white' }}>Stack 설명</div>
+          <StackDescriptInput
+            value={stackDescription}
+            onChange={(e) => setStackDescript(e.target.value)}
+            placeholder="스택 설명"
+            style={{ marginBottom: '20px' }}
+          />
+          <CustomButton
+            onClick={() => fetchInitStack()}
+          >
+            생성
+          </CustomButton>
+        </ModalContent>
+      </GlassModalChildren>
+      <GlassModalChildren
+        isModalOpen={modalAdminUpdateSwitch}
+        setIsModalOpen={() => {
+          setModalAdminUpdateSwitch(false);
+          setStackDescript('');
+          setStackName('');
+        }}>
+        <ModalContent>
+          <ModalTextBox style={{ marginBottom: "20px" }}>
+            Stack의 정보 수정
+          </ModalTextBox>
+          <div style={{ fontSize: "20px", color: 'white' }}>Stack Name</div>
+          <StackNameInput
+            type="text"
+            value={stackName}
+            onChange={(e) => setStackName(e.target.value)}
+            placeholder="스택 이름"
+          />
+          <div style={{ fontSize: "20px", color: 'white' }}>Stack 설명</div>
+          <StackDescriptInput
+            value={stackDescription}
+            onChange={(e) => setStackDescript(e.target.value)}
+            placeholder="스택 설명"
+            style={{ marginBottom: "20px" }}
+          />
+          <CustomButton
+            onClick={() => fetchUpdateStack(modalStack.id)}
+          >
+            수정
+          </CustomButton>
+        </ModalContent>
+      </GlassModalChildren>
+      <GlassModalChildren
+        isModalOpen={modalSwitch}
+        setIsModalOpen={() => setModalSwitch(false)}>
+        {modalStack && (
+          <ModalContent>
+            {modalStack.isPurchase ? (
+              <>
+                <ModalTextBox style={{ "margin-bottom": "125px" }}>
+                  이미 구매한 질문입니다.
+                </ModalTextBox>
+                <div style={{ marginTop: '20px', display: "flex", width: '100%', justifyContent: 'space-around' }}>
+                  <CustomButton
+                    onClick={() => setModalSwitch(false)}
+                  >
+                    닫기
+                  </CustomButton>
+                  {memberRole === "ADMIN" && (
+                    <CustomButton
+                      onClick={() => {
+                        setStackName(modalStack.stackName);
+                        setStackDescript(modalStack.description);
+                        setModalSwitch(false);
+                        setModalAdminUpdateSwitch(true);
+                      }}
+                    >
+                      스택 수정
+                    </CustomButton>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <ModalTextBox ref={myModalTextBoxRef}>
+                  해당 질문 카테고리를 구매하시겠습니까?
+                </ModalTextBox>
+                <ModalTextBox>
+                  {modalStack.stackName}
+                  <br />
+                  <div style={{ fontSize: '0.6em' }}>
+                    {modalStack.description}</div>
+                </ModalTextBox>
+                <ModalTextBox>포인트 : {modalStack.price}</ModalTextBox>
+                <div style={{ marginTop: '20px', display: "flex", width: '100%', justifyContent: 'space-around' }}>
+                  <CustomButton
+                    myRef={myModalBtnRef}
+                    onClick={() => {
+                      fetchPurchasStack(modalStack.id);
+                    }}
+                  >
+                    구매
+                  </CustomButton>
+                  {memberRole === "ADMIN" && (
+                    <CustomButton
+                      onClick={() => {
+                        setStackName(modalStack.stackName);
+                        setStackDescript(modalStack.description);
+                        setModalSwitch(false);
+                        setModalAdminUpdateSwitch(true);
+                      }}
+                    >
+                      스택 수정
+                    </CustomButton>
+                  )}
+                </div>
+              </>
+            )}
+          </ModalContent>
+        )}
+      </GlassModalChildren>
+
+      <GlassModalChildren
+        isModalOpen={creditInfoModal}
+        setIsModalOpen={() => setCreditInfoModal(false)}>
+        <h1 style={{ color: 'white' }}>크레딧을 얻는 방법!</h1>
+        <ul style={{ color: 'white', display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+          <li>면접 질문을 올리고 채택이 된다: 10pt</li>
+          <li>면접 질문을 투표 한다: 1pt </li>
+          <li>면접 질문에 답을 한다: 1pt </li>
+          <li>연습 모드를 한다: 답변 당 2pt </li>
+          <li>실전 모드를 한다: 30pt <br />
+            - 단 스킵할때 마다: -5pt <br />
+            - 최소 0pt</li>
+        </ul>
+        <CustomButton
+          onClick={() => setCreditInfoModal(false)}>
+          닫기
+        </CustomButton>
+      </GlassModalChildren >
+
       <GlassModal
         isModalOpen={isModalOpen}
         setIsModalOpen={() => setIsModalOpen(false)}
