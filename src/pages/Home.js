@@ -57,10 +57,16 @@ const DeveloperInfoContainer = styled.div`
 
 const DeveloperCard = styled.div`
   background: rgba(255, 255, 255, 0.1);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  justify-items:center;
   border-radius: 10px;
   padding: 10px;
   text-align: center;
-  width: 150px;
+  width: 180px;
+  height: 230px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);

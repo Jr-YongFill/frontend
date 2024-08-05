@@ -182,7 +182,7 @@ const Store = () => {
       <Wrapper>
         <Block></Block>
         <div>
-          <GlassCard>
+          <GlassCard width={"60vw"}>
             <Title>
               <h1>Stack 상점</h1>
               <h1>내 크레딧: {credit}</h1>

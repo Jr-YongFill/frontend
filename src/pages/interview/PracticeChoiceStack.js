@@ -114,7 +114,7 @@ const PracticeChoiceStack = () => {
       <Header />
       <Wrapper>
         <Block />
-        <GlassCard>
+        <GlassCard width={"60vw"}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Title>
               <h1>이력서에 어떤 스택으로 지원하셨나요?</h1>
