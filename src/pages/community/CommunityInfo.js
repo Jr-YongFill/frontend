@@ -11,6 +11,7 @@ import GlassCard from "../../components/GlassCard";
 import PageButtonController from '../../components/PageButtonController';
 import GlassModal from "../../components/modal/GlassModal";
 import GlassInput from '../../components/GlassInput';
+import { CircularProgress } from '@mui/material';
 
 const Title = styled.div`
   display: flex;
@@ -139,10 +140,10 @@ const CommunityQNA = () => {
             </MainHeader>
             <MainBody>
               <MainContent>
-                {data &&
+                {data ?(
                   data.resultList.map((post, idx) => (
                     <GlassCard 
-                      width={"60vw"}
+                      width={"58vw"}
                       key={idx}
                       onClick={
                         () => navigate(`/post/${post.postId}`)}>
@@ -152,7 +153,9 @@ const CommunityQNA = () => {
                         <span>작성일 : {formatDate(post.createTime)}</span>
                       </PostDetails>
                     </GlassCard>
-                  ))
+                  ))):(
+                    <CircularProgress color="secondary" />
+                  )
                 }
               </MainContent>
               <PageButtonController

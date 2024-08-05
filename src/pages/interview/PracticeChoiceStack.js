@@ -29,10 +29,11 @@ const Main = styled.div`
 `;
 
 const Content = styled.div`
-  display: grid;
-  margin: 20px 20px;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 30px;
+  display: flex;
+  justify-content:space-evenly;
+  flex-wrap: wrap;
+  margin: 20px 10vw;
+  gap: 5px;
 `;
 
 const ModalContent = styled.div`
