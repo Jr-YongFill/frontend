@@ -31,8 +31,9 @@ const Main = styled.div`
 const Content = styled.div`
   display: flex;
   justify-content:space-evenly;
-  flex-wrap: wrap
-  margin: 20px 20px;=
+  flex-wrap: wrap;
+  margin: 20px 10vw;
+  gap: 5px;
 `;
 
 const ModalContent = styled.div`
@@ -102,7 +103,7 @@ const InterviewChoiceStack = () => {
       <Header />
       <Wrapper>
         <Block />
-        <GlassCard>
+        <GlassCard width={"60vw"}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Title>
               <h1>이력서에 어떤 스택으로 지원하셨나요?</h1>
@@ -112,6 +113,7 @@ const InterviewChoiceStack = () => {
               <Content>
                 {stacks && stacks.map((stack, idx) => (
                   <CustomButton
+                    width={"150px"}
                     key={idx}
                     onClick={() => handleButtonClick(stack)}
                   >

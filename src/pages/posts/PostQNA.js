@@ -198,7 +198,7 @@ const PostQNA = () => {
 
               <EditorBox ref={editorRef} onChange={onChange} onUploadImage={onUploadImage} />
               <div style={{ display: "flex", justifyContent: "end", margin: '30px 0px 0px 0px' }}>
-                <CustomButton type={"submit"} onClick={handleSubmit}>
+              <CustomButton type={"submit"} onClick={handleSubmit} width={"100px"}>
                   저장
                 </CustomButton>
               </div>

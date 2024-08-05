@@ -10,6 +10,8 @@ import { baseAPI } from "../../config";
 import { localStorageGetValue } from "../../utils/CryptoUtils";
 import Wrapper from "../../components/Wrapper";
 import GlassCard from "../../components/GlassCard";
+import Block from "../../components/Block";
+import CustomButton from "../../components/CustomButton";
 
 const TitleInput = styled.input`
   border: none;
@@ -197,7 +199,9 @@ const UpdatePost = () => {
     <>
       <Header />
       <Wrapper>
-        <GlassCard>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <Block></Block>
+        <GlassCard width={"60vw"}>
           <TitleWrapper>
             <h1>정보게시판</h1>
             <h3>제목</h3>
@@ -216,13 +220,14 @@ const UpdatePost = () => {
           </TitleWrapper>
           <EditorArea>
             <EditorBox ref={editorRef} onChange={onChange} onUploadImage={onUploadImage} initialValue={dataValue.content} />
-            <div style={{ display: "flex", justifyContent: "end" }}>
-              <SubmitButton onClick={handleSubmit}>
-                저장
-              </SubmitButton>
-            </div>
+            <div style={{ display: "flex", justifyContent: "end", margin: '30px 0px 0px 0px' }}>
+                <CustomButton type={"submit"} onClick={handleSubmit} width={"100px"}>
+                  저장
+                </CustomButton>
+              </div>
           </EditorArea>
         </GlassCard>
+        </div>
       </Wrapper>
     </>
   );

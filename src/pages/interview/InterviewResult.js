@@ -65,7 +65,7 @@ const InterviewNote = () => {
               <CustomButton sx={{ marginTop: 2 }} onClick={() => navigate('/interview/note')}>오답노트</CustomButton>
             </div>
           </TitleContainer>
-          <GlassCard>
+          <GlassCard width={"60vw"}>
             {answers.length > 0 ? answers.map((answer, index) => (
               <Accordion
                 sx={{
