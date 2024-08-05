@@ -55,5 +55,5 @@ jobs:
             docker stop ${{ secrets.DOCKER_IMAGE_NAME }}
             docker rm ${{ secrets.DOCKER_IMAGE_NAME }}
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}
-            docker run -d -p 80:80 --network=${{ secrets.DOCKER_NETWORK_NAME }} --name ${{ secrets.DOCKER_IMAGE_NAME }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}
+            docker run -d -p 80:80 -p 443:443 --network=${{ secrets.DOCKER_NETWORK_NAME }} --name ${{ secrets.DOCKER_IMAGE_NAME }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}
             docker system prune -f
