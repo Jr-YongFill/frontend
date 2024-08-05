@@ -59,7 +59,7 @@ const PageButtonController = ({ data, setCurrentPage, currentPage }) => {
                         onClick={() => {
                             setCurrentPage(currentPage + 1);
                         }}
-                        disabled={currentPage === data.totalPage - 1}
+                        disabled={data.totalPage === 0 || currentPage === data.totalPage - 1}
                     >
                         다음
                     </PageButton>
