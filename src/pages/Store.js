@@ -93,9 +93,9 @@ const Store = () => {
   const [modalText, setModalText] = useState('');
   const [modalOnClick, setModalOnClick] = useState(null);
 
-  const fetchUpdateStack = (stackId) => {
+  const fetchUpdateStack = async (stackId) => {
     try {
-      baseAPI.patch(`/api/admin/stacks/${stackId}`, {
+      await baseAPI.patch(`/api/admin/stacks/${stackId}`, {
         stackName: stackName,
         price: 100,
         description: stackDescription,
@@ -112,9 +112,9 @@ const Store = () => {
     }
   };
 
-  const fetchInitStack = () => {
+  const fetchInitStack = async () => {
     try {
-      baseAPI.post(`/api/admin/stacks`, {
+      await baseAPI.post(`/api/admin/stacks`, {
         stackName: stackName,
         price: 100,
         description: stackDescription,
@@ -318,9 +318,9 @@ const Store = () => {
                         </ModalTextBox>
                         <ModalTextBox>
                           {modalStack.stackName}
-                          <br/>
-                          <div style={{fontSize:'0.6em'}}>
-                          {modalStack.description}</div>
+                          <br />
+                          <div style={{ fontSize: '0.6em' }}>
+                            {modalStack.description}</div>
                         </ModalTextBox>
                         <ModalTextBox>포인트 : {modalStack.price}</ModalTextBox>
                         <div style={{ marginTop: '20px', display: "flex", width: '100%', justifyContent: 'space-around' }}>
