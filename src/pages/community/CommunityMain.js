@@ -12,10 +12,10 @@ import Block from '../../components/Block';
 import NPGlassCard from '../../components/NoPaddingGlassCard';
 import GlassTitle from '../../components/GlassTitle';
 import GlassModal from "../../components/modal/GlassModal";
+import { CircularProgress } from '@mui/material';
 
 const ContainerWrapper = styled.div`
   width:60vw;
-
 `
 
 const ContainerRow = styled.div`
@@ -203,14 +203,14 @@ const CommunityMain = () => {
                   <a href='/community/qna' style={{ color: palette.gray, textDecorationLine: 'none' }}>+ 더보기</a>
                 </GlassTitle>
                 <ul style={{ padding: '3vh 0', margin: '0 3vw' }}>
-                  {qnaData ?
+                  {qnaData[0] ?
                     (qnaData.map((data, idx) => {
                       return (
                         <CustomLi key={idx} data={data}></CustomLi>
                       )
                     }))
                     :
-                    (<div>게시글이 없네요!</div>)
+                    (<CircularProgress color="secondary" />)
                   }
                 </ul>
               </NPGlassCard>
@@ -224,14 +224,14 @@ const CommunityMain = () => {
                   <a href='/community/info' style={{ color: palette.gray, textDecorationLine: 'none' }}>+ 더보기</a>
                 </GlassTitle>
                 <ul style={{ padding: '3vh 0', margin: '0 3vw' }}>
-                  {infoData ?
+                  {infoData[0] ?
                     (infoData.map((data, idx) => {
                       return (
                         <CustomLi key={idx} data={data}></CustomLi>
                       )
                     }))
                     :
-                    (<div>게시글이 없네요!</div>)
+                    (<CircularProgress color="secondary" />)
                   }
                 </ul>
               </NPGlassCard>

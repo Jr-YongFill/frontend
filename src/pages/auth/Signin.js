@@ -74,12 +74,8 @@ const Signin = () => {
       localStorageSetValue('tokenType', tokenType);
       localStorageSetValue('member-role', role);
       localStorageSetValue('member-nickName', nickName);
+      navigate('/');
 
-      setModalText('로그인에 성공하셨습니다.');
-      setModalOnClick(() => () => {
-        setIsModalOpen(false);
-        navigate('/');
-      })
       setIsModalOpen(true);
     } catch (error) {
       console.log(error);

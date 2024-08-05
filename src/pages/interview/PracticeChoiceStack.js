@@ -29,10 +29,11 @@ const Main = styled.div`
 `;
 
 const Content = styled.div`
-  display: grid;
-  margin: 20px 20px;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 30px;
+  display: flex;
+  justify-content:space-evenly;
+  flex-wrap: wrap;
+  margin: 20px 10vw;
+  gap: 5px;
 `;
 
 const ModalContent = styled.div`
@@ -114,7 +115,7 @@ const PracticeChoiceStack = () => {
       <Header />
       <Wrapper>
         <Block />
-        <GlassCard>
+        <GlassCard width={"60vw"}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Title>
               <h1>이력서에 어떤 스택으로 지원하셨나요?</h1>

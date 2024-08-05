@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { baseAPI } from '../../config';
-import pallete from '../../styles/pallete';
 import styled from 'styled-components';
 import { localStorageGetValue } from "../../utils/CryptoUtils";
 import Wrapper from '../../components/Wrapper';
@@ -18,15 +17,22 @@ const QuestionContainer = styled.div`
     justify-content: left;
     margin-left: 30px;
     align-items: center;
+    flex-direction: column;
+    
 `;
 
 
 const VideoContainer = styled.div`
+    flex : 6;
     margin-bottom: 30px;
     width: 100%;
     display: flex;
     justify-content: center;
 `;
+
+
+
+
 
 const ModalContent = styled.div`
   display: flex;
@@ -48,6 +54,8 @@ const AnswerContainer = styled.div`
   border: 20px solid lightgray;
   margin-bottom: 2.5rem;
 `;
+
+
 
 const PracticeInterview = () => {
   const navigate = useNavigate();
@@ -77,6 +85,11 @@ const PracticeInterview = () => {
   const [modalText, setModalText] = useState('');
   const [modalOnClick, setModalOnClick] = useState(null);
 
+  const [submitted, setSubmitted] = useState(true);
+
+
+  const [hasCameraAccess, setHasCameraAccess] = useState(false);
+
   const handlePageNext = () => {
     (currentPage < localStorage.getItem("answersCount") - 1) && setCurrentPage(currentPage + 1)
   }
@@ -85,6 +98,7 @@ const PracticeInterview = () => {
     (currentPage > 0) && setCurrentPage(currentPage - 1)
   }
   const getUserCamera = () => {
+    setHasCameraAccess(true);
     navigator.mediaDevices.getUserMedia({
       video: true,
     })
@@ -93,11 +107,13 @@ const PracticeInterview = () => {
         if (video) {
           video.srcObject = stream;
           video.play();
+
         }
       })
       .catch((error) => {
-        console.error(error);
-        setModalText(error.message); // HTTP 요청이 아닌 경우, error.response가 없을 수 있음
+        console.error(`getUserCamera : ${error}`);
+        setHasCameraAccess(false);
+        setModalText(`카메라를 인식할 수 없습니다.\n기본 이미지로 대체합니다.`); // HTTP 요청이 아닌 경우, error.response가 없을 수 있음
         setModalOnClick(() => () => {
           setIsModalOpen(false);
         });
@@ -108,6 +124,7 @@ const PracticeInterview = () => {
   const stopCamera = () => {
     const video = videoRef.current;
     if (video && video.srcObject) {
+      setHasCameraAccess(false);
       const stream = video.srcObject;
       const tracks = stream.getTracks();
       tracks.forEach((track) => track.stop());
@@ -218,7 +235,7 @@ const PracticeInterview = () => {
     const url = window.URL.createObjectURL(audioBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = '녹음 파일';
+    a.download = `${question}_${new Date()}`;
     a.click();
 
     window.URL.revokeObjectURL(url);
@@ -293,26 +310,36 @@ const PracticeInterview = () => {
 
   useEffect(() => {
     async function getMicrophoneAccess() {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      let audioChunks = [];
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        let audioChunks = [];
 
-      mediaRecorder.addEventListener('dataavailable', (event) => {
-        if (event.data.size > 0) {
-          audioChunks.push(event.data);
-        }
-      });
+        mediaRecorder.addEventListener('dataavailable', (event) => {
+          if (event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        });
 
-      mediaRecorder.addEventListener('stop', () => {
-        const blob = new Blob(audioChunks, { type: 'audio/wav' });
+        mediaRecorder.addEventListener('stop', () => {
+          const blob = new Blob(audioChunks, { type: 'audio/wav' });
 
-        const audioUrl = URL.createObjectURL(blob);
-        setAudioURL(audioUrl);
-        setAudioBlob(blob);
-        audioChunks = [];
-      });
+          const audioUrl = URL.createObjectURL(blob);
+          setAudioURL(audioUrl);
+          setAudioBlob(blob);
+          audioChunks = [];
+        });
 
-      setRecorder(mediaRecorder);
+        setRecorder(mediaRecorder);
+      } catch (error) {
+        console.error(`mediaRecorder : ${error}`);
+        setModalText(`마이크를 인식할 수 없습니다.면접을 진행할 수 없습니다.`); // HTTP 요청이 아닌 경우, error.response가 없을 수 있음
+        setModalOnClick(() => () => {
+          setIsModalOpen(false);
+          navigate('/interview/practice-choice-stack');
+        });
+        setIsModalOpen(true);
+      }
     }
 
     getMicrophoneAccess();
@@ -339,13 +366,15 @@ const PracticeInterview = () => {
       <Wrapper>
         <div style={{ display: 'block ', flexDirection: 'column' }}><Block />
           <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-
-            <GlassCard>
+            <GlassCard width={"40vw"}>
               <QuestionContainer>
                 <h2 style={{ wordBreak: 'keep-all' }}>Q. {question}</h2>
+                {recording && <h4 style={{color: 'red'}}>● Recording</h4>}
               </QuestionContainer>
+
               <VideoContainer>
-                <video
+                {hasCameraAccess ?
+                  <video
                   className='container'
                   ref={videoRef}
                   style={{
@@ -354,13 +383,32 @@ const PracticeInterview = () => {
                     height: 'auto',
                     borderRadius: '25px',
                   }}
-                />
+                  /> :
+                  <div
+                    style={{
+                      width: '20rem',
+                      height: '12rem',
+                      borderRadius: '25px',
+                      backgroundColor: 'black',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '1.5rem'
+                    }}
+                  >
+                    카메라를 사용할 수 없습니다.
+                  </div>
+                }
+
               </VideoContainer>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
+              <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'space-around'}}>
                   <CustomButton
                     isNotHover={recording}
-                    onClick={startRecording}
+                    onClick={() => {
+                      setSubmitted(false);
+                      startRecording();}}
                     disabled={recording}>답변 시작</CustomButton>
                   <CustomButton
                     isNotHover={!recording}
@@ -377,28 +425,35 @@ const PracticeInterview = () => {
                 }
                 <div style={{ marginTop: '30px', width: '100%', display: 'flex', justifyContent: 'space-around' }}>
                   <CustomButton
-                    isNotHover={!audioURL}
-                    disabled={!audioURL}
+                    isNotHover={submitted || recording}
+                    disabled={submitted || recording}
                     onClick={() => setModalSwitch(true)}>답변 제출</CustomButton>
-                  <CustomButton onClick={() => {
-                    fetchQuestion();
-                    setAudioBlob(null);
-                    setAudioURL(null);
-                  }}>다음 질문</CustomButton>
+                  <CustomButton
+                    isNotHover={recording}
+                    disabled={recording}
+                    onClick={() => {
+                      stopRecording();
+                      fetchQuestion();
+                      setAudioBlob(null);
+                      setAudioURL(null);
+                      setSubmitted(true);
+                    }}
+                  >다음 질문</CustomButton>
                 </div>
               </div>
             </GlassCard>
-            <GlassCard>
+            <GlassCard width={"40vw"}>
               {questionAnswers[currentPage] ?
                 <div>
                   <h1>답변 내역</h1>
                   <>
                     <h2>Q. {questionAnswers[currentPage].question}</h2>
-                    <h3>나의 답변</h3>
-                    <AnswerContainer><div>{questionAnswers[currentPage].memberAnswer}</div></AnswerContainer>
-
-                    <h3>GPT의 답변</h3>
-                    <AnswerContainer><div>{questionAnswers[currentPage].gptAnswer}</div></AnswerContainer>
+                    <br/>
+                    <h2>나의 답변</h2>
+                    <GlassCard>{questionAnswers[currentPage].memberAnswer}</GlassCard>
+                    <br/>
+                    <h2>GPT의 답변</h2>
+                    <GlassCard>{questionAnswers[currentPage].gptAnswer}</GlassCard>
                   </>
 
                   <div style={{ marginTop: '30px', width: '100%', display: 'flex', justifyContent: 'space-around' }}>
@@ -439,6 +494,7 @@ const PracticeInterview = () => {
           <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
             <CustomButton
               onClick={async () => {
+                setSubmitted(true);
                 await handleGrade();
                 setModalSwitch(false);
               }}
@@ -451,6 +507,8 @@ const PracticeInterview = () => {
               onClick={async () => {
                 setModalSwitch(false);
               }}
+              isNotHover={submitted}
+              disabled={submitted}
             >
               닫기
             </CustomButton>
