@@ -77,6 +77,8 @@ const PracticeInterview = () => {
   const [modalText, setModalText] = useState('');
   const [modalOnClick, setModalOnClick] = useState(null);
 
+  const [loadingNext, setLoadingNext] = useState(false);
+
   const handlePageNext = () => {
     (currentPage < localStorage.getItem("answersCount") - 1) && setCurrentPage(currentPage + 1)
   }
@@ -439,8 +441,10 @@ const PracticeInterview = () => {
           <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
             <CustomButton
               onClick={async () => {
+                setLoadingNext(true);
                 await handleGrade();
                 setModalSwitch(false);
+                setLoadingNext(false);
               }}
               isNotHover={btnBlock}
               disabled={btnBlock}
@@ -451,6 +455,8 @@ const PracticeInterview = () => {
               onClick={async () => {
                 setModalSwitch(false);
               }}
+              isNotHover={loadingNext}
+              disabled={loadingNext}
             >
               닫기
             </CustomButton>
