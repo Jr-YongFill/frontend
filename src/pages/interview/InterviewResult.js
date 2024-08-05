@@ -45,6 +45,7 @@ const InterviewNote = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const answers = location.state || {};
+  
 
   const handleAccordionChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);

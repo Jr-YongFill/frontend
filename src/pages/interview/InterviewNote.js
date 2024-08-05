@@ -62,7 +62,7 @@ const StyledTabs = styled((props) => (
 const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
   ({ theme }) => ({
     textTransform: 'none',
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: 'white !important',
     '&.Mui-selected': {
       color: '#6854fc !important',
     },
