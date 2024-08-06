@@ -21,7 +21,7 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#languages-framwork-libraries">Languages, Framework, Libraries</a></li>
+    <li><a href="#languages-framework-libraries">Languages, Framework, Libraries</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage-image-example">Usage Image Example</a></li>
     <li><a href="#team-roles">Team Roles</a></li>
@@ -35,7 +35,6 @@
 </details>
 
 <!-- LANGUAGES, LIBRARIES, AND TOOLS USED -->
-<a id="languages-libraries-and-tools-used"></a>
 ## Languages, Framework, Libraries
 #### Languages
 * Javascript
