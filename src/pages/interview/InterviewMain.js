@@ -40,7 +40,7 @@ const SubTitleText = styled.div`
 
 const DescriptionText = styled.div`
   margin-top: 2vw;
-  font-size: 0.4em;
+  font-size: 0.8em;
   color: ${palette.gray};
 `;
 
@@ -74,7 +74,7 @@ const InterviewMain = () => {
                       기능 사용을 위해서는 Open AI API키가 필요합니다.
                     </DescriptionText>
                   </div>
-                  <img src={img} width={"18%"} alt={"기본 이미지"}></img>
+                  <img src={img} width={"35%"} alt={"기본 이미지"}></img>
               </div>
               <BtnGroup>
                 <BtnBox>

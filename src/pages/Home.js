@@ -127,9 +127,9 @@ const Home = () => {
                 <Title>모의면접</Title>
                 <Title>시뮬레이터</Title>
                 <Description>
-                  어쩌구저쩌구
+                  CS 면접, 잘 준비하셨나요?
                   <br></br>
-                  저쩌구
+                  GPT를 통해 내 지식을 확인해보세요!
                 </Description>
                 <CustomButton
                   width={"15vw"}
@@ -158,9 +158,9 @@ const Home = () => {
                 <Title>취준생</Title>
                 <Title>커뮤니티</Title>
                 <Description>
-                  취준생을 위한
+                  개발자 취업 정보
                   <br></br>
-                  커뮤니티 기능
+                  여기서 확인해요
                 </Description>
                 <CustomButton
                   width={"15vw"}

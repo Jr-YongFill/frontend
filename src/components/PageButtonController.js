@@ -9,7 +9,8 @@ const PaginationContainer = styled.div`
 `;
 
 const PageButton = styled.button`
-  background-color: ${(props) => (props.active ? palette.purple : palette.dark)};
+  background-color: ${(props) => (props.active ? palette.purple : 'rgba(255,255,255,0.1)')};
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   border: none;
   margin: 0 10px;
   padding: 10px 20px;

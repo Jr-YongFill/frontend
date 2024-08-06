@@ -108,7 +108,7 @@ const Header = ({ color }) => {
     <HeaderContainer style={{ background: color }}>
       <HeaderGnb>
         <MainLink to="/">
-          <Logo>모시모시</Logo>
+          <Logo>MOSI</Logo>
         </MainLink>
       </HeaderGnb>
       <GnbMenu>

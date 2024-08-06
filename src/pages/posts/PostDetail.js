@@ -17,6 +17,8 @@ import GlassInput from '../../components/GlassInput';
 import '../../App.css'; // 커스텀 스타일
 import { differenceInDays, formatDistanceToNow, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import {FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 
 /* data객체 정보 예시
 {
@@ -300,6 +302,8 @@ function PostDetail() {
                       <PageHeaderWriter>
                         <div>
                           작성자: {data.writerName}
+                          {data.updateYn==="Y" && ((<>   (수정됨)</>))}
+
                         </div>
                         <div style={{ fontSize: '15px', fontWeight: 'lighter', display: 'flex', justifyContent: 'space-between' }}>
                           <>
@@ -343,7 +347,7 @@ function PostDetail() {
                     alignItems: 'center'
                   }}>
                     {memberId && <LikeButton liked={data.liked} onClick={fetchLike}>
-                      Like
+                    <FontAwesomeIcon icon={faThumbsUp} color='white'size='xl'/>
                     </LikeButton>}
                     <div>
                       {data.likeCount}
@@ -410,15 +414,20 @@ function PostDetail() {
                               {comment.content}
                             </div>
                             {editCommentId === comment.id && (
-                              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <input
+                              <div style={{display:'flex', flexDirection:'column'}}>
+                              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems:'center' }}>
+                                <GlassInput
+                                  width={"50vw"}
                                   value={editComment}
                                   onChange={handleCommentChange}
-                                  style={{ width: '60%', height: '20px', fontSize: '18px', marginBottom: '20px', 'border-radius': '10px' }} />
+                                />
                                 <MyBtn
                                   color={palette.dark}
                                   onClick={() => fetchUpdateComment(comment.id)}>수정</MyBtn>
+                                  
                               </div>
+                              <HighLight></HighLight>
+                                </div>
                             )}
                           </Comment>
                         );
