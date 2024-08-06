@@ -10,6 +10,7 @@ import CustomButton from '../../components/CustomButton';
 import GlassModalChildren from '../../components/modal/GlassModalChildren';
 import GlassModal from '../../components/modal/GlassModal';
 import Block from '../../components/Block';
+import DisposableButton from '../../components/DisposableButton';
 
 const QuestionContainer = styled.div`
     grid-column: 1;
@@ -28,6 +29,7 @@ const VideoContainer = styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
 `;
 
 
@@ -419,16 +421,21 @@ const PracticeInterview = () => {
               </VideoContainer>
               <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <div style={{width: '100%', display: 'flex', justifyContent: 'space-around'}}>
-                  <CustomButton
-                    isNotHover={recording}
+                  {recording ? (
+                    <CustomButton
+                      isNotHover={false}
+                      onClick={stopRecording}
+                      >답변 종료</CustomButton>
+                    ):(
+                    <CustomButton
+                    isNotHover={false}
                     onClick={() => {
                       setSubmitted(false);
                       startRecording();}}
-                    disabled={recording}>답변 시작</CustomButton>
-                  <CustomButton
-                    isNotHover={!recording}
-                    onClick={stopRecording}
-                    disabled={!recording}>답변 종료</CustomButton>
+                    >답변 시작</CustomButton>
+                      )}
+                  
+                  
                   {audioBlob &&
                     <CustomButton onClick={downloadRecording}>Download</CustomButton>
                   }
@@ -507,18 +514,16 @@ const PracticeInterview = () => {
             채점을 진행하면 GPT API를 사용합니다.
           </ModalTextBox>
           <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
-            <CustomButton
+            <DisposableButton
               onClick={async () => {
                 setSubmitted(true);
                 await handleGrade();
                 setModalSwitch(false);
                 await addCredit(2);
               }}
-              isNotHover={btnBlock}
-              disabled={btnBlock}
             >
               채점하기
-            </CustomButton>
+            </DisposableButton>
             <CustomButton
               onClick={async () => {
                 setModalSwitch(false);

@@ -57,6 +57,7 @@ const InterviewNote = () => {
       <Wrapper>
         <div style={{ margin: "auto 0" }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ height: '3rem' }} />
             <Block></Block>
             <GlassCard width={"60vw"}>
               <div
@@ -72,9 +73,13 @@ const InterviewNote = () => {
                   <h1>면접 결과</h1>
                   <SubTitleText>
                     <h1>면접 잘 보셨나요?</h1>
+                    <h1>질문 별 응시 결과를 확인해봐요!</h1>
                   </SubTitleText>
+                  <div style={{color:'gray',fontWeight:'normal'}}>
+                    무응답 후 제출할 경우 음성인식이 올바르지 않을 수 있어요
+                  </div>
                 </div>
-                <img src={img} width={"18%"} alt={"기본 이미지"} style={{ marginRight: '30px' }}></img>
+                <img src={img} width={"30%"} alt={"기본 이미지"} style={{ marginRight: '30px' }}></img>
               </div>
               <BtnGroup>
                 <BtnBox>

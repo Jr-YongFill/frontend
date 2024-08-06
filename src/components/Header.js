@@ -127,6 +127,13 @@ const Header = ({ color }) => {
           <span>상점</span>
         </StyledLink>
         <StyledLink
+          to="/interview/note"
+          onClick={(event) => LinkClick(event, '/interview/note')}
+          active={(location.pathname === '/interview/note').toString()}
+        >
+          <span>오답노트</span>
+        </StyledLink>
+        <StyledLink
           to="/community/main"
           active={(location.pathname === '/community/main' || location.pathname === '/post').toString()}
         >
