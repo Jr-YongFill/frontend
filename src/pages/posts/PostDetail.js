@@ -46,7 +46,7 @@ const Container = styled.div`
 
 const PageHeader = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   width: 100%;
   padding: 20px 0px;

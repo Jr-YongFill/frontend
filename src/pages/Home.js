@@ -51,7 +51,7 @@ const DeveloperInfoContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
-  margin-top: 20px;
+  margin:20px 30px 0px 30px;
   padding: 30px 0px;
 `;
 
@@ -65,7 +65,7 @@ const DeveloperCard = styled.div`
   border-radius: 10px;
   padding: 10px;
   text-align: center;
-  width: 180px;
+  width: 150px;
   height: 230px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
@@ -113,6 +113,8 @@ const Home = () => {
         <ContainerWrapper>
           {/* 헤더가 보여질 공간을 띄워주긴 위한 Block컴포넌트(MUI아님!!!!)을 배치해야함 */}
           <Block></Block>
+          <div style={{ height: '30px' }} />
+
           <GlassCard width={"60vw"}>
             <div
               style={{
@@ -175,7 +177,7 @@ const Home = () => {
             </div>
           </GlassCard>
 
-          <GlassCard width={"60vw"}>
+          <GlassCard width={"60vw"} margin={"0 10vw"}>
             <Title style={{ textAlign: "center" }}>개발자 정보</Title>
             <DeveloperInfoContainer>
               <DeveloperCard>
