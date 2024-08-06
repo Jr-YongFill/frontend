@@ -18,7 +18,7 @@ const QuestionContainer = styled.div`
     margin-left: 30px;
     align-items: center;
     flex-direction: column;
-    
+
 `;
 
 
@@ -35,24 +35,24 @@ const VideoContainer = styled.div`
 
 
 const ModalContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
 const ModalTextBox = styled.div`
-  color: ${(props) => props.color};
-  margin-top: 30px;
-  font-size: 25px;
-  font-weight: bold;
-  text-align: center;
+    color: ${(props) => props.color};
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
 `;
 
 const AnswerContainer = styled.div`
-  background-color: lightgray;
-  border-radius: 20px;
-  border: 20px solid lightgray;
-  margin-bottom: 2.5rem;
+    background-color: lightgray;
+    border-radius: 20px;
+    border: 20px solid lightgray;
+    margin-bottom: 2.5rem;
 `;
 
 
@@ -383,24 +383,24 @@ const PracticeInterview = () => {
       <Header />
       <Wrapper>
         <div style={{ display: 'block ', flexDirection: 'column' }}><Block />
-          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <GlassCard width={"40vw"}>
+          <div style={{ display: 'flex', justifyContent: 'space-around'}}>
+            <GlassCard width={"40vw"} margin={"1vw"}>
               <QuestionContainer>
-                <h2 style={{ wordBreak: 'keep-all' }}>Q. {question}</h2>
+                <h1 style={{ wordBreak: 'keep-all' }}>Q. {question}</h1>
                 {recording && <h4 style={{color: 'red'}}>● Recording</h4>}
               </QuestionContainer>
 
               <VideoContainer>
                 {hasCameraAccess ?
                   <video
-                  className='container'
-                  ref={videoRef}
-                  style={{
-                    transform: 'scaleX(-1)',
-                    width: '65%',
-                    height: 'auto',
-                    borderRadius: '25px',
-                  }}
+                    className='container'
+                    ref={videoRef}
+                    style={{
+                      transform: 'scaleX(-1)',
+                      width: '65%',
+                      height: 'auto',
+                      borderRadius: '25px',
+                    }}
                   /> :
                   <div
                     style={{
@@ -460,17 +460,17 @@ const PracticeInterview = () => {
                 </div>
               </div>
             </GlassCard>
-            <GlassCard width={"40vw"}>
+            <GlassCard width={"40vw"} margin={"1vw"}>
               {questionAnswers[currentPage] ?
-                <div>
+                <div style={{margin: "2vw"}}>
                   <h1>답변 내역</h1>
                   <>
                     <h2>Q. {questionAnswers[currentPage].question}</h2>
                     <br/>
-                    <h2>나의 답변</h2>
+                    <h3>나의 답변</h3>
                     <GlassCard>{questionAnswers[currentPage].memberAnswer}</GlassCard>
                     <br/>
-                    <h2>GPT의 답변</h2>
+                    <h3>GPT의 답변</h3>
                     <GlassCard>{questionAnswers[currentPage].gptAnswer}</GlassCard>
                   </>
 
