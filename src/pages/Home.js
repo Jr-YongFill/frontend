@@ -179,25 +179,25 @@ const Home = () => {
             <Title style={{ textAlign: "center" }}>개발자 정보</Title>
             <DeveloperInfoContainer>
               <DeveloperCard>
-                <img src={defaultImage} alt="Developer" />
+                <img src={"https://avatars.githubusercontent.com/u/63451752?v=4"} alt="Developer" />
                 <h3>장희권</h3>
                 <p>Developer</p>
                 <p>contact: hgyellow0505@gmail.com</p>
               </DeveloperCard>
               <DeveloperCard>
-                <img src={defaultImage} alt="Developer" />
+                <img src={"https://avatars.githubusercontent.com/u/52325199?v=4"} alt="Developer" />
                 <h3>김지혜</h3>
                 <p>Developer</p>
                 <p>contact: cocoa389@naver.com</p>
               </DeveloperCard>
               <DeveloperCard>
-                <img src={defaultImage} alt="Developer" />
+                <img src={"https://img.29cm.co.kr/next-product/2023/06/20/bbfb62d5d3884d68ac92156105593ba5_20230620103030.jpg?width=1200"} alt="Developer" />
                 <h3>이동규</h3>
                 <p>Developer</p>
                 <p>contact: dlehdrb1112@gmail.com</p>
               </DeveloperCard>
               <DeveloperCard>
-                <img src={defaultImage} alt="Developer" />
+                <img src={"https://avatars.githubusercontent.com/u/84944464?v=4"} alt="Developer" />
                 <h3>배창민</h3>
                 <p>Developer</p>
                 <p>contact: changmin38@gmail.com</p>

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "모의면접 시뮬레이터",
+  "name": "개발자를 위한 CS 모의면접 시뮬레이터",
   "icons": [
     {
       "src": "favicon.ico",

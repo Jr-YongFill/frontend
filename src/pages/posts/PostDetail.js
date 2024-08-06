@@ -50,6 +50,7 @@ const PageHeader = styled.div`
   justify-content: space-between;
   width: 100%;
   padding: 20px 0px;
+  flex-wrap:wrap;
 `;
 
 const PageHeaderWriter = styled.div`
@@ -295,8 +296,12 @@ function PostDetail() {
             {data &&
               <GlassCard width={"60vw"}>
                 <div style={{ padding: '0px 30px 20px', margin: '0 3vw' }}>
-
+    
                   <PageHeader>
+                    <div style={{ display:'block' ,flexDirection:'column'}}>
+                    <h5>{data.category}</h5>
+                      <HighLight></HighLight>
+                      </div>
                     <div style={{ display: 'flex' }}>
                       <ProfileImage src={data.filePath} alt="작성자 프로필" />
                       <PageHeaderWriter>
