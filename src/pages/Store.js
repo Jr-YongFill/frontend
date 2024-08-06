@@ -389,10 +389,8 @@ const Store = () => {
           <li>면접 질문을 투표 한다: 1pt </li>
           <li>면접 질문에 답을 한다: 1pt </li>
           <li>연습 모드를 한다: 답변 당 2pt </li>
-          <li>
-            실전 모드를 한다: 30pt <br />
-            - 단 스킵할때 마다: -5pt <br />- 최소 0pt
-          </li>
+          <li>실전 모드를 한다: 30pt<br></br></li>
+          <li>단, 실전모드에서는 문제를 스킵할때 마다: -5pt</li>
         </ul>
         <CustomButton onClick={() => setCreditInfoModal(false)}>
           닫기
