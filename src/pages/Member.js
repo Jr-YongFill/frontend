@@ -15,6 +15,9 @@ import CustomLi from "../components/CustomLi";
 import NPGlassCard from "../components/NoPaddingGlassCard";
 import GlassModal from "../components/modal/GlassModal";
 import GlassInput from "../components/GlassInput";
+import { RemoveModal } from "../components/modal/RemoveModal";
+import { tr } from 'date-fns/locale';
+import CustomButton from '../components/CustomButton';
 
 const Title = styled.h2`
   font-weight: bold;
@@ -76,8 +79,7 @@ const ButtonContainer = styled.div`
 `;
 
 const FileInput = styled.input`
-  width: 50%;
-  padding: 10px;
+  display: none;
 `;
 
 const Input = styled.input`
@@ -151,6 +153,7 @@ const Member = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalText, setModalText] = useState('');
   const [modalOnClick, setModalOnClick] = useState(null);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(null);
 
   useEffect(() => {
     setMemberId(localStorageGetValue("member-id"));
@@ -217,6 +220,7 @@ const Member = () => {
       await baseAPI.delete(`/api/members/${memberId}`);
       localStorage.clear();
 
+      setIsRemoveModalOpen(false);
       setModalText("회원 탈퇴 성공");
       setModalOnClick(() => () => {
         setIsModalOpen(false);
@@ -349,26 +353,46 @@ const Member = () => {
     <>
       <Header />
       <Wrapper>
-        <div style={{width:'60vw'}}>
+        <div style={{ width: '60vw' }}>
           <Block></Block>
           <NPGlassCard>
             <TopContainer>
               <Title>마이페이지</Title>
-              <Button onClick={deleteHandle}>탈퇴하기</Button>
+              <CustomButton onClick={() => setIsRemoveModalOpen(true)}>탈퇴하기</CustomButton>
             </TopContainer>
             <div style={{ padding: "20px" }}>
               <MiddelContainer>
                 <ImageContainer>
                   <ProfileImage src={profileImage} alt="Profile 선택" />
                   <ButtonContainer>
+                    <label for="file"
+                      style={{
+                        backgroundColor: palette.dark,
+                        border: 'none',
+                        width: '12vh',
+                        paddingTop: '6px',
+                        height: '4vh',
+                        borderRadius: '10px',
+                        fontSize: '1em',
+                        color: 'white',
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        margin: '10px 0',
+                        '&:hover': {
+                          backgroundColor: palette.purple
+                        }
+                      }}>
+                      <div class="btn-upload">파일 업로드</div>
+                    </label>
                     <FileInput
+                      id='file'
                       type="file"
                       accept="image/*"
                       onChange={handleImageChange}
                     />
-                    <Button onClick={UpdateImageHandle} width={"100px"}>
+                    <CustomButton onClick={UpdateImageHandle} width={"100px"}>
                       수정하기
-                    </Button>
+                    </CustomButton>
                   </ButtonContainer>
                 </ImageContainer>
 
@@ -383,9 +407,9 @@ const Member = () => {
                         value={nickName}
                         onChange={handleNameChange}
                       />
-                      <Button onClick={UpdateImageHandle}>
+                      <CustomButton onClick={UpdateImageHandle}>
                         수정하기
-                      </Button>
+                      </CustomButton>
                     </NicknameInput>
                   </NicknameContainer>
                   <PasswordContainer>
@@ -403,9 +427,9 @@ const Member = () => {
                       onChange={handleCheckPasswordChange}
                     />
                     <PasswordButtonContainer>
-                      <Button onClick={UpdatePasswordHandle}>
+                      <CustomButton onClick={UpdatePasswordHandle}>
                         변경하기
-                      </Button>
+                      </CustomButton>
                     </PasswordButtonContainer>
                   </PasswordContainer>
                 </MemberUpdateContainer>
@@ -414,31 +438,35 @@ const Member = () => {
               <BottomContainer>
                 <GlassCard width={"25vw"}>
                   <Title>내가 쓴 글</Title>
-                  <ul style={{marginLeft: '-40px'}}>
+                  <ul style={{ marginLeft: '-40px' }}>
                     {postData.map((post, index) => (
-                      <CustomLi key={index} data={post} isMine={true}/>
+                      <CustomLi key={index} data={post} isMine={true} />
                     ))}
                   </ul>
                 </GlassCard>
                 <GlassCard width={"25vw"}>
                   <Title>내가 쓴 댓글</Title>
-                  <ul style={{marginLeft: '-40px'}}>
+                  <ul style={{ marginLeft: '-40px' }}>
                     {commentData.map((comment, index) => (
-                      <CustomLi key={index} data={comment} isMine={true}/>
+                      <CustomLi key={index} data={comment} isMine={true} />
                     ))}
                   </ul>
                 </GlassCard>
               </BottomContainer>
             </div>
           </NPGlassCard>
-        </div>
-      </Wrapper>
+        </div >
+      </Wrapper >
 
       <GlassModal
         isModalOpen={isModalOpen}
         setIsModalOpen={() => setIsModalOpen(false)}
         message={modalText}
         onClick={modalOnClick} />
+      <RemoveModal
+        isModalOpen={isRemoveModalOpen}
+        setIsModalOpen={() => setIsRemoveModalOpen(false)}
+        onClick={deleteHandle} />
     </>
   );
 };
