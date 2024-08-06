@@ -239,10 +239,16 @@ const InterviewNote = () => {
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   sx={{
-                    bgcolor: 'rgba(255, 255, 255, 0.1)'
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    display: 'flex',
+                    justifyContents: 'center'
                   }}
                 >
                   <Typography variant="h6">{question.question}</Typography>
+                  {question.memberAnswers[0].id ? 
+                    <Typography variant={"body2"} sx={{marginLeft:'auto', marginRight:'2vw', marginTop:'0.3vw'}}>답변 {question.memberAnswers.length}개</Typography> :
+                    <Typography variant={"body2"} sx={{marginLeft:'auto', marginRight:'2vw', marginTop:'0.3vw'}} color={'gray'}>답변 없음</Typography>
+                  }
                 </AccordionSummary>
                 <AccordionDetails
                   sx={{

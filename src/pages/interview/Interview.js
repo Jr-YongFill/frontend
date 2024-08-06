@@ -140,15 +140,44 @@ const Interview = () => {
           'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-4o-mini',
           messages: [{
             role: 'user',
             content: `당신은 개발자 면접관이며, 다음 질문에 대해 면접자가 제대로 답변했는지 체크해야합니다.\n
-            입력형식은 다음과 같습니다.\n
-            면접 질문:  {질문 텍스트}\n
-            면접 답변:  {답변 텍스트}\n해당 면접 질문에 대해 면접 답변이 정답인지, 틀렸다면 어느 부분이 틀렸는지 답변해주세요. 코드는 출력하지 않습니다.\n
+            다음 면접 질문과 답변에 대해 면접 답변이 정답인지, 틀렸다면 어느 부분이 틀렸는지 답변해주세요. 코드는 출력하지 않습니다.\n
             그리고 어느 부분이 틀린지 지적해주세요.\n
              면접질문: ${questions[currentQuestion].question} 면접답변: ${memberAnswer}`
+          }],
+        })
+      });
+
+      if (!response.ok) {
+        const errorDetail = await response.json();
+        throw new Error(`Error in AI response: ${response.statusText}, ${JSON.stringify(errorDetail)}`);
+      }
+
+      const result = await response.json();
+      return result.choices[0].message.content;
+
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const askSkip = async () => {
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [{
+            role: 'user',
+            content: `아래 면접 질문에 대해 어떻게 답변해야 할지 모범 답변만을 출력해 주세요..\n
+             면접질문: ${questions[currentQuestion].question}`
           }],
         })
       });
@@ -206,8 +235,7 @@ const Interview = () => {
 
       if (isSkip) {
         memberAnswer = "모르겠습니다.";
-
-        gptAnswer = await askQuestion(memberAnswer);
+        gptAnswer = await askSkip();
       } else {
         // 오디오를 텍스트로 변환
         memberAnswer = await transcribeAudio();
@@ -473,11 +501,11 @@ const Interview = () => {
                 <CustomButton
                   disabled={!recording || !isFirstWait}
                   isNotHover={!recording || !isFirstWait}
-                  onClick={handleNext}>Next</CustomButton>
+                  onClick={handleSkip}>Skip</CustomButton>
                 <CustomButton
                   disabled={!recording || !isFirstWait}
                   isNotHover={!recording || !isFirstWait}
-                  onClick={handleSkip}>Skip</CustomButton>
+                  onClick={handleNext}>Next</CustomButton>
               </ButtonContainer>
             </GridContainer>
           </div>

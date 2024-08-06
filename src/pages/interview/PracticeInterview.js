@@ -250,16 +250,13 @@ const PracticeInterview = () => {
           'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-4o-mini',
           messages: [{
             role: 'user',
             content: `당신은 개발자 면접관이며, 다음 질문에 대해 면접자가 제대로 답변했는지 체크해야합니다.\n
-            입력형식은 다음과 같습니다.\n
-            면접 질문:  {질문 텍스트}\n
-            면접 답변:  {답변 텍스트}\n
-            해당 면접 질문에 대해 면접 답변이 정답인지, 틀렸다면 어느 부분이 틀렸는지 답변해주세요. 코드는 출력하지 않습니다.\n
+            다음 면접 질문과 답변에 대해 면접 답변이 정답인지, 틀렸다면 어느 부분이 틀렸는지 답변해주세요. 코드는 출력하지 않습니다.\n
             그리고 어느 부분이 틀린지 지적해주세요.\n
-             면접질문: ${question} 면접답변: ${memberAnswer}`
+             면접질문: ${question}, 면접답변: ${memberAnswer}`
           }],
         })
       });
