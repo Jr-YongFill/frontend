@@ -21,22 +21,22 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#about-the-project">About The Project</a></li>
     <li><a href="#languages-libraries-and-tools-used">Languages, libraries and tools used</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#usage-image-example">Usage Image Example</a></li>
     <li><a href="#team-roles">Team Roles</a></li>
     <li><a href="#feature">Feature</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#contact">Contact</a></li>
     <li><a href="#coming-soon">Coming Soon</a></li>
+    <li><a href="#contact">Contact</a></li>
     <li><a href="#project-link">Project Link</a></li>
   </ol>
 </details>
 
 <!-- LANGUAGES, LIBRARIES, AND TOOLS USED -->
 <a id="languages-libraries-and-tools-used"></a>
-## Languages, Libraries, and Tools Used
+## Languages, Framework, Libraries
 #### Languages
 * Javascript
 
@@ -46,6 +46,17 @@
     - project: npm
 
 #### libraries
+* mui
+   - version: 5.16.5
+* styled-components
+    - version: 6.1.12
+* crypto-js
+   - version: 4.2.0
+* emotion
+    - version: 11.13.0
+* fortawesome
+    - version: 6.6.0
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -65,8 +76,27 @@
   ```sh
    npm start
   ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 <!-- USAGE EXAMPLES -->
-이미지 넣기
+## Usage Image Examples
+Home
+![Home](https://github.com/user-attachments/assets/cddcf02c-eaf7-4dd3-8b23-c02fdd36b0bc)
+Interview Choice
+![면접 시뮬레이션 메인](https://github.com/user-attachments/assets/3924ed8d-3c16-44c5-9e7e-f89522f2458d)
+GPT API KEY
+![GPTAPI키](https://github.com/user-attachments/assets/6c51b27d-8ccf-4eca-b8f4-a0b1955caac8)
+Interview
+![실전 면접](https://github.com/user-attachments/assets/bc810764-eb8d-48cf-af2d-ccaf0cab5049)
+Practice Interview
+![practice](https://github.com/user-attachments/assets/89e436ae-404a-4697-a039-b1b5c43502f6)
+Answer Note
+![오답노트](https://github.com/user-attachments/assets/1ee2ad5d-dc33-416d-aa2e-e0b1fa7daa51)
+Post
+![post](https://github.com/user-attachments/assets/c06f2a3d-0640-4c95-b658-5784b0742435)
+Vote
+![vote](https://github.com/user-attachments/assets/e70f3b1e-4c8b-4f87-b5d9-6ffeb6402062)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
