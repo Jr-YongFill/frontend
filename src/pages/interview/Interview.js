@@ -63,7 +63,10 @@ const Interview = () => {
   const [modalOnClick, setModalOnClick] = useState(null);
   const [credit, setCredit] = useState(30);
 
+  const [hasCameraAccess, setHasCameraAccess] = useState(false);
+
   const getUserCamera = () => {
+    setHasCameraAccess(true);
     navigator.mediaDevices.getUserMedia({
       video: true,
     })
@@ -75,11 +78,12 @@ const Interview = () => {
         }
       })
       .catch((error) => {
-
-        setModalText(error.response.data.message);
+        console.error(`getUserCamera : ${error}`);
+        setHasCameraAccess(false);
+        setModalText(`카메라를 인식할 수 없습니다.\n기본 이미지로 대체합니다.`); // HTTP 요청이 아닌 경우, error.response가 없을 수 있음
         setModalOnClick(() => () => {
           setIsModalOpen(false);
-        })
+        });
         setIsModalOpen(true);
       });
   };
@@ -351,29 +355,41 @@ const Interview = () => {
   }, []);
 
   useEffect(() => {
+
     async function getMicrophoneAccess() {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      let audioChunks = [];
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        let audioChunks = [];
 
-      mediaRecorder.addEventListener('dataavailable', (event) => {
-        if (event.data.size > 0) {
-          audioChunks.push(event.data);
-        }
-      });
+        mediaRecorder.addEventListener('dataavailable', (event) => {
+          if (event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        });
 
-      mediaRecorder.addEventListener('stop', () => {
-        const blob = new Blob(audioChunks, { type: 'audio/wav' });
-        const audioUrl = URL.createObjectURL(blob);
-        setAudioURL(audioUrl);
-        setAudioBlob(blob);
-        audioChunks = [];
-        setWait(true);
-      });
+        mediaRecorder.addEventListener('stop', () => {
+          const blob = new Blob(audioChunks, { type: 'audio/wav' });
+          const audioUrl = URL.createObjectURL(blob);
+          setAudioURL(audioUrl);
+          setAudioBlob(blob);
+          audioChunks = [];
+          setWait(true);
+        });
 
-      setRecorder(mediaRecorder);
-      mediaRecorder.start();
-      setRecording(true);
+        setRecorder(mediaRecorder);
+        mediaRecorder.start();
+        setRecording(true);
+      } catch (error) {
+        console.error(`mediaRecorder : ${error}`);
+        setModalText(`마이크를 인식할 수 없습니다.면접을 진행할 수 없습니다.`); // HTTP 요청이 아닌 경우, error.response가 없을 수 있음
+        setModalOnClick(() => () => {
+          setIsModalOpen(false);
+          navigate('/interview/choice-stack');
+        });
+        setIsModalOpen(true);
+      }
+
     }
     if (isFirstWait) {
       getMicrophoneAccess(); // Start recording after setting the recorder
@@ -408,23 +424,41 @@ const Interview = () => {
               <h1>준비 시간 입니다.</h1>
             }
             <GridContainer>
-              <video
-                className='container'
-                ref={videoRef}
-                style={{
-                  transform: 'scaleX(-1)',
-                  width: '400px',
-                  height: '250px',
-                  borderRadius: '25px',
-                }}
-              />
+
+              {hasCameraAccess ?
+                <video
+                  className='container'
+                  ref={videoRef}
+                  style={{
+                    transform: 'scaleX(-1)',
+                    width: '400px',
+                    height: '250px',
+                    borderRadius: '25px',
+                  }}
+                /> :
+                <div
+                  style={{
+                    width: '20rem',
+                    height: '12rem',
+                    borderRadius: '25px',
+                    backgroundColor: 'black',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem'
+                  }}
+                >
+                  카메라를 사용할 수 없습니다.
+                </div>
+              }
             </GridContainer>
 
             <GridContainer>
               {!isFirstWait &&
                 <Timer
                   handleNext={() => setIsFirstWait(true)}
-                  time={10} />}
+                  time={10}/>}
               {isFirstWait &&
                 <>
                   {recording ?
