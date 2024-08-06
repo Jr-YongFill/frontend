@@ -80,7 +80,7 @@
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
-## Usage Image Examples
+## Usage Image Example
 Home
 ![Home](https://github.com/user-attachments/assets/cddcf02c-eaf7-4dd3-8b23-c02fdd36b0bc)
 Interview Choice
