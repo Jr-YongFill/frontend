@@ -21,7 +21,7 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#languages-libraries-and-tools-used">Languages, libraries and tools used</a></li>
+    <li><a href="#languages-framwork-libraries">Languages, Framework, Libraries</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage-image-example">Usage Image Example</a></li>
     <li><a href="#team-roles">Team Roles</a></li>
