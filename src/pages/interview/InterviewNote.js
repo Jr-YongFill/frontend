@@ -173,7 +173,7 @@ const InterviewNote = () => {
       <Header sx={{ margin: 0 }} /> {/* Remove extra margin from Header */}
       <Wrapper>
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ height: '3rem' }} />
+          <div style={{ height: '30px' }} />
           <Block></Block>
           <GlassCard width={"60vw"}>
             <div
