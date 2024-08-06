@@ -5,7 +5,7 @@ const getTokenType = () => localStorageGetValue('tokenType')
 const getAccessToken = () => localStorageGetValue('accessToken');
 const getRefreshToken = () => localStorageGetValue('refreshToken');
 
-const BASE_URL = `http://${process.env.REACT_APP_HOST_IP}:${process.env.REACT_APP_HOST_PORT}`;
+const BASE_URL = `https://${process.env.REACT_APP_HOST_IP}:${process.env.REACT_APP_HOST_PORT}`;
 export const baseAPI = axios.create({
     baseURL: BASE_URL,
 });
