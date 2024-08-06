@@ -386,7 +386,7 @@ function PostDetail() {
                                     작성자: {comment.memberNickname}
                                   </div>
                                   <div>
-                                    작성일: {formatRelativeTime(comment.createDate)}
+                                    작성일: {formatRelativeTime(comment.createTime)}
                                   </div>
                                 </PageHeaderWriter>
                               </div>
