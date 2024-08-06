@@ -442,7 +442,7 @@ const Interview = () => {
     <>
       <Header />
       <Wrapper>
-        <GlassCard width={'100%'}>
+        <GlassCard width={'60vw'}>
           <div>
             {questions[currentQuestion] && isFirstWait == true &&
               <h1>Q{currentQuestion + 1}. {questions[currentQuestion].question}</h1>
