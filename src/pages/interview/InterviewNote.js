@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Alert,
   Pagination,
+  PaginationItem,
   Box,
   Grid,
   Divider
@@ -108,7 +109,7 @@ const InterviewNote = () => {
         const response = await baseAPI.get(`/api/members/${memberId}/stacks`);
         const datas = response.data;
         setStacks(datas);
-        const purchasedFirstStackId = datas.filter(stack=>stack.isPurchase)[0].id
+        const purchasedFirstStackId = datas.filter(stack => stack.isPurchase)[0].id
 
         if (datas.length > 0) {
           setSelectedStack(purchasedFirstStackId); // 구매한 스택 기준 첫 번째 스택 선택
@@ -171,8 +172,8 @@ const InterviewNote = () => {
     <>
       <Header sx={{ margin: 0 }} /> {/* Remove extra margin from Header */}
       <Wrapper>
-        <div style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-          <div style={{height: '3rem'}}/>
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ height: '3rem' }} />
           <Block></Block>
           <GlassCard width={"60vw"}>
             <div
@@ -192,12 +193,12 @@ const InterviewNote = () => {
                   <p>다시 한 번 복습해봐요!</p>
                 </SubTitleText>
               </div>
-              <img src={img} width={"18%"} alt={"기본 이미지"} style={{marginRight: '30px'}}></img>
+              <img src={img} width={"18%"} alt={"기본 이미지"} style={{ marginRight: '30px' }}></img>
             </div>
 
           </GlassCard>
 
-          <Box sx={{marginTop: 2}}>
+          <Box sx={{ marginTop: 2 }}>
             <StyledTabs
               value={selectedStack}
               onChange={handleChangeTab}
@@ -208,20 +209,20 @@ const InterviewNote = () => {
             >
               {stacks.map((stack) => (
                 stack.isPurchase ? (
-                  <StyledTab key={stack.id} label={stack.stackName} value={stack.id}/>
+                  <StyledTab key={stack.id} label={stack.stackName} value={stack.id} />
 
                 ) : (
-                  <Tab key={stack.id} label={stack.stackName} value={stack.id} disabled/>
+                  <Tab key={stack.id} label={stack.stackName} value={stack.id} disabled />
                 )
               ))}
             </StyledTabs>
           </Box>
 
-          <div style={{width: '62vw'}}>
+          <div style={{ width: '62vw' }}>
             {questions.map((question) => (
               <Accordion
                 sx={{
-                  '&:before': {display: 'none'},
+                  '&:before': { display: 'none' },
                   '& .MuiAccordionSummary-expandIconWrapper .MuiSvgIcon-root': { color: 'white' },
                   color: 'white',
                   backdropFilter: 'blur(10px)',
@@ -230,13 +231,13 @@ const InterviewNote = () => {
                   borderRadius: '10px',
                   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.3)'
-              }}
+                }}
                 key={question.id}
                 expanded={expanded === question.id}
                 onChange={handleAccordionChange(question.id)}
               >
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon/>}
+                  expandIcon={<ExpandMoreIcon />}
                   sx={{
                     bgcolor: 'rgba(255, 255, 255, 0.1)'
                   }}
@@ -249,7 +250,7 @@ const InterviewNote = () => {
                   }}>
                   {question.memberAnswers[0].id ? (
                     question.memberAnswers.map((answer) => (
-                      <div key={answer.id} style={{margin: '3rem'}}>
+                      <div key={answer.id} style={{ margin: '3rem' }}>
                         <Typography variant="h4" gutterBottom>
                           {answer.createDate ? new Date(answer.createDate).toLocaleDateString() : 'No Date'}&nbsp;&nbsp;
                         </Typography>
@@ -266,38 +267,53 @@ const InterviewNote = () => {
 
                           <NPGlassCard>
                             <GlassTitle>
-                              <div style={{fontSize: 25, fontWeight: 'bold'}}>나의 답변</div>
+                              <div style={{ fontSize: 25, fontWeight: 'bold' }}>나의 답변</div>
                             </GlassTitle>
                             <SubContainer>
-                              <div style={{paddingBottom: '3vh'}}>{answer.memberAnswer}</div>
+                              <div style={{ paddingBottom: '3vh' }}>{answer.memberAnswer}</div>
                             </SubContainer>
                           </NPGlassCard>
 
                           <NPGlassCard>
                             <GlassTitle>
-                              <div style={{fontSize: 25, fontWeight: 'bold'}}>GPT의 답변</div>
+                              <div style={{ fontSize: 25, fontWeight: 'bold' }}>GPT의 답변</div>
                             </GlassTitle>
                             <SubContainer>
-                              <div style={{paddingBottom: '3vh', wordWrap: "break-word"}}>{answer.gptAnswer}</div>
+                              <div style={{ paddingBottom: '3vh', wordWrap: "break-word" }}>{answer.gptAnswer}</div>
                             </SubContainer>
                           </NPGlassCard>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <div style={{fontSize: '0.9em'}}>
-                      답변이 존재하지 않습니다.<br/>면접을 더 진행해보세요!
+                    <div style={{ fontSize: '0.9em' }}>
+                      답변이 존재하지 않습니다.<br />면접을 더 진행해보세요!
                     </div>
                   )}
                 </AccordionDetails>
               </Accordion>
             ))}
-            <CenteredBox sx={{marginTop: 2}}>
-              <Pagination sx={{color: 'white'}}
-                          count={totalPages}
-                          page={currentPage}
-                          onChange={handleChangePage}
-                          variant="outlined" shape="rounded"
+            <CenteredBox sx={{ marginTop: 2 }}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handleChangePage}
+                variant="outlined"
+                shape="rounded"
+                sx={{
+                  '& .MuiPaginationItem-root': {
+                    color: 'white',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    border: 'none', 
+                  },
+                  '& .MuiPaginationItem-previousNext': {
+                    color: 'white',
+                  },
+                  '& .MuiPaginationItem-outlined': {
+                    border: 'none',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
               />
             </CenteredBox>
           </div>
