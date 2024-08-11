@@ -9,8 +9,9 @@
 
 <h3 align="center"><a href="http://www.mosi.digital/">MOSI</a></h3>
 
-  <p align="center">  
-    GPT AI 기반 CS면접을 도와주는 서비스입니다.
+  <p align="center">   
+    혼자서 면접 준비하는 취업 준비생들은 본인이 질문에 대한 올바른 답변을 하였는지 확인하는데 어려움이
+있습니다. 이를 보완하기 위해 면접자의 음성을 Text로 변환하여 저장하고, GPT API를 활용하여 올바른 대답인지 피드백 받을 수 있게 하는 서비스입니다. 또한 취업 준비생들끼리 정보를 공유하는 커뮤니티 서비스입니다. 
     <br />
   <p align="right">
       기획: 김지혜
